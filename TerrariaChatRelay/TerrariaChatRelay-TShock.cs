@@ -20,7 +20,7 @@ namespace TerrariaChatRelay
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(0, 9, 1);
+		public override Version Version => new Version(0, 9, 1, 1);
 
 		public override string Author => "Panini";
 
@@ -58,6 +58,7 @@ namespace TerrariaChatRelay
 		{
 			Global.SavePath = Path.Combine(Directory.GetCurrentDirectory(), TShock.SavePath);
 			Global.ModConfigPath = Path.Combine(Directory.GetCurrentDirectory(), TShock.SavePath, "TerrariaChatRelay");
+			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
 
 			var config = ConfigFile.Read(Path.Combine(Global.SavePath, "config.json"));
 			CommandPrefix = config.CommandSpecifier;
@@ -94,13 +95,19 @@ namespace TerrariaChatRelay
 
 			//Hook into the chat. This specific hook catches the chat before it is sent out to other clients.
 			//This allows us to edit the chat message before others get it.
-			ServerApi.Hooks.ServerChat.Register(this, OnChatReceived);
+
+			if (Global.Config.ShowChatMessages)
+				ServerApi.Hooks.ServerChat.Register(this, OnChatReceived);
+
+			if (Global.Config.ShowGameEvents)
+				ServerApi.Hooks.ServerBroadcast.Register(this, OnServerBroadcast);
+
+			if (Global.Config.ShowServerStartMessage)
+				Hooks.Game.PostInitialize += OnServerStart;
+
 			ServerApi.Hooks.ServerJoin.Register(this, OnServerJoin);
 			ServerApi.Hooks.ServerLeave.Register(this, OnServerLeave);
 			ServerApi.Hooks.NpcSpawn.Register(this, OnNPCSpawn);
-			ServerApi.Hooks.ServerBroadcast.Register(this, OnServerBroadcast);
-			Hooks.Game.PostInitialize += OnServerStart;
-			//World event
 
 			//This hook is a part of TShock and not a part of TS-API. There is a strict distinction between those two assemblies.
 			//This event is provided through the C# ``event`` keyword, which is a feature of the language itself.
@@ -181,8 +188,18 @@ namespace TerrariaChatRelay
 		{
 			if (disposing)
 			{
-				OnServerStop();
-				ServerApi.Hooks.ServerChat.Deregister(this, OnChatReceived);
+				if (Global.Config.ShowServerStartMessage)
+					OnServerStop();
+
+				if (Global.Config.ShowChatMessages)
+					ServerApi.Hooks.ServerChat.Deregister(this, OnChatReceived);
+
+				if (Global.Config.ShowGameEvents)
+					ServerApi.Hooks.ServerBroadcast.Deregister(this, OnServerBroadcast);
+
+				if (Global.Config.ShowServerStartMessage)
+					Hooks.Game.PostInitialize -= OnServerStart;
+
 				ServerApi.Hooks.ServerJoin.Deregister(this, OnServerJoin);
 				ServerApi.Hooks.ServerLeave.Deregister(this, OnServerLeave);
 				ServerApi.Hooks.NpcSpawn.Deregister(this, OnNPCSpawn);
