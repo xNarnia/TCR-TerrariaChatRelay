@@ -1,5 +1,7 @@
-# TCR-TerrariaChatRelay-TShock
-Self-serving Terraria Chat Relay with extensible chat service support  
+# TCR-TerrariaChatRelay-TShock Port
+Self-serving Terraria Chat Relay with extensible chat service support.
+This is a port of TCR-TerrariaChatRelay for tModLoader. 
+https://github.com/xPanini/TCR-TerrariaChatRelay
 
 # To-do:
 
