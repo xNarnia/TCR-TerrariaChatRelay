@@ -270,9 +270,17 @@ namespace DiscordChatRelay
 					outMsg = outMsg.Replace("%bossname%", bossName);
 				}
 
+                // Find the Player Name
 				if(msg.Player == null && (msg.Message.EndsWith(" has joined.") || msg.Message.EndsWith(" has left.")))
 				{
 					string playerName = msg.Message.Replace(" has joined.", "").Replace(" has left.", "");
+
+                    // Suppress empty player name "has left" messages caused by port sniffers
+                    if (playerName.IsNullOrEmpty())
+                    {
+                        // An early return is the easiest way out
+                        return;
+                    }
 
 					outMsg = outMsg.Replace("%playername%", playerName);
 				}
