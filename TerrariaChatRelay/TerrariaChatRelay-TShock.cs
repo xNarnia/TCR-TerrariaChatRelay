@@ -60,7 +60,7 @@ namespace TerrariaChatRelay
 			Global.ModConfigPath = Path.Combine(Directory.GetCurrentDirectory(), TShock.SavePath, "TerrariaChatRelay");
 			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
 
-			var config = ConfigFile.Read(Path.Combine(Global.SavePath, "config.json"));
+			var config = ConfigFile.Read(Path.Combine(Global.SavePath, "config.json"), out bool missingFields);
 			CommandPrefix = config.CommandSpecifier;
 
 			ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
@@ -144,6 +144,9 @@ namespace TerrariaChatRelay
 		{
 			try
 			{
+				if(Main.player[args.Who].name != "" 
+					&& Main.player[args.Who].name != null
+					&& Main.player[args.Who].name.Replace("*" , "") != "")
 				EventManager.RaiseTerrariaMessageReceived(this, -1, $"{Main.player[args.Who].name} has left.");
 			}
 			catch (Exception)
