@@ -26,7 +26,7 @@ namespace TerrariaChatRelay.Clients
 
         public override void GameMessageReceivedHandler(object sender, TerrariaChatEventArgs e)
         {
-            NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(e.Message + " - TestChatClient"), Color.Cyan, -1);
+            //NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(e.Message + " - TestChatClient"), Color.Cyan, -1);
         }
 
         public override void GameMessageSentHandler(object sender, TerrariaChatEventArgs msg)

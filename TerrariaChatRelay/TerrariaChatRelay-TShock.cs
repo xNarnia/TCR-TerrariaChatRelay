@@ -20,7 +20,7 @@ namespace TerrariaChatRelay
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(0, 9, 1, 1);
+		public override Version Version => new Version(0, 9, 2);
 
 		public override string Author => "Panini";
 
@@ -60,8 +60,7 @@ namespace TerrariaChatRelay
 			Global.ModConfigPath = Path.Combine(Directory.GetCurrentDirectory(), TShock.SavePath, "TerrariaChatRelay");
 			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
 
-			var config = ConfigFile.Read(Path.Combine(Global.SavePath, "config.json"));
-			CommandPrefix = config.CommandSpecifier;
+			CommandPrefix = TShock.Config.Settings.CommandSpecifier;
 
 			ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
@@ -144,6 +143,10 @@ namespace TerrariaChatRelay
 		{
 			try
 			{
+				if(Main.player[args.Who].name != ""
+					&& Main.player[args.Who].name != " "
+					&& Main.player[args.Who].name != null
+					&& Main.player[args.Who].name.Replace("*" , "") != "")
 				EventManager.RaiseTerrariaMessageReceived(this, -1, $"{Main.player[args.Who].name} has left.");
 			}
 			catch (Exception)
@@ -215,7 +218,8 @@ namespace TerrariaChatRelay
 		/// </summary>
 		public async Task GetLatestVersionNumber()
 		{
-			var http = HttpWebRequest.CreateHttp("https://raw.githubusercontent.com/xPanini/TCR-TerrariaChatRelay/master/build.txt");
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+			var http = HttpWebRequest.CreateHttp("https://raw.githubusercontent.com/xPanini/TCR-TerrariaChatRelay-TShock/master/version.txt");
 
 			WebResponse res = null;
 			try
