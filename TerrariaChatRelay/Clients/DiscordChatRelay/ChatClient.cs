@@ -192,9 +192,9 @@ namespace DiscordChatRelay
                 {
                     string msgout = chatmsg.Message;
 
-					// Lazy add commands until I take time to design a command service properly
-					if (ExecuteCommand(chatmsg))
-						return;
+                    // Lazy add commands until I take time to design a command service properly
+                    if (ExecuteCommand(chatmsg))
+                        return;
 
                     msgout = chatParser.ConvertUserIdsToNames(msgout, chatmsg.UsersMentioned);
                     msgout = chatParser.ShortenEmojisToName(msgout);
@@ -336,56 +336,56 @@ namespace DiscordChatRelay
             return LastSequenceNumber;
         }
         
-		public bool ExecuteCommand(MessageData chatmsg)
-		{
-			string prefix = Main.Config.CommandPrefix;
-			string message = chatmsg.Message;
+        public bool ExecuteCommand(MessageData chatmsg)
+        {
+            string prefix = Main.Config.CommandPrefix;
+            string message = chatmsg.Message;
 
-			if (!message.StartsWith(prefix))
-				return false;
+            if (!message.StartsWith(prefix))
+                return false;
 
-			message = message.Replace(prefix, string.Empty);
+            message = message.Replace(prefix, string.Empty);
 
-			switch (message)
-			{
-				case "help":
-				case "info":
-					messageQueue.QueueMessage(chatmsg.ChannelId,
-						"**Command List**\n" +
-						$"```\n{prefix}playing - See who's online\n" +
-						$"{prefix}world - See world information```"
-					);
-					PrettyPrint.Log("Command info was executed.");
-					return true;
+            switch (message)
+            {
+                case "help":
+                case "info":
+                    messageQueue.QueueMessage(chatmsg.ChannelId,
+                        "**Command List**\n" +
+                        $"```\n{prefix}players/playing - See who's online\n" +
+                        $"{prefix}world - See world information```"
+                    );
+                    PrettyPrint.Log("Command info was executed.");
+                    return true;
 
-				case "playing":
-				case "players":
-					var playersOnline = string.Join(", ", Terraria.Main.player.Where(x => x.name.Length != 0).Select(x => x.name));
+                case "playing":
+                case "players":
+                    var playersOnline = string.Join(", ", Terraria.Main.player.Where(x => x.name.Length != 0).Select(x => x.name));
 
-					if (playersOnline == string.Empty)
-						playersOnline = "No players online!";
+                    if (playersOnline == string.Empty)
+                        playersOnline = "No players online!";
 
-					messageQueue.QueueMessage(chatmsg.ChannelId,
-						$"**Currently Playing:**\n" +
-						$"```{playersOnline}```"
-					);
-					PrettyPrint.Log("Command playing was executed.");
-					return true;
+                    messageQueue.QueueMessage(chatmsg.ChannelId,
+                        $"**Currently Playing:**\n" +
+                        $"```{playersOnline}```"
+                    );
+                    PrettyPrint.Log("Command playing was executed.");
+                    return true;
 
-				case "world":
-					messageQueue.QueueMessage(chatmsg.ChannelId,
-						$"**World:** {Terraria.Main.worldName}\n" +
-						$"```\nDifficulty: {(Terraria.Main.expertMode == false ? "Normal" : "Expert")}\n" +
-						$"Hardmode: {(Terraria.Main.hardMode == false ? "No" : "Yes")}\n" +
-						$"Evil Type: {(Terraria.WorldGen.crimson == false ? "Corruption" : "Crimson")}```"
-					);
-					PrettyPrint.Log("Command world was executed.");
-					return true;
+                case "world":
+                    messageQueue.QueueMessage(chatmsg.ChannelId,
+                        $"**World:** {Terraria.Main.worldName}\n" +
+                        $"```\nDifficulty: {(Terraria.Main.expertMode == false ? "Normal" : "Expert")}\n" +
+                        $"Hardmode: {(Terraria.Main.hardMode == false ? "No" : "Yes")}\n" +
+                        $"Evil Type: {(Terraria.WorldGen.crimson == false ? "Corruption" : "Crimson")}```"
+                    );
+                    PrettyPrint.Log("Command world was executed.");
+                    return true;
 
-				default:
-					return false;
-			}
-		}
+                default:
+                    return false;
+            }
+        }
   
 		//private class TCRCommandCaller : CommandCaller
 		//{
