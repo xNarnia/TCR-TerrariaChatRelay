@@ -14,6 +14,9 @@ namespace TerrariaChatRelay.Helpers
     {
         public static void BroadcastChatMessageWithoutTCRFormattable(string text, int excludedPlayer)
         {
+			if (text == null)
+				return;
+
             NetPacket packet = 
 				Terraria.GameContent.NetModules.NetTextModule.SerializeServerMessage(
 					NetworkText.FromFormattable(text), new Color(255, 255, 255), byte.MaxValue);
@@ -23,6 +26,9 @@ namespace TerrariaChatRelay.Helpers
 
 		public static void BroadcastChatMessageWithoutTCRLiteral(string text, int excludedPlayer)
 		{
+			if (text == null)
+				return;
+
 			NetPacket packet = 
 				Terraria.GameContent.NetModules.NetTextModule.SerializeServerMessage(
 					NetworkText.FromLiteral(text), new Color(255, 255, 255), byte.MaxValue);

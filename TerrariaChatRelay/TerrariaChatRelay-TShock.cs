@@ -20,7 +20,7 @@ namespace TerrariaChatRelay
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(0, 9, 2);
+		public override Version Version => new Version(0, 9, 3);
 
 		public override string Author => "Panini";
 
@@ -178,7 +178,11 @@ namespace TerrariaChatRelay
 		private void OnServerBroadcast(ServerBroadcastEventArgs args)
 		{
 			var literalText = Language.GetText(args.Message._text).Value;
-			EventManager.RaiseTerrariaMessageReceived(this, -1, string.Format(literalText, args.Message._substitutions));
+
+			if (args.Message._substitutions?.Length > 0)
+				EventManager.RaiseTerrariaMessageReceived(this, -1, string.Format(literalText, args.Message._substitutions));
+			else
+				EventManager.RaiseTerrariaMessageReceived(this, -1, literalText);
 		}
 
 		//private void OnBroadcastMessage(NetworkText text, ref Color color, ref int ignorePlayer)
