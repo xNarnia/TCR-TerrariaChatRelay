@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Localization;
@@ -20,7 +21,7 @@ namespace TerrariaChatRelay
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(0, 9, 3);
+		public override Version Version => new Version(0, 9, 4, 1);
 
 		public override string Author => "Panini";
 
@@ -117,11 +118,18 @@ namespace TerrariaChatRelay
 		{
 			EventManager.DisconnectClients();
 			Global.Config = null;
+
+			new DiscordChatRelay.Main();
+
+			EventManager.ConnectClients();
 		}
 
 		private void OnChatReceived(ServerChatEventArgs args)
 		{
 			if (args.Text.StartsWith(CommandPrefix))
+				return;
+
+			if (args.Text == "" || args.Text == null)
 				return;
 
 			EventManager.RaiseTerrariaMessageReceived(this, args.Who, args.Text);
@@ -180,8 +188,16 @@ namespace TerrariaChatRelay
 			var literalText = Language.GetText(args.Message._text).Value;
 
 			if (args.Message._substitutions?.Length > 0)
-				EventManager.RaiseTerrariaMessageReceived(this, -1, string.Format(literalText, args.Message._substitutions));
-			else
+				literalText = string.Format(literalText, args.Message._substitutions);
+
+			if (
+				literalText.EndsWith(" has joined.") || // User joined
+				literalText.EndsWith(" has left.") || // User left
+				literalText.EndsWith(" has awoken!") || // Boss Spawn
+				Regex.IsMatch(literalText, @".*?:\s+.*") // Chat
+				)
+				return;
+
 				EventManager.RaiseTerrariaMessageReceived(this, -1, literalText);
 		}
 

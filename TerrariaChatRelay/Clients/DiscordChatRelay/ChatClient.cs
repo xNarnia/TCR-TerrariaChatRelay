@@ -55,23 +55,31 @@ namespace DiscordChatRelay
             Channel_IDs = channel_ids.ToList();
 
             messageQueue = new DiscordMessageQueue(500);
-            messageQueue.OnReadyToSend += delegate (Dictionary<ulong, Queue<string>> messages) {
-                foreach(var queue in messages)
-                {
-                    string output = "";
-
-                    foreach(var msg in queue.Value)
-                    {
-                        output += msg + '\n';
-                    }
-
-                    if(output.Length > 2000)
-                        output = output.Substring(0, 2000);
-
-                    SendMessageToDiscordChannel(queue.Key, output);
-                }
-            };
+            messageQueue.OnReadyToSend += OnMessageReadyToSend;
         }
+
+		/// <summary>
+		/// Event fired when a message from in-game is received.
+		/// Queues messages to stack messages closely sent to each other.
+		/// This will allow TCR to combine messages and reduce messages sent to Discord.
+		/// </summary>
+		public void OnMessageReadyToSend(Dictionary<ulong, Queue<string>> messages)
+		{
+			foreach (var queue in messages)
+			{
+				string output = "";
+
+				foreach (var msg in queue.Value)
+				{
+					output += msg + '\n';
+				}
+
+				if (output.Length > 2000)
+					output = output.Substring(0, 2000);
+
+				SendMessageToDiscordChannel(queue.Key, output);
+			}
+		}
 
         /// <summary>
         /// Create a new WebSocket and initiate connection with Discord servers. 
@@ -132,6 +140,11 @@ namespace DiscordChatRelay
 
             if (Socket.ReadyState != WebSocketState.Closed)
                 Socket.Close();
+			Socket = null;
+
+			messageQueue.OnReadyToSend -= OnMessageReadyToSend;
+			messageQueue.Clear();
+			messageQueue = null;
 
             heartbeatTimer.Stop();
             heartbeatTimer.Dispose();
