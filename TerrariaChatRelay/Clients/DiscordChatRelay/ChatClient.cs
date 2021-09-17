@@ -275,9 +275,11 @@ namespace DiscordChatRelay
 					outMsg = "%message%";
 
 				if (msg.Player != null)
-					outMsg = outMsg.Replace("%playername%", msg.Player.name);
+                    outMsg = outMsg.Replace("%playername%", msg.Player.name)
+                                   .Replace("%groupprefix%", TShockAPI.TShock.Players[msg.ID].Group.Prefix)
+                                   .Replace("%groupsuffix%", TShockAPI.TShock.Players[msg.ID].Group.Suffix);
 
-				if(msg.Message.EndsWith(" has awoken!"))
+                if (msg.Message.EndsWith(" has awoken!"))
 				{
 					bossName = msg.Message.Replace(" has awoken!", "");
 					outMsg = outMsg.Replace("%bossname%", bossName);

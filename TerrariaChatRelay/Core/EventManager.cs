@@ -86,6 +86,7 @@ namespace TerrariaChatRelay
         public Player Player { get; set; }
         public Color Color { get; set; }
         public string Message { get; set; }
+		public int ID { get; set; }
 
 		/// <summary>
 		/// Message payload sent to subscribers when a game message has been received.
@@ -99,6 +100,7 @@ namespace TerrariaChatRelay
 				Player = Terraria.Main.player[playerId] ?? null;
 			Color = color;
             Message = msg;
-        }
+			ID = playerId;
+		}
     }
 }
