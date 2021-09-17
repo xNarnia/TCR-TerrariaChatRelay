@@ -43,19 +43,19 @@ namespace DiscordChatRelay
 		[JsonProperty(Order = 65)]
 		public string FormatHelp7 { get; set; } = "%groupsuffix% = Group suffix";
 
-		[JsonProperty(Order = 65)]
+		[JsonProperty(Order = 70)]
 		public static string PlayerChatFormat = ":speech_left: **%playername%:** %message%";
-		[JsonProperty(Order = 75)]
+		[JsonProperty(Order = 80)]
 		public static string PlayerLoggedInFormat = ":small_blue_diamond: **%playername%** joined the server.";
-		[JsonProperty(Order = 85)]
+		[JsonProperty(Order = 90)]
 		public static string PlayerLoggedOutFormat = ":small_orange_diamond: **%playername%** left the server.";
-		[JsonProperty(Order = 95)]
-		public static string WorldEventFormat = "**%message%**";
 		[JsonProperty(Order = 100)]
-		public static string ServerStartingFormat = ":small_blue_diamond: **%message%**";
+		public static string WorldEventFormat = "**%message%**";
 		[JsonProperty(Order = 105)]
-		public static string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
+		public static string ServerStartingFormat = ":small_blue_diamond: **%message%**";
 		[JsonProperty(Order = 110)]
+		public static string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
+		[JsonProperty(Order = 115)]
 		public static string VanillaBossSpawned = ":anger: **%bossname% has awoken!**";
 
 		public Configuration()
