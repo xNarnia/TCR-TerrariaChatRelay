@@ -12,6 +12,7 @@ TerrariaChatRelay/bin/
 *.user
 *.userosscache
 *.sln.docstates
+TerrariaChatRelay-TShock.sln
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
