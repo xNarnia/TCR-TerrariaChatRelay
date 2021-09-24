@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TerrariaChatRelay-TShock-Adapter")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("TCR-TShock")]
+[assembly: AssemblyDescription("Adapter to connect TerrariaChatRelay to TShock")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TerrariaChatRelay-TShock-Adapter")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyProduct("TCR-TShock")]
+[assembly: AssemblyCopyright("Copyright © 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

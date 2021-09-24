@@ -54,7 +54,7 @@ namespace TCRDiscord
                 msg =  JsonConvert.DeserializeObject<Message>(json);
                 return true;
             }
-            catch(JsonSerializationException e)
+            catch(JsonSerializationException)
             {
                 msg = null;
                 return false;
@@ -81,7 +81,7 @@ namespace TCRDiscord
                 msg = null;
                 return false;
             }
-            catch (JsonSerializationException e)
+            catch (JsonSerializationException)
             {
                 msg = null;
                 return false;

@@ -84,7 +84,7 @@ namespace TerrariaChatRelay
 					{
 						AddCommand((ICommand)Activator.CreateInstance(type));
 					}
-					catch (Exception e) { }
+					catch (Exception) { }
 				}
 			}
 		}

@@ -22,7 +22,7 @@ namespace TCRTShock
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(0, 9, 4, 1);
+		public override Version Version => new Version(1, 0, 0);
 
 		public override string Author => "Panini";
 
@@ -165,7 +165,7 @@ namespace TCRTShock
 				// -1 is hacky, but works
 				Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(-1), $"{Main.player[args.Who].name} has joined.");
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				PrettyPrint.Log("OnServerJoin could not be broadcasted.");
 			}
@@ -283,6 +283,7 @@ namespace TCRTShock
 			}
 			catch (Exception e)
 			{
+				PrettyPrint.WriteLine(e.Message);
 				return;
 			}
 
