@@ -15,4 +15,4 @@ If you want to suggest a chat service, prioritize another, or contribute some co
 
 ### Helpful Links:
 * [First Time Setup - Server Owner](https://github.com/Everni/TCR-TerrariaChatRelay/wiki/First-Time-Setup-Server-Owner)
-* [Discord Support Server](https://discord.gg/nJ5vPeA)
+* [Discord Support Server](https://discord.gg/GAxYFa7nqX)
