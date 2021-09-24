@@ -70,7 +70,7 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TerrariaChatRelay\TerrariaChatRelay.csproj">
+    <ProjectReference Include="..\TCR-TerrariaChatRelay\TerrariaChatRelay.csproj">
       <Project>{3b5df98f-5b1e-466b-be21-06ea28044c72}</Project>
       <Name>TerrariaChatRelay</Name>
     </ProjectReference>

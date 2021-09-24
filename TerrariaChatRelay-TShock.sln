@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerrariaChatRelay", "TerrariaChatRelay\TerrariaChatRelay.csproj", "{3B5DF98F-5B1E-466B-BE21-06EA28044C72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerrariaChatRelay", "TCR-TerrariaChatRelay\TerrariaChatRelay.csproj", "{3B5DF98F-5B1E-466B-BE21-06EA28044C72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCR-Discord", "TCRPlugin-Discord\TCR-Discord.csproj", "{D9BA95FA-F737-4196-A84E-E7B67131537D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCR-Discord", "TCR-Discord\TCR-Discord.csproj", "{D9BA95FA-F737-4196-A84E-E7B67131537D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCR-TShock", "TerrariaChatRelay-TShock-Adapter\TCR-TShock.csproj", "{0D601774-4485-4AD4-AFE2-1CF32DCEB49C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCR-TShock", "TCR-TShock\TCR-TShock.csproj", "{0D601774-4485-4AD4-AFE2-1CF32DCEB49C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
