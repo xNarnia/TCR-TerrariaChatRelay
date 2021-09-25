@@ -19,8 +19,19 @@ namespace TerrariaChatRelay.Command.Commands
 
 		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
 		{
-			var players = Terraria.Main.player.Where(x => x.name.Length != 0);
-			return $"</b>Players Online:</b> {players.Count()} / {Terraria.Main.player.Length}" + "</br></box>" + string.Join(", ", players.Select(x => x.name)).Replace("`", "") + "</box>";
+			var players = new List<string>();
+			StringBuilder sb = new StringBuilder();
+
+			foreach (TShockAPI.TSPlayer ply in TShockAPI.TShock.Players)
+			{
+				if (ply != null && ply.Active)
+				{
+					players.Add(ply.Name);
+				}
+			}
+
+			//var players = Terraria.Main.player.Where(x => x.name.Length != 0);
+			return $"</b>Player(s) Online:</b> {TShockAPI.TShock.Utils.GetActivePlayerCount()} / {TShockAPI.TShock.Config.Settings.MaxSlots}" + "</br></box>" + string.Join(", ", players).Replace("`", "") + "</box>";
 		}
 	}
 
