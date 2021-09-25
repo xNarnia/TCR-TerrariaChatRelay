@@ -17,6 +17,8 @@ namespace TerrariaChatRelay.Command.Commands
 
 		public string Description { get; } = "Kills the designated player >:)";
 
+		public string Usage { get; } = "kill PlayerName";
+
 		public Permission DefaultPermissionLevel { get; } = Permission.Manager;
 
 		public string Execute(string input = null, TCRClientUser whoRanCommand = null)

@@ -25,6 +25,11 @@ namespace TerrariaChatRelay.Command
 		string Description { get; }
 
 		/// <summary>
+		/// String example of how to use the command. Example: !cmdkey params
+		/// </summary>
+		string Usage { get; }
+
+		/// <summary>
 		/// The permission level required to run this command if no permission is assigned.
 		/// </summary>
 		Permission DefaultPermissionLevel { get; }

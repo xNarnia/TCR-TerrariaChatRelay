@@ -7,7 +7,7 @@ using Terraria;
 
 namespace TerrariaChatRelay.Command.Commands
 {
-	//[Command]
+	// [Command]
 	public class CmdBanPlayer : ICommand
 	{
 		public string Name { get; } = "Ban Player";
@@ -15,6 +15,8 @@ namespace TerrariaChatRelay.Command.Commands
 		public string CommandKey { get; } = "ban";
 
 		public string Description { get; } = "Bans the specified player. (Careful not to trigger other Discord bots!)";
+
+		public string Usage { get; } = "ban PlayerName";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.Manager;
 

@@ -7,6 +7,7 @@ using Terraria;
 
 namespace TerrariaChatRelay.Command.Commands
 {
+	[Command]
 	public class CmdKickPlayer : ICommand
 	{
 		public string Name { get; } = "Kick Player";
@@ -14,6 +15,8 @@ namespace TerrariaChatRelay.Command.Commands
 		public string CommandKey { get; } = "kick";
 
 		public string Description { get; } = "Kicks the specified player. (Careful not to trigger other Discord bots!)";
+
+		public string Usage { get; } = "kick PlayerName";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.Manager;
 
@@ -28,7 +31,7 @@ namespace TerrariaChatRelay.Command.Commands
 				if (Main.player[i].name.ToLower() == input)
 				{
 					input = input.Remove(0, Main.player[i].name.Length - 1);
-					TShockAPI.TShock.Players[i].Kick(input);
+					TShockAPI.TShock.Players[i].Kick(input, true,false, whoRanCommand.Username, true);
 					return "";
 				}
 			}

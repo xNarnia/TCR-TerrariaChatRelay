@@ -18,6 +18,8 @@ namespace TCRDiscord.Commands
 
 		public string Description { get; } = "Removes the user's access to Administrator level commands.";
 
+		public string Usage { get; } = "removeadmin @DiscordUser";
+
 		public Permission DefaultPermissionLevel { get; } = Permission.Owner;
 
 		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
@@ -40,7 +42,7 @@ namespace TCRDiscord.Commands
 			}
 			else
 			{
-				return "Could not parse User ID. Did you right-click & Copy Id from user?";
+				return "Could not find user. Example: removeadmin @UserToRemovePermissions";
 			}
 		}
 	}

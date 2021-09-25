@@ -90,15 +90,18 @@ namespace TCRDiscord
                 PrettyPrint.Log("Discord", "Please update your Mod Config. Mod reload required.");
 
                 if (BOT_TOKEN == "BOT_TOKEN")
-                    Console.WriteLine(" Invalid Token: BOT_TOKEN");
+                    PrettyPrint.Log("Discord", " Invalid Token: BOT_TOKEN", ConsoleColor.Yellow);
                 if (Channel_IDs.Contains(0))
-                    Console.WriteLine(" Invalid Channel Id: 0");
+                    PrettyPrint.Log("Discord", " Invalid Channel Id: 0", ConsoleColor.Yellow);
 
-                Console.WriteLine("  Config path: " + new Configuration().FileName);
+                PrettyPrint.Log("Discord", "Config path: " + new Configuration().FileName);
                 Console.ResetColor();
                 Dispose();
                 return;
             }
+
+            if (Main.Config.OwnerUserId == 0)
+                PrettyPrint.Log("Discord", " Invalid Owner Id: 0", ConsoleColor.Yellow);
 
             errorCounter = 0;
 
@@ -345,7 +348,9 @@ namespace TCRDiscord
             result = result.Replace("</br>", "\n");
             result = result.Replace("</b>", "**");
             result = result.Replace("</i>", "*");
+            result = result.Replace("</code>", "`");
             result = result.Replace("</box>", "```");
+            result = result.Replace("</quote>", "> ");
 
             messageQueue.QueueMessage(sourceChannelId, result);
 		}

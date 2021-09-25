@@ -18,6 +18,8 @@ namespace TCRDiscord.Commands
 
 		public string Description { get; } = "Grants the user access to Manager level commands.";
 
+		public string Usage { get; } = "addmanager @DiscordUser";
+
 		public Permission DefaultPermissionLevel { get; } = Permission.Admin;
 
 		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
@@ -33,7 +35,7 @@ namespace TCRDiscord.Commands
 			}
 			else
 			{
-				return "Could not parse User ID.";
+				return "Could not find user. Example: addadmin @UserToGivePermissions";
 			}
 		}
 	}

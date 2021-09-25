@@ -18,6 +18,8 @@ namespace TCRTShock.Commands
 
 		public string Description { get; } = "Run any command as if you were on the server console!";
 
+		public string Usage { get; } = "cmd ConsoleCommand ConsoleCommandParameters LIKE cmd time noon";
+
 		public TerrariaChatRelay.Command.Permission DefaultPermissionLevel { get; } = TerrariaChatRelay.Command.Permission.Admin;
 
 		public string Execute(string input = null, TCRClientUser whoRanCommand = null)

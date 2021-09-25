@@ -23,6 +23,11 @@ namespace TerrariaChatRelay
 		/// <returns>True if a command key is found. False if not.</returns>
 		public bool IsCommand(string input, string commandPrefix)
 		{
+			if(input.Length > commandPrefix.Length)
+			{
+				if (!input.StartsWith(commandPrefix))
+					return false;
+			}
 			string newinput = input.ToLower().Remove(0, commandPrefix.Length);
 
 			int indexOfSeparator = newinput.IndexOf(' ');

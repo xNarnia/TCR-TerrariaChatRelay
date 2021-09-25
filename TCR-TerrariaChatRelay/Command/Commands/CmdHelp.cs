@@ -15,14 +15,17 @@ namespace TerrariaChatRelay.Command.Commands
 
 		public string Description { get; } = "Displays this help message!";
 
+		public string Usage { get; } = "help";
+
 		public Permission DefaultPermissionLevel { get; } = Permission.User;
 
 		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
 		{
-			return string.Join("</br>", 
+			return string.Join("</br></br>", 
 				Core.CommandServ.Commands
 					.Where(x => x.Value.DefaultPermissionLevel <= whoRanCommand.PermissionLevel)
-					.Select(x => $"</b>{(x.Value.DefaultPermissionLevel == Permission.User ? "" : $"[{x.Value.DefaultPermissionLevel.ToString()}] - ")}{x.Value.CommandKey}</b> - {x.Value.Description}")
+					.OrderBy(x => x.Value.DefaultPermissionLevel)
+					.Select(x => $"</quote></b>{(x.Value.DefaultPermissionLevel == Permission.User ? "" : $"[{x.Value.DefaultPermissionLevel.ToString()}] - ")}{x.Value.CommandKey}</b> - {x.Value.Description}</br></quote>     </b>Example:</b> </code>{x.Value.Usage}</code>")
 			);
 		}
 	}
@@ -32,5 +35,7 @@ namespace TerrariaChatRelay.Command.Commands
 	public class CmdInfo : CmdHelp, ICommand
 	{
 		public new string CommandKey { get; } = "info";
+
+		public new string Usage { get; } = "info";
 	}
 }

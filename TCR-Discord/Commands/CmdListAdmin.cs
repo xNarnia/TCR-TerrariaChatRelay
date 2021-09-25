@@ -18,6 +18,8 @@ namespace TCRDiscord.Commands
 
 		public string Description { get; } = "Lists all users given access to Administrator level commands.";
 
+		public string Usage { get; } = "listadmin";
+
 		public Permission DefaultPermissionLevel { get; } = Permission.Owner;
 
 		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
