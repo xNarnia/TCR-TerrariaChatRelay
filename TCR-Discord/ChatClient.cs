@@ -292,6 +292,8 @@ namespace TCRDiscord
                                    .Replace("%groupprefix%", msg.Player.GroupPrefix)
                                    .Replace("%groupsuffix%", msg.Player.GroupSuffix);
 
+                outMsg = chatParser.RemoveTerrariaColorCodes(outMsg);
+
                 if (msg.Message.EndsWith(" has awoken!"))
 				{
 					bossName = msg.Message.Replace(" has awoken!", "");
