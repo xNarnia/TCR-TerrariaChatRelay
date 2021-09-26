@@ -149,6 +149,9 @@ namespace TCRTShock
 			if (args.Text == "" || args.Text == null)
 				return;
 
+			if (TShock.Players[args.Who].mute == true)
+				return;
+
 			ChatHolder.Add(new Chatter() 
 			{ 
 				Player = Main.player[args.Who].ToTCRPlayer(args.Who), 
