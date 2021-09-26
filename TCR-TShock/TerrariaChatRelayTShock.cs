@@ -22,7 +22,7 @@ namespace TCRTShock
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(1, 0, 0);
+		public override Version Version => new Version(1, 0, 1);
 
 		public override string Author => "Panini";
 
@@ -147,6 +147,9 @@ namespace TCRTShock
 				return;
 
 			if (args.Text == "" || args.Text == null)
+				return;
+
+			if (TShock.Players[args.Who].mute == true)
 				return;
 
 			ChatHolder.Add(new Chatter() 
