@@ -54,6 +54,7 @@
     <Compile Include="Commands\CmdConsoleCommand.cs" />
     <Compile Include="Commands\CmdKickPlayer.cs" />
     <Compile Include="Commands\CmdSpawnNPC.cs" />
+    <Compile Include="Commands\CmdUnbanPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TerrariaChatRelayTShock.cs" />
   </ItemGroup>
