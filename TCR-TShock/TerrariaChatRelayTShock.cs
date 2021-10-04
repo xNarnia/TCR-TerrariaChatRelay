@@ -59,6 +59,7 @@ namespace TCRTShock
 			134, // The Destroyer
 			262, // Plantera
 			245, // Golem
+			636, // Empress Of Light
 			370, // Duke Fishron
 			439, // Lunatic Cultist
 			396 // Moon Lord
