@@ -12,11 +12,13 @@ namespace TCRDiscord.Helpers
     {
         Regex specialFinder { get; }
         Regex colorCodeFinder { get; }
+        Regex itemCodeFinder { get; }
 
         public ChatParser()
         {
             specialFinder = new Regex(@":[^:\s]*(?:::[^:\s]*)*>");
             colorCodeFinder = new Regex(@"\[c\/.*?:(.*?)\]");
+            itemCodeFinder = new Regex(@"\[i:(.*?)\]");
         }
 
         public string ConvertUserIdsToNames(string chatMessage, List<User> users)
@@ -41,6 +43,16 @@ namespace TCRDiscord.Helpers
         public string RemoveTerrariaColorCodes(string chatMessage)
 		{
             var match = colorCodeFinder.Match(chatMessage);
+
+            while (match.Success)
+            {
+                if (match.Groups.Count >= 2)
+                    chatMessage = chatMessage.Replace(match.Groups[0].Value, match.Groups[1].Value);
+
+                match = match.NextMatch();
+            }
+
+            match = itemCodeFinder.Match(chatMessage);
 
             while (match.Success)
             {
