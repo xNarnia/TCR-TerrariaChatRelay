@@ -16,8 +16,23 @@ namespace TerrariaChatRelay
 			public static string GetEvilType()
 				=> Terraria.WorldGen.crimson == false ? "Corruption" : "Crimson";
 
+			public static string GetWorldSeed()
+				=> Terraria.WorldGen.currentWorldSeed;
+
+			public static string getWorldID()
+				=> Terraria.Main.worldID.ToString();
+
+			public static string getWorlSize()
+				=> $"{Terraria.Main.maxTilesX}x{Terraria.Main.maxTilesY}";
+
+			public static string getWorldPath()
+				=> Terraria.Main.WorldPath;
+
 			public static bool IsExpertMode()
 				=> Terraria.Main.expertMode;
+
+			public static bool IsMasterMode()
+				=> Terraria.Main.masterMode;
 
 			public static bool IsHardMode()
 				=> Terraria.Main.hardMode;

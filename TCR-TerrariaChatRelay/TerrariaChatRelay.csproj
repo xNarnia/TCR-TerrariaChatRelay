@@ -54,6 +54,7 @@
     <Compile Include="Command\Commands\CmdKillPlayer.cs" />
     <Compile Include="Command\CommandService.cs" />
     <Compile Include="Command\Commands\CmdPlayersOnline.cs" />
+    <Compile Include="Command\Commands\CmdWorld.cs" />
     <Compile Include="Command\Models\CommandAttribute.cs" />
     <Compile Include="Command\Models\ICommand.cs" />
     <Compile Include="Command\Models\CommandPayload.cs" />
