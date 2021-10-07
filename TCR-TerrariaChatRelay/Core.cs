@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
@@ -104,6 +105,29 @@ namespace TerrariaChatRelay
 		public static void ConnectClients()
         {
 			PrettyPrint.Log("Connecting clients...");
+
+			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+			{
+				var references = assembly.GetReferencedAssemblies().ToList();
+
+				foreach (var reference in references)
+				{
+					if (reference.Name.Contains("TCR-TerrariaChatRelay"))
+					{
+						foreach (var type in assembly.GetTypes())
+						{
+							if (type.BaseType == typeof(TCRPlugin))
+							{
+								Activator.CreateInstance(type);
+								break;
+							}
+						}
+
+						((CommandService)CommandServ).ScanForCommands(assembly);
+						break;
+					}
+				}
+			}
 
 			for (var i = 0; i < Subscribers.Count; i++)
 			{

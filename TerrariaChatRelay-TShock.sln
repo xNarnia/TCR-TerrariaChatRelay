@@ -11,22 +11,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCR-TShock", "TCR-TShock\TC
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		TModLoader|Any CPU = TModLoader|Any CPU
+		TShock|Any CPU = TShock|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D9BA95FA-F737-4196-A84E-E7B67131537D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9BA95FA-F737-4196-A84E-E7B67131537D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D9BA95FA-F737-4196-A84E-E7B67131537D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9BA95FA-F737-4196-A84E-E7B67131537D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D601774-4485-4AD4-AFE2-1CF32DCEB49C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D601774-4485-4AD4-AFE2-1CF32DCEB49C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D601774-4485-4AD4-AFE2-1CF32DCEB49C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D601774-4485-4AD4-AFE2-1CF32DCEB49C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.TModLoader|Any CPU.ActiveCfg = TModLoader|Any CPU
+		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
+		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.TShock|Any CPU.ActiveCfg = TShock|Any CPU
+		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.TShock|Any CPU.Build.0 = TShock|Any CPU
+		{D9BA95FA-F737-4196-A84E-E7B67131537D}.TModLoader|Any CPU.ActiveCfg = TModLoader|Any CPU
+		{D9BA95FA-F737-4196-A84E-E7B67131537D}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
+		{D9BA95FA-F737-4196-A84E-E7B67131537D}.TShock|Any CPU.ActiveCfg = TShock|Any CPU
+		{D9BA95FA-F737-4196-A84E-E7B67131537D}.TShock|Any CPU.Build.0 = TShock|Any CPU
+		{0D601774-4485-4AD4-AFE2-1CF32DCEB49C}.TModLoader|Any CPU.ActiveCfg = TShock|Any CPU
+		{0D601774-4485-4AD4-AFE2-1CF32DCEB49C}.TShock|Any CPU.ActiveCfg = TShock|Any CPU
+		{0D601774-4485-4AD4-AFE2-1CF32DCEB49C}.TShock|Any CPU.Build.0 = TShock|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -295,7 +295,7 @@ namespace TCRDiscord
                                    .Replace("%groupprefix%", msg.Player.GroupPrefix)
                                    .Replace("%groupsuffix%", msg.Player.GroupSuffix);
 
-                outMsg = chatParser.RemoveTerrariaColorCodes(outMsg);
+                outMsg = chatParser.RemoveTerrariaColorAndItemCodes(outMsg);
 
                 if (msg.Message.EndsWith(" has awoken!"))
 				{
@@ -383,72 +383,5 @@ namespace TCRDiscord
         {
             return LastSequenceNumber;
         }
-        
-        public bool ExecuteCommand(MessageData chatmsg)
-        {
-            string prefix = Main.Config.CommandPrefix;
-            string message = chatmsg.Message;
-
-            if (!message.StartsWith(prefix))
-                return false;
-
-            message = message.Replace(prefix, string.Empty);
-
-            switch (message)
-            {
-                case "help":
-                case "info":
-                    messageQueue.QueueMessage(chatmsg.ChannelId,
-                        "**Command List**\n" +
-                        $"```\n{prefix}players/playing - See who's online\n" +
-                        $"{prefix}world - See world information```"
-                    );
-                    PrettyPrint.Log("Command info was executed.");
-                    return true;
-
-                case "playing":
-                case "players":
-                    var playersOnline = TerrariaChatRelay.Game.GetOnlinePlayers();
-
-                    if (playersOnline == string.Empty)
-                        playersOnline = "No players online!";
-
-                    messageQueue.QueueMessage(chatmsg.ChannelId,
-                        $"**Currently Playing:**\n" +
-                        $"```{playersOnline}```"
-                    );
-                    PrettyPrint.Log("Command playing was executed.");
-                    return true;
-
-                case "world":
-                    messageQueue.QueueMessage(chatmsg.ChannelId,
-                        $"**World:** {TerrariaChatRelay.Game.World.GetName()}\n" +
-                        $"```\nDifficulty: {(TerrariaChatRelay.Game.World.IsExpertMode() ? "Normal" : "Expert")}\n" +
-                        $"Hardmode: {(TerrariaChatRelay.Game.World.IsHardMode() ? "No" : "Yes")}\n" +
-                        $"Evil Type: {TerrariaChatRelay.Game.World.GetEvilType()}```"
-                    );
-                    PrettyPrint.Log("Command world was executed.");
-                    return true;
-
-                default:
-                    return false;
-            }
-        }
-  
-		//private class TCRCommandCaller : CommandCaller
-		//{
-		//	public CommandType CommandType => CommandType.Console;
-
-		//	public Player Player => null;
-
-		//	public void Reply(string text, Color color = default(Color))
-		//	{
-		//		string[] array = text.Split('\n');
-		//		foreach (string value in array)
-		//		{
-		//			EventManager.RaiseTerrariaMessageReceived(null, -1, Color.Aqua, value);
-		//		}
-		//	}
-		//}
 	}
 }

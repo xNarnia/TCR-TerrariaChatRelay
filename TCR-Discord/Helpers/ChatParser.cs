@@ -26,6 +26,7 @@ namespace TCRDiscord.Helpers
             foreach (var user in users)
             {
                 chatMessage = chatMessage.Replace($"<@{user.Id}>", $"[c/00FFFF:@" + user.Username.Replace("[", "").Replace("]", "") + "]");
+                chatMessage = chatMessage.Replace($"<@!{user.Id}>", $"[c/00FFFF:@" + user.Username.Replace("[", "").Replace("]", "") + "]");
             }
 
             return chatMessage;
@@ -40,7 +41,7 @@ namespace TCRDiscord.Helpers
             return chatMessage;
         }
 
-        public string RemoveTerrariaColorCodes(string chatMessage)
+        public string RemoveTerrariaColorAndItemCodes(string chatMessage)
 		{
             var match = colorCodeFinder.Match(chatMessage);
 

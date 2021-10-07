@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TerrariaChatRelay.Command.Commands
+﻿namespace TerrariaChatRelay.Command.Commands
 {
 	[Command]
 	public class CmdWorld : ICommand
@@ -26,12 +20,16 @@ namespace TerrariaChatRelay.Command.Commands
 			worldinfo.Append("</b>Information about the currently running world</b> </br>");
 			worldinfo.Append($"</box>World Name : {TerrariaChatRelay.Game.World.GetName()} </br>");
 			worldinfo.Append($"Hardmode : {TerrariaChatRelay.Game.World.GetEvilType()} </br>");
+#if TSHOCK
 			worldinfo.Append($"Difficulty : {(TerrariaChatRelay.Game.World.IsMasterMode() ? "Master" : (TerrariaChatRelay.Game.World.IsExpertMode() ? "Expert" : "Normal"))} </br>");
+#endif
 			worldinfo.Append($"Hardmode : {(TerrariaChatRelay.Game.World.IsHardMode() ? "Yes" : "No")} </br>");
-			worldinfo.Append($"World Size : {TerrariaChatRelay.Game.World.getWorlSize()}");
+			worldinfo.Append($"World Size : {TerrariaChatRelay.Game.World.getWorldSize()}");
 
+#if TSHOCK
 			if(Global.Config.ShowWorldSeed)
 				worldinfo.Append($"</br>World Seed : {TerrariaChatRelay.Game.World.GetWorldSeed()}");
+#endif
 
 			worldinfo.Append("</box>");
 			return worldinfo.ToString();

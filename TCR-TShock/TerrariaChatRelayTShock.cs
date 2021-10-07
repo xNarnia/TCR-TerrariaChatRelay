@@ -101,12 +101,8 @@ namespace TCRTShock
 			//		}
 			//	}
 			//}
-			new TCRDiscord.Main();
 
 			Core.ConnectClients();
-
-			// not appropriate to have a ScanForCommands method in the interface but too lazy to think this out
-			((CommandService)Core.CommandServ).ScanForCommands(this);
 
 			if (Global.Config.CheckForLatestVersion)
 				Task.Run(GetLatestVersionNumber);

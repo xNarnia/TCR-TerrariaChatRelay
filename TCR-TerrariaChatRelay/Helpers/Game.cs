@@ -16,13 +16,15 @@ namespace TerrariaChatRelay
 			public static string GetEvilType()
 				=> Terraria.WorldGen.crimson == false ? "Corruption" : "Crimson";
 
+#if TSHOCK
 			public static string GetWorldSeed()
 				=> Terraria.WorldGen.currentWorldSeed;
+#endif
 
 			public static string getWorldID()
 				=> Terraria.Main.worldID.ToString();
 
-			public static string getWorlSize()
+			public static string getWorldSize()
 				=> $"{Terraria.Main.maxTilesX}x{Terraria.Main.maxTilesY}";
 
 			public static string getWorldPath()
@@ -31,8 +33,10 @@ namespace TerrariaChatRelay
 			public static bool IsExpertMode()
 				=> Terraria.Main.expertMode;
 
+#if TSHOCK
 			public static bool IsMasterMode()
 				=> Terraria.Main.masterMode;
+#endif
 
 			public static bool IsHardMode()
 				=> Terraria.Main.hardMode;
