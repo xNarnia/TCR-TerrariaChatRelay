@@ -20,11 +20,9 @@ namespace TCRDiscord
 		[JsonProperty(Order = 10)]
 		public bool EnableDiscord { get; set; } = true;
 		[JsonProperty(Order = 15)]
-		public string CommandPrefix { get; set; } = "!";
+		public string CommandPrefix { get; set; } = "t!";
 		[JsonProperty(Order = 20)]
-		public bool FirstTimeMessageShown { get; set; } = false;
-		[JsonProperty(Order = 25)]
-		public bool AlwaysShowFirstTimeMessage { get; set; } = false;
+		public bool ShowPoweredByMessageOnStartup { get; set; } = true;
 		[JsonProperty(Order = 30)]
 		public ulong OwnerUserId { get; set; } = 0;
 		[JsonProperty(Order = 32)]

@@ -53,6 +53,7 @@
     <Compile Include="Commands\CmdUnbanPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TerrariaChatRelayTShock.cs" />
+    <Compile Include="TShockAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TCR-Discord\TCR-Discord.csproj">

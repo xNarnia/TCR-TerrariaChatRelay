@@ -33,6 +33,7 @@ namespace TCRDiscord.Commands
 				if (Main.Config.ManagerUserIds.Contains(userId))
 				{
 					Main.Config.AdminUserIds.Remove(userId);
+					Main.Config.SaveJson();
 					return "User successfully deleted.";
 				}
 				else

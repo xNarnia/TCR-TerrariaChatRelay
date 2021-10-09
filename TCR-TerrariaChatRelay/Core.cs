@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,8 +8,8 @@ using Terraria;
 using Terraria.UI.Chat;
 using TerrariaChatRelay.Clients;
 using TerrariaChatRelay.Command;
-using TerrariaChatRelay.Command.Commands;
 using TerrariaChatRelay.Helpers;
+using TerrariaChatRelay.Models;
 
 namespace TerrariaChatRelay
 {
@@ -28,15 +27,22 @@ namespace TerrariaChatRelay
 		public static event EventHandler<ClientChatEventArgs> OnClientMessageReceived;
 		public static event EventHandler<ClientChatEventArgs> OnClientMessageSent;
 
+		private static ITCRAdapter _adapter;
+
+		~Core()
+		{
+			_adapter = null;
+		}
+
 		/// <summary>
 		/// Intializes all values to default values to ready EventManager for use.
 		/// </summary>
-		public static void Initialize()
+		public static void Initialize(ITCRAdapter adapter)
 		{
 			Subscribers = new List<IChatClient>();
 			CommandServ = new CommandService();
+			_adapter = adapter;
 		}
-
 
 		/// <summary>
 		/// Emits a message to TerrariaChatRelay that a client message have been received.
@@ -68,7 +74,7 @@ namespace TerrariaChatRelay
 			}
 			else
 			{
-				NetHelpers.BroadcastChatMessageWithoutTCRFormattable($"{clientPrefix}<{user.Username}> {msg}", -1);
+				_adapter.BroadcastChatMessage($"{clientPrefix}<{user.Username}> {msg}", -1);
 				OnClientMessageReceived?.Invoke(sender, new ClientChatEventArgs(user, msg));
 			}
 		}
@@ -80,7 +86,9 @@ namespace TerrariaChatRelay
 		/// <param name="playerId">Id of player in respect to Main.Player[i], where i is the index of the player.</param>
 		/// <param name="msg">Text content of the message</param>
 		public static void RaiseTerrariaMessageReceived(object sender, TCRPlayer player, string msg)
-			=> RaiseTerrariaMessageReceived(sender, player, Color.White, msg);
+		{
+			RaiseTerrariaMessageReceived(sender, player, new TCRColor(255, 255, 255), _adapter.ParseSnippets(msg));
+		}
 
 		/// <summary>
 		/// Emits a message to all subscribers that a game message has been received.
@@ -89,18 +97,8 @@ namespace TerrariaChatRelay
 		/// <param name="playerId">Id of player in respect to Main.Player[i], where i is the index of the player.</param>
 		/// <param name="color">Color to display the text.</param>
 		/// <param name="msg">Text content of the message</param>
-		public static void RaiseTerrariaMessageReceived(object sender, TCRPlayer player, Color color, string msg)
-        {
-            var snippets = ChatManager.ParseMessage(msg, color);
-
-            string outmsg = "";
-            foreach (var snippet in snippets)
-            {
-                outmsg += snippet.Text;
-            }
-
-            OnGameMessageReceived?.Invoke(sender, new TerrariaChatEventArgs(player, color, outmsg));
-        }
+		public static void RaiseTerrariaMessageReceived(object sender, TCRPlayer player, TCRColor color, string msg)
+            => OnGameMessageReceived?.Invoke(sender, new TerrariaChatEventArgs(player, color, msg));
 
 		public static void ConnectClients()
         {
@@ -151,7 +149,7 @@ namespace TerrariaChatRelay
     public class TerrariaChatEventArgs : EventArgs
     {
         public TCRPlayer Player { get; set; }
-        public Color Color { get; set; }
+        public TCRColor Color { get; set; }
         public string Message { get; set; }
 
 		/// <summary>
@@ -161,7 +159,7 @@ namespace TerrariaChatRelay
 		/// <param name="color">Color to display the text.</param>
 		/// 
 		/// <param name="msg">Text content of the message</param>
-		public TerrariaChatEventArgs(TCRPlayer player, Color color, string msg)
+		public TerrariaChatEventArgs(TCRPlayer player, TCRColor color, string msg)
         {
 			Player = player;
 			Color = color;

@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Localization;
+using Terraria.UI.Chat;
 using TerrariaApi.Server;
 using TerrariaChatRelay;
 using TerrariaChatRelay.Helpers;
@@ -22,7 +23,7 @@ namespace TCRTShock
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(1, 0, 1);
+		public override Version Version => new Version(1, 0, 3);
 
 		public override string Author => "Panini";
 
@@ -82,7 +83,7 @@ namespace TCRTShock
 
 			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
 			// Add subscribers to list
-			Core.Initialize();
+			Core.Initialize(new TShockAdapter());
 
 			// Clients auto subscribe to list.
 			//foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
@@ -126,6 +127,8 @@ namespace TCRTShock
 			//This hook is a part of TShock and not a part of TS-API. There is a strict distinction between those two assemblies.
 			//This event is provided through the C# ``event`` keyword, which is a feature of the language itself.
 			GeneralHooks.ReloadEvent += OnReload;
+
+			((CommandService)Core.CommandServ).ScanForCommands(this);
 		}
 
 		private void OnReload(ReloadEventArgs reloadEventArgs)
@@ -149,11 +152,21 @@ namespace TCRTShock
 			if (TShock.Players[args.Who].mute == true)
 				return;
 
+			var snippets = ChatManager.ParseMessage(args.Text, Color.White);
+
+			string outmsg = "";
+			foreach (var snippet in snippets)
+			{
+				outmsg += snippet.Text;
+			}
+
 			ChatHolder.Add(new Chatter() 
 			{ 
 				Player = Main.player[args.Who].ToTCRPlayer(args.Who), 
-				Text = $"{args.Text}"
+				Text = $"{outmsg}"
 			});
+
+
 			Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(args.Who), args.Text);
 		}
 

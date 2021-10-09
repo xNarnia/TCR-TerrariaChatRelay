@@ -31,6 +31,7 @@ namespace TCRDiscord.Commands
 			if (ulong.TryParse(input, out ulong userId))
 			{
 				Main.Config.ManagerUserIds.Add(userId);
+				Main.Config.SaveJson();
 				return "User successfully added.";
 			}
 			else

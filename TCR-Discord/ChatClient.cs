@@ -120,12 +120,11 @@ namespace TCRDiscord
 				Socket.Log.Output = (_, __) => { };
 			Socket.Connect();
 
-            if(!Main.Config.FirstTimeMessageShown 
-                || Main.Config.AlwaysShowFirstTimeMessage)
+            if(Main.Config.ShowPoweredByMessageOnStartup)
             {
                 messageQueue.QueueMessage(Channel_IDs,
-                    $"**This bot is powered by TerrariaChatRelay**\nUse {Main.Config.CommandPrefix}help for more commands!");
-				Main.Config.FirstTimeMessageShown = true;
+                    $"**This bot is powered by TerrariaChatRelay**\nUse **{Main.Config.CommandPrefix}help** for more commands!");
+				Main.Config.ShowPoweredByMessageOnStartup = true;
 				Main.Config.SaveJson();
             }
 		}
@@ -192,60 +191,70 @@ namespace TCRDiscord
         /// </summary>
         private void Socket_OnDataReceived(object sender, MessageEventArgs e)
         {
-            var json = e.Data;
+			try
+			{
+                var json = e.Data;
 
-            if (json == null) return;
-            if (json.Length <= 1) return;
+                if (json == null) return;
+                if (json.Length <= 1) return;
 
-            if (debug)
-                Console.WriteLine("\n" + json + "\n");
+                if (debug)
+                    Console.WriteLine("\n" + json + "\n");
 
-            if(!DiscordMessageFactory.TryParseDispatchMessage(json, out var msg)) return;
-            LastSequenceNumber = msg.SequenceNumber;
+                if(!DiscordMessageFactory.TryParseDispatchMessage(json, out var msg)) return;
+                LastSequenceNumber = msg.SequenceNumber;
 
-            var chatmsg = msg.GetChatMessageData();
-            if(chatmsg != null && Channel_IDs.Contains(chatmsg.ChannelId))
-            {
-                if (!chatmsg.Author.IsBot)
+                var chatmsg = msg.GetChatMessageData();
+                if(chatmsg != null && chatmsg.Message != "" && Channel_IDs.Contains(chatmsg.ChannelId))
                 {
-                    string msgout = chatmsg.Message;
-
-                    // Lazy add commands until I take time to design a command service properly
-                    //if (ExecuteCommand(chatmsg))
-                    //    return;
-
-                    msgout = chatParser.ConvertUserIdsToNames(msgout, chatmsg.UsersMentioned);
-                    msgout = chatParser.ShortenEmojisToName(msgout);
-
-                    Permission userPermission; 
-                    if (chatmsg.Author.Id == Main.Config.OwnerUserId)
-                        userPermission = Permission.Owner;
-                    else if (Main.Config.AdminUserIds.Contains(chatmsg.Author.Id))
-                        userPermission = Permission.Admin;
-                    else if (Main.Config.ManagerUserIds.Contains(chatmsg.Author.Id))
-                        userPermission = Permission.Manager;
-                    else
-                        userPermission = Permission.User;
-
-                    var user = new TCRClientUser("Discord", chatmsg.Author.Username, userPermission);
-                    TerrariaChatRelay.Core.RaiseClientMessageReceived(this, user, "[c/7489d8:Discord] - ", msgout, Main.Config.CommandPrefix, chatmsg.ChannelId);
-
-                    msgout = $"<{chatmsg.Author.Username}> {msgout}";
-
-                    if (Channel_IDs.Count > 1)
+                    if (!chatmsg.Author.IsBot)
                     {
-                        messageQueue.QueueMessage(
-                            Channel_IDs.Where(x => x != chatmsg.ChannelId), 
-                            $"**[Discord]** <{chatmsg.Author.Username}> {chatmsg.Message}");
-                    }
+                        string msgout = chatmsg.Message;
 
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.Write("[Discord] ");
-                    Console.ResetColor();
-                    Console.Write(msgout);
-                    Console.WriteLine();
+                        // Lazy add commands until I take time to design a command service properly
+                        //if (ExecuteCommand(chatmsg))
+                        //    return;
+
+                        if(!Core.CommandServ.IsCommand(msgout, Main.Config.CommandPrefix))
+						{
+                            msgout = chatParser.ConvertUserIdsToNames(msgout, chatmsg.UsersMentioned);
+                            msgout = chatParser.ShortenEmojisToName(msgout);
+                        }
+
+                        Permission userPermission; 
+                        if (chatmsg.Author.Id == Main.Config.OwnerUserId)
+                            userPermission = Permission.Owner;
+                        else if (Main.Config.AdminUserIds.Contains(chatmsg.Author.Id))
+                            userPermission = Permission.Admin;
+                        else if (Main.Config.ManagerUserIds.Contains(chatmsg.Author.Id))
+                            userPermission = Permission.Manager;
+                        else
+                            userPermission = Permission.User;
+
+                        var user = new TCRClientUser("Discord", chatmsg.Author.Username, userPermission);
+                        TerrariaChatRelay.Core.RaiseClientMessageReceived(this, user, "[c/7489d8:Discord] - ", msgout, Main.Config.CommandPrefix, chatmsg.ChannelId);
+
+                        msgout = $"<{chatmsg.Author.Username}> {msgout}";
+
+                        if (Channel_IDs.Count > 1)
+                        {
+                            messageQueue.QueueMessage(
+                                Channel_IDs.Where(x => x != chatmsg.ChannelId), 
+                                $"**[Discord]** <{chatmsg.Author.Username}> {chatmsg.Message}");
+                        }
+
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write("[Discord] ");
+                        Console.ResetColor();
+                        Console.Write(msgout);
+                        Console.WriteLine();
+                    }
                 }
             }
+            catch(Exception ex)
+			{
+                PrettyPrint.Log(ex.Message, ConsoleColor.Red);
+			}
         }
 
         /// <summary>
@@ -253,6 +262,8 @@ namespace TCRDiscord
         /// </summary>
         private void Socket_OnError(object sender, WebSocketSharp.ErrorEventArgs e)
         {
+            PrettyPrint.Log(e.Message, ConsoleColor.Red);
+            
             Disconnect();
 
 			var restartClient = new ChatClient(parent, BOT_TOKEN, Channel_IDs.ToArray());

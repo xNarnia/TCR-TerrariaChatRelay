@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TCRDiscord;
 using TerrariaChatRelay;
 using TerrariaChatRelay.Command;
+using TerrariaChatRelay.Helpers;
 
 namespace TCRDiscord.Commands
 {
@@ -24,18 +25,20 @@ namespace TCRDiscord.Commands
 
 		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
 		{
-			input = input.Replace("<@", "");
+			input = input.Replace("<", "");
+			input = input.Replace("@", "");
 			input = input.Replace("!", "");
 			input = input.Replace(">", "");
 
 			if (ulong.TryParse(input, out ulong userId))
 			{
 				Main.Config.AdminUserIds.Add(userId);
+				Main.Config.SaveJson();
 				return "User successfully added.";
 			}
 			else
 			{
-				return "Could not find user. Example: addadmin @UserToGivePermissions";
+				return "Could not find user. Example: addadmin @UserToGivePermissions " + input;
 			}
 		}
 	}
