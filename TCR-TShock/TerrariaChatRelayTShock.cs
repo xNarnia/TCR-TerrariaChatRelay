@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Localization;
+using Terraria.Net;
 using Terraria.UI.Chat;
 using TerrariaApi.Server;
 using TerrariaChatRelay;
@@ -23,7 +24,7 @@ namespace TCRTShock
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(1, 0, 3);
+		public override Version Version => new Version(1, 0, 3, 2);
 
 		public override string Author => "Panini";
 
@@ -176,6 +177,12 @@ namespace TCRTShock
 			{
 				var player = Main.player[args.Who];
 				// -1 is hacky, but works
+
+				NetPacket packet =
+					Terraria.GameContent.NetModules.NetTextModule.SerializeServerMessage(
+						NetworkText.FromFormattable("This chat is powered by TerrariaChatRelay."), Color.LawnGreen, byte.MaxValue);
+				NetManager.Instance.SendToClient(packet, args.Who);
+
 				Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(-1), $"{Main.player[args.Who].name} has joined.");
 			}
 			catch (Exception)

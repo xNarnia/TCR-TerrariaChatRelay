@@ -16,7 +16,7 @@ namespace TCRDiscord
 			= Path.Combine(Global.ModConfigPath, "TerrariaChatRelay-Discord.json");
 
 		[JsonProperty(Order = 5)]
-		public string Comment { get; set; } = "Get a BOT_TOKEN from https://discordapp.com/developers/applications/";
+		public string CommentGuide { get; set; } = "Setup Guide: https://tinyurl.com/TCR-Setup";
 		[JsonProperty(Order = 10)]
 		public bool EnableDiscord { get; set; } = true;
 		[JsonProperty(Order = 15)]

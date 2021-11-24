@@ -4,7 +4,10 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specified files
-TerrariaChatRelay/bin/
+references/touch
+references/*.dll
+references/*.xml
+references/touch
 
 # User-specific files
 *.rsuser
