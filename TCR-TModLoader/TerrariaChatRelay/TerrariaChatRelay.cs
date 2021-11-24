@@ -94,7 +94,7 @@ namespace TerrariaChatRelay
 		public async Task GetLatestVersionNumber()
 		{
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-			var http = HttpWebRequest.CreateHttp("https://raw.githubusercontent.com/xPanini/TCR-TerrariaChatRelay-TShock/TCR-TModLoader/TerrariaChatRelay/build.txt");
+			var http = HttpWebRequest.CreateHttp("https://raw.githubusercontent.com/xPanini/TCR-TerrariaChatRelay-TShock/master/TCR-TModLoader/TerrariaChatRelay/build.txt");
 
 			WebResponse res = null;
 			try
