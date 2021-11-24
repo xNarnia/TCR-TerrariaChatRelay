@@ -1,8 +1,6 @@
 # TCR-TerrariaChatRelay - TShock & TModLoader
 Self-serving Terraria Chat Relay with extensible chat service support.
 
-https://github.com/xPanini/TCR-TerrariaChatRelay
-
 # Features:
 
 * Discord to Terraria bridge like Discord2Terraria or Terracord
