@@ -24,7 +24,7 @@ namespace TCRTShock
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(1, 0, 3, 2);
+		public override Version Version => new Version(1, 0, 3, 3);
 
 		public override string Author => "Panini";
 
@@ -294,7 +294,7 @@ namespace TCRTShock
 		public async Task GetLatestVersionNumber()
 		{
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-			var http = HttpWebRequest.CreateHttp("https://raw.githubusercontent.com/xPanini/TCR-TerrariaChatRelay-TShock/master/version.txt");
+			var http = HttpWebRequest.CreateHttp("https://raw.githubusercontent.com/xPanini/TCR-TerrariaChatRelay/master/version.txt");
 
 			WebResponse res = null;
 			try
@@ -303,7 +303,7 @@ namespace TCRTShock
 			}
 			catch (Exception e)
 			{
-				PrettyPrint.WriteLine(e.Message);
+				PrettyPrint.Log("Error checking for version update: " + e.Message, ConsoleColor.Red);
 				return;
 			}
 

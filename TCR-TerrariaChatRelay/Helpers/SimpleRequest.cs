@@ -51,6 +51,7 @@ namespace TerrariaChatRelay.Helpers
         /// <param name="methodType">Method type of the request. Examples: POST, GET, PUT, etc.</param>
         /// <param name="contentType">The content's type.</param>
         /// <param name="content">Byte array content to be sent</param>
+        /// <exception cref="WebException"></exception>
         /// <returns>String response from server.</returns>
         public static async Task<string> SendRequestAsync(Uri uri, WebHeaderCollection headers, string methodType, string contentType, byte[] content)
         {
@@ -65,24 +66,15 @@ namespace TerrariaChatRelay.Helpers
                 webRequest.Headers.Add($"{header}: {headers[header]}");
             }
 
-            try
+            var reqStream = await webRequest.GetRequestStreamAsync().ConfigureAwait(false);
+            reqStream.Write(content, 0, content.Length);
+
+            var res = await webRequest.GetResponseAsync().ConfigureAwait(false);
+
+            using (StreamReader sr = new StreamReader(res.GetResponseStream()))
             {
-                var reqStream = await webRequest.GetRequestStreamAsync().ConfigureAwait(false);
-                reqStream.Write(content, 0, content.Length);
-
-                var res = await webRequest.GetResponseAsync().ConfigureAwait(false);
-
-                using (StreamReader sr = new StreamReader(res.GetResponseStream()))
-                {
-                    return sr.ReadToEnd();
-                }
+                return sr.ReadToEnd();
             }
-            catch (Exception e)
-            {
-				PrettyPrint.Log(e.Message);
-            }
-
-            return null;
         }
     }
 }

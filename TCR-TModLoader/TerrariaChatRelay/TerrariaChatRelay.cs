@@ -48,6 +48,12 @@ namespace TerrariaChatRelay
 
 			PlayerJoinEndingString = Language.GetText("LegacyMultiplayer.19").Value.Split(new string[] { "{0}" }, StringSplitOptions.None).Last();
 			PlayerLeaveEndingString = Language.GetText("LegacyMultiplayer.20").Value.Split(new string[] { "{0}" }, StringSplitOptions.None).Last();
+			
+			Mod NoMoreTombs = ModLoader.GetMod("NoMoreTombs");
+			if (NoMoreTombs != null)
+			{
+				PrettyPrint.Log("[NoMoreTombs] Incompatibility : Death messages can not be routed.", ConsoleColor.Red);
+			}
 
 			// Add subscribers to list
 			Core.Initialize(new tModLoaderAdapter());
@@ -94,7 +100,7 @@ namespace TerrariaChatRelay
 		public async Task GetLatestVersionNumber()
 		{
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-			var http = HttpWebRequest.CreateHttp("https://raw.githubusercontent.com/xPanini/TCR-TerrariaChatRelay-TShock/master/TCR-TModLoader/TerrariaChatRelay/build.txt");
+			var http = HttpWebRequest.CreateHttp("https://raw.githubusercontent.com/xPanini/TCR-TerrariaChatRelay/master/TCR-TModLoader/TerrariaChatRelay/build.txt");
 
 			WebResponse res = null;
 			try
@@ -163,7 +169,7 @@ namespace TerrariaChatRelay
 			}
 			catch(Exception e)
 			{
-				PrettyPrint.Log(e.Message, ConsoleColor.Red);
+				PrettyPrint.Log("Error checking for version update: " + e.Message, ConsoleColor.Red);
 			}
 
 			return orig(reader);

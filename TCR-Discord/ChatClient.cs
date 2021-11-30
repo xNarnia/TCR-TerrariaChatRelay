@@ -109,7 +109,7 @@ namespace TCRDiscord
             Socket.Compression = CompressionMethod.Deflate;
             Socket.OnOpen += (object sender, EventArgs e) =>
             {
-				PrettyPrint.Log("Discord", "Connection complete!");
+                PrettyPrint.Log("Discord", "Connection established. Logging in!");
                 Socket.Send(DiscordMessageFactory.CreateLogin(BOT_TOKEN));
             };
 
@@ -118,9 +118,10 @@ namespace TCRDiscord
             Socket.OnError += Socket_OnError;
 			if(!debug)
 				Socket.Log.Output = (_, __) => { };
-			Socket.Connect();
 
-            if(Main.Config.ShowPoweredByMessageOnStartup)
+            Socket.Connect();
+
+            if (Main.Config.ShowPoweredByMessageOnStartup)
             {
                 messageQueue.QueueMessage(Channel_IDs,
                     $"**This bot is powered by TerrariaChatRelay**\nUse **{Main.Config.CommandPrefix}help** for more commands!");
@@ -253,7 +254,7 @@ namespace TCRDiscord
             }
             catch(Exception ex)
 			{
-                PrettyPrint.Log(ex.Message, ConsoleColor.Red);
+                PrettyPrint.Log("Discord", ex.Message, ConsoleColor.Red);
 			}
         }
 
@@ -262,12 +263,11 @@ namespace TCRDiscord
         /// </summary>
         private void Socket_OnError(object sender, WebSocketSharp.ErrorEventArgs e)
         {
-            PrettyPrint.Log(e.Message, ConsoleColor.Red);
-            
+            PrettyPrint.Log("Discord", e.Message, ConsoleColor.Red);
             Disconnect();
 
 			var restartClient = new ChatClient(parent, BOT_TOKEN, Channel_IDs.ToArray());
-			PrettyPrint.Log("Discord", "Client disconnected. Attempting to reconnect...");
+			PrettyPrint.Log("Discord", "Restarting client...", ConsoleColor.Yellow);
 			restartClient.Connect();
 			parent.Add(restartClient);
 			Dispose();
@@ -373,11 +373,30 @@ namespace TCRDiscord
             message = message.Replace("\n", "\\n");
             string json = DiscordMessageFactory.CreateTextMessage(message);
 
-            string response = await SimpleRequest.SendJsonDataAsync($"{API_URL}/channels/{channelId}/messages",
-                new WebHeaderCollection()
-                    {
+            string response = null;
+            try
+            {
+                response = await SimpleRequest.SendJsonDataAsync($"{API_URL}/channels/{channelId}/messages",
+                    new WebHeaderCollection()
+                        {
                         { "Authorization", $"Bot {BOT_TOKEN}" }
-                    }, json);
+                        }, json);
+            }
+			catch (Exception e)
+			{
+                if(e.Message.Contains("(401) Unauthorized"))
+				{
+                    PrettyPrint.Log("Discord", "Unauthorized access to Discord server. Is your BOT_TOKEN correct?", ConsoleColor.Red);
+				}
+				else if(e.Message.Contains("(403) Forbidden"))
+                {
+                    PrettyPrint.Log("Discord", "Forbidden access to Discord channel. Are your Channel IDs & BOT permissions correct?", ConsoleColor.Red);
+                }
+				else
+				{
+                    PrettyPrint.Log("Discord", e.Message, ConsoleColor.Red);
+                }
+            }
 
             if (debug)
             {

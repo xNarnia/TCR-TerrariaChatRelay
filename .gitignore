@@ -8,6 +8,7 @@ references/touch
 references/*.dll
 references/*.xml
 references/touch
+TCR-TModLoader/TerrariaChatRelay/lib/*
 
 # User-specific files
 *.rsuser

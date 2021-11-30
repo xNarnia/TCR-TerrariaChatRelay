@@ -31,6 +31,6 @@
     </Reference>
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="copy $(ProjectDir)..\..\TCR-Discord\bin\TModLoader\TCR-Discord.dll $(ProjectDir)$(OutDir)lib&#xD;&#xA;copy $(ProjectDir)..\..\TCR-TerrariaChatRelay\bin\TModLoader\TCR-TerrariaChatRelay.dll $(ProjectDir)lib" />
+    <Exec Command="ECHO $(ProjectDir)..\..\TCR-Discord\bin\TModLoader\TCR-Discord.dll $(ProjectDir)lib&#xD;&#xA;copy /Y $(ProjectDir)..\..\TCR-Discord\bin\TModLoader\TCR-Discord.dll $(ProjectDir)lib&#xD;&#xA;ECHO $(ProjectDir)..\..\TCR-TerrariaChatRelay\bin\TModLoader\TCR-TerrariaChatRelay.dll $(ProjectDir)lib&#xD;&#xA;copy /Y $(ProjectDir)..\..\TCR-TerrariaChatRelay\bin\TModLoader\TCR-TerrariaChatRelay.dll $(ProjectDir)lib" />
   </Target>
 </Project>
