@@ -46,14 +46,14 @@ namespace TerrariaChatRelay.Clients.Discord
         /// <param name="message">Message to send.</param>
         public void QueueMessage(IEnumerable<ulong> channelsToSendTo, string message)
         {
-            foreach(var channelId in channelsToSendTo)
+            foreach (var channelId in channelsToSendTo)
             {
                 if (!ContainsKey(channelId))
                     Add(channelId, new Queue<string>());
 
                 this[channelId].Enqueue(message);
             }
-            
+
             PrepareSend(true);
         }
 
@@ -68,7 +68,7 @@ namespace TerrariaChatRelay.Clients.Discord
                 preparingToSend = true;
                 queueTimer.Start();
             }
-            else if(!Prepare && preparingToSend)
+            else if (!Prepare && preparingToSend)
             {
                 preparingToSend = false;
                 queueTimer.Stop();

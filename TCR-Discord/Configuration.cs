@@ -10,7 +10,7 @@ using TerrariaChatRelay.Helpers;
 
 namespace TCRDiscord
 {
-    public class Configuration : SimpleConfig<Configuration>
+	public class Configuration : SimpleConfig<Configuration>
 	{
 		public override string FileName { get; set; }
 			= Path.Combine(Global.ModConfigPath, "TerrariaChatRelay-Discord.json");
@@ -74,9 +74,9 @@ namespace TCRDiscord
 		}
 	}
 
-    public class Endpoint
-    {
-        public string BotToken { get; set; } = "BOT_TOKEN";
-        public ulong[] Channel_IDs { get; set; } = { 0 };
-    }
+	public class Endpoint
+	{
+		public string BotToken { get; set; } = "BOT_TOKEN";
+		public ulong[] Channel_IDs { get; set; } = { 0 };
+	}
 }

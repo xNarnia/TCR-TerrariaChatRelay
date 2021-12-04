@@ -42,7 +42,7 @@ namespace TCRDiscord.Helpers
         }
 
         public string RemoveTerrariaColorAndItemCodes(string chatMessage)
-		{
+        {
             var match = colorCodeFinder.Match(chatMessage);
 
             while (match.Success)

@@ -28,7 +28,7 @@ namespace TCRDiscord.Models
         /// <returns>Data if it is present.</returns>
         public MessageData GetChatMessageData()
         {
-            if(MessageType == "MESSAGE_CREATE")
+            if (MessageType == "MESSAGE_CREATE")
             {
                 return ((JObject)Data).ToObject<MessageData>();
             }

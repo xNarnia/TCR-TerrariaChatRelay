@@ -17,7 +17,7 @@ namespace TCRDiscord
 				foreach (var discordClient in Config.EndPoints)
 					new ChatClient(Subscribers, discordClient.BotToken, discordClient.Channel_IDs);
 
-				if(Config.CommandPrefix.Length < 1)
+				if (Config.CommandPrefix.Length < 1)
 					Config.CommandPrefix = "t!";
 			}
 

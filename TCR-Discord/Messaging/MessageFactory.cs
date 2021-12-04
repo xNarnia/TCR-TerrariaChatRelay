@@ -51,10 +51,10 @@ namespace TCRDiscord
         {
             try
             {
-                msg =  JsonConvert.DeserializeObject<Message>(json);
+                msg = JsonConvert.DeserializeObject<Message>(json);
                 return true;
             }
-            catch(JsonSerializationException)
+            catch (JsonSerializationException)
             {
                 msg = null;
                 return false;

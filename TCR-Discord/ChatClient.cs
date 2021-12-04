@@ -44,10 +44,10 @@ namespace TCRDiscord
         // Other
         private bool debug = false;
 
-        public ChatClient(List<IChatClient> _parent, string bot_token, ulong[] channel_ids) 
+        public ChatClient(List<IChatClient> _parent, string bot_token, ulong[] channel_ids)
             : base(_parent)
         {
-			parent = _parent;
+            parent = _parent;
             BOT_TOKEN = bot_token;
             chatParser = new ChatParser();
             Channel_IDs = channel_ids.ToList();
@@ -56,28 +56,28 @@ namespace TCRDiscord
             messageQueue.OnReadyToSend += OnMessageReadyToSend;
         }
 
-		/// <summary>
-		/// Event fired when a message from in-game is received.
-		/// Queues messages to stack messages closely sent to each other.
-		/// This will allow TCR to combine messages and reduce messages sent to Discord.
-		/// </summary>
-		public void OnMessageReadyToSend(Dictionary<ulong, Queue<string>> messages)
-		{
-			foreach (var queue in messages)
-			{
-				string output = "";
+        /// <summary>
+        /// Event fired when a message from in-game is received.
+        /// Queues messages to stack messages closely sent to each other.
+        /// This will allow TCR to combine messages and reduce messages sent to Discord.
+        /// </summary>
+        public void OnMessageReadyToSend(Dictionary<ulong, Queue<string>> messages)
+        {
+            foreach (var queue in messages)
+            {
+                string output = "";
 
-				foreach (var msg in queue.Value)
-				{
-					output += msg + '\n';
-				}
+                foreach (var msg in queue.Value)
+                {
+                    output += msg + '\n';
+                }
 
-				if (output.Length > 2000)
-					output = output.Substring(0, 2000);
+                if (output.Length > 2000)
+                    output = output.Substring(0, 2000);
 
-				SendMessageToDiscordChannel(output, queue.Key);
-			}
-		}
+                SendMessageToDiscordChannel(output, queue.Key);
+            }
+        }
 
         /// <summary>
         /// Create a new WebSocket and initiate connection with Discord servers. 
@@ -116,8 +116,8 @@ namespace TCRDiscord
             Socket.OnMessage += Socket_OnDataReceived;
             Socket.OnMessage += Socket_OnHeartbeatReceived;
             Socket.OnError += Socket_OnError;
-			if(!debug)
-				Socket.Log.Output = (_, __) => { };
+            if (!debug)
+                Socket.Log.Output = (_, __) => { };
 
             Socket.Connect();
 
@@ -125,10 +125,10 @@ namespace TCRDiscord
             {
                 messageQueue.QueueMessage(Channel_IDs,
                     $"**This bot is powered by TerrariaChatRelay**\nUse **{Main.Config.CommandPrefix}help** for more commands!");
-				Main.Config.ShowPoweredByMessageOnStartup = true;
-				Main.Config.SaveJson();
+                Main.Config.ShowPoweredByMessageOnStartup = true;
+                Main.Config.SaveJson();
             }
-		}
+        }
 
         /// <summary>
         /// Unsubscribes all WebSocket events, then releases all resources used by the WebSocket.
@@ -143,12 +143,12 @@ namespace TCRDiscord
             // Dispose WebSocket client
             if (Socket.ReadyState != WebSocketState.Closed)
                 Socket.Close();
-			Socket = null;
+            Socket = null;
 
             // Detach queue from event and dispose
-			messageQueue.OnReadyToSend -= OnMessageReadyToSend;
-			messageQueue.Clear();
-			messageQueue = null;
+            messageQueue.OnReadyToSend -= OnMessageReadyToSend;
+            messageQueue.Clear();
+            messageQueue = null;
 
             // Dispose heartbeat timer
             heartbeatTimer.Stop();
@@ -171,7 +171,7 @@ namespace TCRDiscord
 
             if (msg.OpCode == GatewayOpcode.Hello)
             {
-                if(heartbeatTimer != null)
+                if (heartbeatTimer != null)
                     heartbeatTimer.Dispose();
 
                 heartbeatTimer = new System.Timers.Timer(((JObject)msg.Data).Value<int>("heartbeat_interval") / 2);
@@ -192,8 +192,8 @@ namespace TCRDiscord
         /// </summary>
         private void Socket_OnDataReceived(object sender, MessageEventArgs e)
         {
-			try
-			{
+            try
+            {
                 var json = e.Data;
 
                 if (json == null) return;
@@ -202,11 +202,11 @@ namespace TCRDiscord
                 if (debug)
                     Console.WriteLine("\n" + json + "\n");
 
-                if(!DiscordMessageFactory.TryParseDispatchMessage(json, out var msg)) return;
+                if (!DiscordMessageFactory.TryParseDispatchMessage(json, out var msg)) return;
                 LastSequenceNumber = msg.SequenceNumber;
 
                 var chatmsg = msg.GetChatMessageData();
-                if(chatmsg != null && chatmsg.Message != "" && Channel_IDs.Contains(chatmsg.ChannelId))
+                if (chatmsg != null && chatmsg.Message != "" && Channel_IDs.Contains(chatmsg.ChannelId))
                 {
                     if (!chatmsg.Author.IsBot)
                     {
@@ -216,13 +216,13 @@ namespace TCRDiscord
                         //if (ExecuteCommand(chatmsg))
                         //    return;
 
-                        if(!Core.CommandServ.IsCommand(msgout, Main.Config.CommandPrefix))
-						{
+                        if (!Core.CommandServ.IsCommand(msgout, Main.Config.CommandPrefix))
+                        {
                             msgout = chatParser.ConvertUserIdsToNames(msgout, chatmsg.UsersMentioned);
                             msgout = chatParser.ShortenEmojisToName(msgout);
                         }
 
-                        Permission userPermission; 
+                        Permission userPermission;
                         if (chatmsg.Author.Id == Main.Config.OwnerUserId)
                             userPermission = Permission.Owner;
                         else if (Main.Config.AdminUserIds.Contains(chatmsg.Author.Id))
@@ -240,7 +240,7 @@ namespace TCRDiscord
                         if (Channel_IDs.Count > 1)
                         {
                             messageQueue.QueueMessage(
-                                Channel_IDs.Where(x => x != chatmsg.ChannelId), 
+                                Channel_IDs.Where(x => x != chatmsg.ChannelId),
                                 $"**[Discord]** <{chatmsg.Author.Username}> {chatmsg.Message}");
                         }
 
@@ -252,10 +252,10 @@ namespace TCRDiscord
                     }
                 }
             }
-            catch(Exception ex)
-			{
+            catch (Exception ex)
+            {
                 PrettyPrint.Log("Discord", ex.Message, ConsoleColor.Red);
-			}
+            }
         }
 
         /// <summary>
@@ -266,11 +266,11 @@ namespace TCRDiscord
             PrettyPrint.Log("Discord", e.Message, ConsoleColor.Red);
             Disconnect();
 
-			var restartClient = new ChatClient(parent, BOT_TOKEN, Channel_IDs.ToArray());
-			PrettyPrint.Log("Discord", "Restarting client...", ConsoleColor.Yellow);
-			restartClient.Connect();
-			parent.Add(restartClient);
-			Dispose();
+            var restartClient = new ChatClient(parent, BOT_TOKEN, Channel_IDs.ToArray());
+            PrettyPrint.Log("Discord", "Restarting client...", ConsoleColor.Yellow);
+            restartClient.Connect();
+            parent.Add(restartClient);
+            Dispose();
         }
 
         public override void GameMessageReceivedHandler(object sender, TerrariaChatEventArgs msg)
@@ -279,29 +279,29 @@ namespace TCRDiscord
                 return;
             try
             {
-				string outMsg = "";
-				string bossName = "";
+                string outMsg = "";
+                string bossName = "";
 
-				if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has joined."))
-					outMsg = Configuration.PlayerLoggedInFormat;
-				else if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has left."))
-					outMsg = Configuration.PlayerLoggedOutFormat;
-				else if (msg.Player.Name != "Server" && msg.Player.PlayerId != -1)
-					outMsg = Configuration.PlayerChatFormat;
-				else if (msg.Player.Name == "Server" && msg.Message.EndsWith(" has awoken!"))
-					outMsg = Configuration.VanillaBossSpawned;
-				else if (msg.Player.Name == "Server" && msg.Message == "The server is starting!")
-					outMsg = Configuration.ServerStartingFormat;
-				else if (msg.Player.Name == "Server" && msg.Message == "The server is stopping!")
-					outMsg = Configuration.ServerStoppingFormat;
-				else if (msg.Player.Name == "Server")
+                if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has joined."))
+                    outMsg = Configuration.PlayerLoggedInFormat;
+                else if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has left."))
+                    outMsg = Configuration.PlayerLoggedOutFormat;
+                else if (msg.Player.Name != "Server" && msg.Player.PlayerId != -1)
+                    outMsg = Configuration.PlayerChatFormat;
+                else if (msg.Player.Name == "Server" && msg.Message.EndsWith(" has awoken!"))
+                    outMsg = Configuration.VanillaBossSpawned;
+                else if (msg.Player.Name == "Server" && msg.Message == "The server is starting!")
+                    outMsg = Configuration.ServerStartingFormat;
+                else if (msg.Player.Name == "Server" && msg.Message == "The server is stopping!")
+                    outMsg = Configuration.ServerStoppingFormat;
+                else if (msg.Player.Name == "Server")
                     outMsg = Configuration.WorldEventFormat;
-				else if (msg.Player.Name == "Server" && msg.Message.Contains("A new version of TCR is available!"))
-					outMsg = ":desktop:  **%message%**";
-				else
-					outMsg = "%message%";
+                else if (msg.Player.Name == "Server" && msg.Message.Contains("A new version of TCR is available!"))
+                    outMsg = ":desktop:  **%message%**";
+                else
+                    outMsg = "%message%";
 
-				if (msg.Player != null)
+                if (msg.Player != null)
                     outMsg = outMsg.Replace("%playername%", msg.Player.Name)
                                    .Replace("%groupprefix%", msg.Player.GroupPrefix)
                                    .Replace("%groupsuffix%", msg.Player.GroupSuffix);
@@ -309,15 +309,15 @@ namespace TCRDiscord
                 outMsg = chatParser.RemoveTerrariaColorAndItemCodes(outMsg);
 
                 if (msg.Message.EndsWith(" has awoken!"))
-				{
-					bossName = msg.Message.Replace(" has awoken!", "");
-					outMsg = outMsg.Replace("%bossname%", bossName);
-				}
+                {
+                    bossName = msg.Message.Replace(" has awoken!", "");
+                    outMsg = outMsg.Replace("%bossname%", bossName);
+                }
 
                 // Find the Player Name
-				if(msg.Player == null && (msg.Message.EndsWith(" has joined.") || msg.Message.EndsWith(" has left.")))
-				{
-					string playerName = msg.Message.Replace(" has joined.", "").Replace(" has left.", "");
+                if (msg.Player == null && (msg.Message.EndsWith(" has joined.") || msg.Message.EndsWith(" has left.")))
+                {
+                    string playerName = msg.Message.Replace(" has joined.", "").Replace(" has left.", "");
 
                     // Suppress empty player name "has left" messages caused by port sniffers
                     if (playerName.IsNullOrEmpty())
@@ -326,23 +326,23 @@ namespace TCRDiscord
                         return;
                     }
 
-					outMsg = outMsg.Replace("%playername%", playerName);
-				}
+                    outMsg = outMsg.Replace("%playername%", playerName);
+                }
 
                 outMsg = outMsg.Replace("%worldname%", TerrariaChatRelay.Game.World.GetName());
-				outMsg = outMsg.Replace("%message%", msg.Message);
+                outMsg = outMsg.Replace("%message%", msg.Message);
 
-				if (outMsg == "" || outMsg == null)
-					return;
+                if (outMsg == "" || outMsg == null)
+                    return;
 
-				messageQueue.QueueMessage(Channel_IDs, outMsg);
+                messageQueue.QueueMessage(Channel_IDs, outMsg);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 errorCounter++;
 
-                if(errorCounter > 2)
+                if (errorCounter > 2)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Discord Client has been terminated. Please reload the mod to issue a reconnect.");
@@ -354,8 +354,8 @@ namespace TCRDiscord
         public override void SendMessageToClient(string msg, ulong sourceChannelId)
             => SendMessageToDiscordChannel(msg, sourceChannelId);
 
-		public override void HandleCommand(ICommandPayload payload, string result, ulong sourceChannelId)
-		{
+        public override void HandleCommand(ICommandPayload payload, string result, ulong sourceChannelId)
+        {
             result = result.Replace("</br>", "\n");
             result = result.Replace("</b>", "**");
             result = result.Replace("</i>", "*");
@@ -364,9 +364,9 @@ namespace TCRDiscord
             result = result.Replace("</quote>", "> ");
 
             messageQueue.QueueMessage(sourceChannelId, result);
-		}
+        }
 
-		public async void SendMessageToDiscordChannel(string message, ulong channelId)
+        public async void SendMessageToDiscordChannel(string message, ulong channelId)
         {
             message = message.Replace("\\", "\\\\");
             message = message.Replace("\"", "\\\"");
@@ -382,18 +382,18 @@ namespace TCRDiscord
                         { "Authorization", $"Bot {BOT_TOKEN}" }
                         }, json);
             }
-			catch (Exception e)
-			{
-                if(e.Message.Contains("(401) Unauthorized"))
-				{
+            catch (Exception e)
+            {
+                if (e.Message.Contains("(401) Unauthorized"))
+                {
                     PrettyPrint.Log("Discord", "Unauthorized access to Discord server. Is your BOT_TOKEN correct?", ConsoleColor.Red);
-				}
-				else if(e.Message.Contains("(403) Forbidden"))
+                }
+                else if (e.Message.Contains("(403) Forbidden"))
                 {
                     PrettyPrint.Log("Discord", "Forbidden access to Discord channel. Are your Channel IDs & BOT permissions correct?", ConsoleColor.Red);
                 }
-				else
-				{
+                else
+                {
                     PrettyPrint.Log("Discord", e.Message, ConsoleColor.Red);
                 }
             }
@@ -413,5 +413,5 @@ namespace TCRDiscord
         {
             return LastSequenceNumber;
         }
-	}
+    }
 }
