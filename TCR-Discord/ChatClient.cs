@@ -379,7 +379,7 @@ namespace TCRDiscord
                 response = await SimpleRequest.SendJsonDataAsync($"{API_URL}/channels/{channelId}/messages",
                     new WebHeaderCollection()
                         {
-                        { "Authorization", $"Bot {BOT_TOKEN}" }
+                            { "Authorization", $"Bot {BOT_TOKEN}" }
                         }, json);
             }
             catch (Exception e)
