@@ -18,13 +18,13 @@
 			var worldinfo = new System.Text.StringBuilder();
 
 			worldinfo.Append("</b>Information about the currently running world</b> </br>");
-			worldinfo.Append($"</box>World Name : {TerrariaChatRelay.Game.World.GetName()} </br>");
-			worldinfo.Append($"Hardmode : {TerrariaChatRelay.Game.World.GetEvilType()} </br>");
+			worldinfo.Append($"</box>World Name: {TerrariaChatRelay.Game.World.GetName()} </br>");
+			worldinfo.Append($"Evil: {TerrariaChatRelay.Game.World.GetEvilType()} </br>");
 #if TSHOCK
-			worldinfo.Append($"Difficulty : {(TerrariaChatRelay.Game.World.IsMasterMode() ? "Master" : (TerrariaChatRelay.Game.World.IsExpertMode() ? "Expert" : "Normal"))} </br>");
+			worldinfo.Append($"Difficulty: {(TerrariaChatRelay.Game.World.IsMasterMode() ? "Master" : (TerrariaChatRelay.Game.World.IsExpertMode() ? "Expert" : "Normal"))} </br>");
 #endif
-			worldinfo.Append($"Hardmode : {(TerrariaChatRelay.Game.World.IsHardMode() ? "Yes" : "No")} </br>");
-			worldinfo.Append($"World Size : {TerrariaChatRelay.Game.World.getWorldSize()}");
+			worldinfo.Append($"Hardmode: {(TerrariaChatRelay.Game.World.IsHardMode() ? "Yes" : "No")} </br>");
+			worldinfo.Append($"World Size: {TerrariaChatRelay.Game.World.getWorldSize()}");
 
 #if TSHOCK
 			if(Global.Config.ShowWorldSeed)
