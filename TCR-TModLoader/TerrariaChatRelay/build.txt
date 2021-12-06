@@ -1,5 +1,5 @@
 author = Lady Narnia
-version = 1.0.3.3
+version = 1.0.3.4
 displayName = TCR-TerrariaChatRelay
 homepage = https://forums.terraria.org/index.php?threads/tcr-terrariachatrelay.78196/
 includePDB=true
