@@ -28,6 +28,7 @@ namespace TCRDiscord
 
         // Discord Variables
         public List<ulong> Channel_IDs { get; set; }
+        public bool Reconnect { get; set; } = true;
         private string BOT_TOKEN;
         private int? LastSequenceNumber = 0;
         private ChatParser chatParser { get; set; }
@@ -118,10 +119,16 @@ namespace TCRDiscord
             Socket.OnError += Socket_OnError;
             if (!debug)
                 Socket.Log.Output = (_, __) => { };
+            else
+                Socket.Log.Output = (logData, output) =>
+                {
+                    PrettyPrint.Log("Discord", output);
+                    PrettyPrint.Log("Discord", logData.Message);
+                };
 
             Socket.Connect();
 
-            if (Main.Config.ShowPoweredByMessageOnStartup)
+            if (Main.Config.ShowPoweredByMessageOnStartup && !Reconnect)
             {
                 messageQueue.QueueMessage(Channel_IDs,
                     $"**This bot is powered by TerrariaChatRelay**\nUse **{Main.Config.CommandPrefix}help** for more commands!");
@@ -264,10 +271,17 @@ namespace TCRDiscord
         private void Socket_OnError(object sender, WebSocketSharp.ErrorEventArgs e)
         {
             PrettyPrint.Log("Discord", e.Message, ConsoleColor.Red);
+
+            if (Socket.IsAlive
+                && Socket.ReadyState != WebSocketState.Closed
+                && Socket.ReadyState != WebSocketState.Closing)
+                return;
+
             Disconnect();
 
-            var restartClient = new ChatClient(parent, BOT_TOKEN, Channel_IDs.ToArray());
             PrettyPrint.Log("Discord", "Restarting client...", ConsoleColor.Yellow);
+            var restartClient = new ChatClient(parent, BOT_TOKEN, Channel_IDs.ToArray());
+            restartClient.Reconnect = true;
             restartClient.Connect();
             parent.Add(restartClient);
             Dispose();
