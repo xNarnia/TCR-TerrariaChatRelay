@@ -340,7 +340,7 @@ namespace TCRDiscord
                     outMsg = outMsg.Replace("%message%", newMsg);
                 }
                 else
-                    outMsg = outMsg.Replace("%message%", msg.Message)
+                    outMsg = outMsg.Replace("%message%", msg.Message);
                 
                 if (outMsg == "" || outMsg == null)
                     return;
