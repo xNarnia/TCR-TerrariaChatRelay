@@ -51,7 +51,6 @@ namespace TCRDiscord
 		[JsonProperty(Order = 67)]
 		public string RegexHelp2 { get; set; } = "If RegexMessageEmptySend is true, then the discord message is sent even if %message% is empty. This is useful when you want to filter messages send to Discord.";
 
-
 		[JsonProperty(Order = 70)]
 		public static string PlayerChatFormat = ":speech_left: **%playername%:** %message%";
 		[JsonProperty(Order = 80)]
@@ -73,7 +72,6 @@ namespace TCRDiscord
 		public static string RegexMessageReplace = "";
 		[JsonProperty(Order = 135)]
 		public static bool RegexMessageEmptySend = false;
-
 
 		public Configuration()
 		{
