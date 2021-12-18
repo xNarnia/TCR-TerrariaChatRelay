@@ -330,7 +330,20 @@ namespace TCRDiscord
                 }
 
                 outMsg = outMsg.Replace("%worldname%", TerrariaChatRelay.Game.World.GetName());
-                outMsg = outMsg.Replace("%message%", msg.Message);
+
+                if (!Configuration.RegexMessageFormat.IsNullOrEmpty() && IsValidRegex(Configuration.RegexMessageFormat))
+                {
+                    string newMsg = Regex.Replace(msg.Message, Configuration.RegexMessageFormat, Configuration.RegexMessageReplace);
+                    // Suppress empty %message% being sent if RegexMessageEmptySend is false
+                    if (!Configuration.RegexMessageEmptySend && newMsg.IsNullOrEmpty())
+                        return;
+                    outMsg = outMsg.Replace("%message%", newMsg);
+                }
+                else
+                    outMsg = outMsg.Replace("%message%", msg.Message);
+
+                
+                
 
                 if (outMsg == "" || outMsg == null)
                     return;
@@ -412,6 +425,22 @@ namespace TCRDiscord
         public int? GetLastSequenceNumber()
         {
             return LastSequenceNumber;
+        }
+
+        private static bool IsValidRegex(string pattern)
+        {
+            if (string.IsNullOrWhiteSpace(pattern)) return false;
+
+            try
+            {
+                Regex.Match("", pattern);
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

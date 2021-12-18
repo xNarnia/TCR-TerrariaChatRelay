@@ -46,6 +46,11 @@ namespace TCRDiscord
 		public string FormatHelp6 { get; set; } = "%groupprefix% = Group prefix";
 		[JsonProperty(Order = 65)]
 		public string FormatHelp7 { get; set; } = "%groupsuffix% = Group suffix";
+		[JsonProperty(Order = 66)]
+		public string RegexHelp1 { get; set; } = "For more advanced users, you can use RegexMessageFormat & RegexMessageReplace to modify %message%";
+		[JsonProperty(Order = 67)]
+		public string RegexHelp2 { get; set; } = "If RegexMessageEmptySend is true, then the discord message is sent even if %message% is empty. This is useful when you want to filter messages send to Discord.";
+
 
 		[JsonProperty(Order = 70)]
 		public static string PlayerChatFormat = ":speech_left: **%playername%:** %message%";
@@ -61,6 +66,14 @@ namespace TCRDiscord
 		public static string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
 		[JsonProperty(Order = 115)]
 		public static string VanillaBossSpawned = ":anger: **%bossname% has awoken!**";
+
+		[JsonProperty(Order = 125)]
+		public static string RegexMessageFormat = "";
+		[JsonProperty(Order = 130)]
+		public static string RegexMessageReplace = "";
+		[JsonProperty(Order = 135)]
+		public static bool RegexMessageEmptySend = false;
+
 
 		public Configuration()
 		{
