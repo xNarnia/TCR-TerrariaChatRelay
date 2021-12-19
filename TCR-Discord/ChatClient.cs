@@ -330,17 +330,15 @@ namespace TCRDiscord
                 }
 
                 outMsg = outMsg.Replace("%worldname%", TerrariaChatRelay.Game.World.GetName());
+                outMsg = outMsg.Replace("%message%", msg.Message);
 
-                if (IsValidRegex(Configuration.RegexMessageFormat))
+                if (Main.Config.RegexMessageEnabled)
                 {
-                    string newMsg = Regex.Replace(msg.Message, Configuration.RegexMessageFormat, Configuration.RegexMessageReplace);
-                    // Suppress empty %message% being sent if RegexMessageEmptySend is false
-                    if (!Configuration.RegexMessageEmptySend && newMsg.IsNullOrEmpty())
-                        return;
-                    outMsg = outMsg.Replace("%message%", newMsg);
-                }
-                else
-                    outMsg = outMsg.Replace("%message%", msg.Message);
+                    foreach (KeyValuePair<string, string> regex in Main.Config.RegexMessageReplace)
+                    {
+                        outMsg = Regex.Replace(outMsg, regex.Key, regex.Value);
+                    }
+                }    
                 
                 if (outMsg == "" || outMsg == null)
                     return;
