@@ -47,7 +47,9 @@ namespace TCRDiscord
 		[JsonProperty(Order = 65)]
 		public string FormatHelp7 { get; set; } = "%groupsuffix% = Group suffix";
 		[JsonProperty(Order = 66)]
-		public string RegexHelp1 { get; set; } = "For more advanced users, you can use RegexMessageReplace to modify the final message being sent. ";
+		public string RegexHelp1 { get; set; } = "For more advanced users, you can use RegexMessageReplace to modify/filter the final message being sent.";
+		[JsonProperty(Order = 67)]
+		public string RegexHelp2 { get; set; } = "Example (Filtering nth mob kill annoucements): { \"^.+ has defeated the \\d+th .+$\": \"\" }";
 
 		[JsonProperty(Order = 70)]
 		public static string PlayerChatFormat = ":speech_left: **%playername%:** %message%";
@@ -67,7 +69,7 @@ namespace TCRDiscord
 		[JsonProperty(Order = 120)]
 		public bool RegexMessageEnabled { get; set; } = false;
 		[JsonProperty(Order = 125)]
-		public Dictionary<string, string> RegexMessageReplace { get; set; } = new Dictionary<string, string> { ["^(.*)$"] = "$1" };
+		public Dictionary<string, string> RegexMessageReplace { get; set; } = new Dictionary<string, string>();
 
 
 		public Configuration()
@@ -78,6 +80,12 @@ namespace TCRDiscord
 				EndPoints.Add(new Endpoint());
 				ManagerUserIds.Add(0);
 				AdminUserIds.Add(0);
+
+				// Regex
+				RegexMessageReplace = new Dictionary<string, string>
+                {
+					["^(.*)$"] = "$1"
+                };
 			}
 		}
 	}
