@@ -63,6 +63,8 @@
     <Compile Include="Main.cs" />
     <Compile Include="Messaging\MessageFactory.cs" />
     <Compile Include="Messaging\MessageQueue.cs" />
+    <Compile Include="Models\Embed.cs" />
+    <Compile Include="Models\Footer.cs" />
     <Compile Include="Models\GatewayOpcode.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\MessageData.cs" />

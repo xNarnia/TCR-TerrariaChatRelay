@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TCRDiscord.Models;
+using TerrariaChatRelay.Helpers;
 
 namespace TCRDiscord
 {
@@ -35,11 +36,22 @@ namespace TCRDiscord
         /// <summary>
         /// Returns a JSON string that can be used to send a text message.
         /// </summary>
-        /// <param name="LastSequenceNumber">Number from last JSON response to send back to server.</param>
-        /// <returns>JSON to send heartbeat with.</returns>
-        public static string CreateTextMessage(string msg)
+        /// <param name="msg">Contents of text message to send.</param>
+        /// <param name="embed">Embed data to send.</param>
+        /// <returns>Text message embedded in Discord JSON format.</returns>
+        public static string CreateTextMessage(string msg, Embed embed = null)
         {
-            return "{\"content\":\"" + msg + "\",\"tts\":false}";
+            if (embed != null)
+			{
+                string embedPayload = JsonConvert.SerializeObject(embed);
+                PrettyPrint.Log("Discord", embedPayload);
+                PrettyPrint.Log("Discord", "{\"content\":\"" + msg + "\",\"tts\":false,\"embeds\":[" + embedPayload + "]}");
+                return "{\"content\":\"" + msg + "\",\"tts\":false,\"embeds\":[" + embedPayload + "]}";
+            }
+			else
+			{
+                return "{\"content\":\"" + msg + "\",\"tts\":false}";
+            }
         }
 
         /// <summary>

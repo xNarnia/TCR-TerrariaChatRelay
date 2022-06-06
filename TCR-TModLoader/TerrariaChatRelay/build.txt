@@ -1,10 +1,10 @@
 author = Lady Narnia
-version = 1.0.3.5
+version = 1.0.4
 displayName = TCR-TerrariaChatRelay
 homepage = https://forums.terraria.org/index.php?threads/tcr-terrariachatrelay.78196/
 includePDB=true
 includeSource=false
 languageVersion=6
-dllReferences = System.Net.Http, websocket-sharp, TCR-TerrariaChatRelay, TCR-Discord
+dllReferences = websocket-sharp, TCR-TerrariaChatRelay, TCR-Discord
 buildIgnore=.git/,.vs/,.bin/,app.config,TerrariaChatRelay.csproj.user
 side = Server

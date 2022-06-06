@@ -39,7 +39,7 @@ namespace TerrariaChatRelay
 
 			// Intercept DeserializeAsServer method
 			NetTextModule.DeserializeAsServer += NetTextModule_DeserializeAsServer;
-			On.Terraria.NetMessage.BroadcastChatMessage += NetMessage_BroadcastChatMessage;
+			On.Terraria.Chat.ChatHelper.BroadcastChatMessage += BroadcastChatMessage;
 			On.Terraria.IO.WorldFile.LoadWorld_Version2 += OnWorldLoadStart;
 			On.Terraria.Netplay.StopListening += OnServerStop;
 			On.Terraria.NetMessage.SyncConnectedPlayer += OnPlayerJoin_NetMessage_SyncConnectedPlayer;
@@ -49,8 +49,7 @@ namespace TerrariaChatRelay
 			PlayerJoinEndingString = Language.GetText("LegacyMultiplayer.19").Value.Split(new string[] { "{0}" }, StringSplitOptions.None).Last();
 			PlayerLeaveEndingString = Language.GetText("LegacyMultiplayer.20").Value.Split(new string[] { "{0}" }, StringSplitOptions.None).Last();
 			
-			Mod NoMoreTombs = ModLoader.GetMod("NoMoreTombs");
-			if (NoMoreTombs != null)
+			if (ModLoader.TryGetMod("NoMoreTombs", out Mod NoMoreTombs))
 			{
 				PrettyPrint.Log("[NoMoreTombs] Incompatibility : Death messages can not be routed.", ConsoleColor.Red);
 			}
@@ -99,7 +98,7 @@ namespace TerrariaChatRelay
 		/// </summary>
 		public async Task GetLatestVersionNumber()
 		{
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 			var http = HttpWebRequest.CreateHttp("https://raw.githubusercontent.com/xPanini/TCR-TerrariaChatRelay/master/TCR-TModLoader/TerrariaChatRelay/build.txt");
 
 			WebResponse res = null;
@@ -147,7 +146,7 @@ namespace TerrariaChatRelay
 		{
 			Core.DisconnectClients();
 			NetTextModule.DeserializeAsServer -= NetTextModule_DeserializeAsServer;
-			On.Terraria.NetMessage.BroadcastChatMessage -= NetMessage_BroadcastChatMessage;
+			On.Terraria.Chat.ChatHelper.BroadcastChatMessage -= BroadcastChatMessage;
 			Global.Config = null;
 		}
 
@@ -158,7 +157,7 @@ namespace TerrariaChatRelay
 		{
 			try
 			{
-				if (!Netplay.disconnect)
+				if (!Netplay.Disconnect)
 				{
 					if (Global.Config.ShowServerStartMessage)
 						Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, "The server is starting!");
@@ -189,13 +188,13 @@ namespace TerrariaChatRelay
 		/// <summary>
 		/// Intercept all other messages from Terraria. E.g. blood moon, death notifications, and player join/leaves.
 		/// </summary>
-		private void NetMessage_BroadcastChatMessage(On.Terraria.NetMessage.orig_BroadcastChatMessage orig, NetworkText text, Color color, int excludedPlayer)
+		private void BroadcastChatMessage(On.Terraria.Chat.ChatHelper.orig_BroadcastChatMessage orig, NetworkText text, Color color, int excludedPlayer)
 		{
 			if (Global.Config.ShowGameEvents && !text.ToString().EndsWith(PlayerJoinEndingString) && !text.ToString().EndsWith(PlayerLeaveEndingString))
 				Core.RaiseTerrariaMessageReceived(this, (excludedPlayer > 0 ? Main.player[excludedPlayer].ToTCRPlayer(excludedPlayer) : TCRPlayer.Server), text.ToString());
 
 			orig(text, color, excludedPlayer);
-		}
+		}	
 
 		/// <summary>
 		/// Intercept chat messages sent from players.

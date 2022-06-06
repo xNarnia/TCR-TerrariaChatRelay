@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using TerrariaChatRelay;
 using TCRDiscord.Models;
 using TerrariaChatRelay.Command;
+using WebSocketSharp.Server;
 
 namespace TCRDiscord
 {
@@ -76,7 +77,7 @@ namespace TCRDiscord
                 if (output.Length > 2000)
                     output = output.Substring(0, 2000);
 
-                SendMessageToDiscordChannel(output, queue.Key);
+                SendMessageToClient(output, queue.Key);
             }
         }
 
@@ -365,9 +366,6 @@ namespace TCRDiscord
             }
         }
 
-        public override void SendMessageToClient(string msg, ulong sourceChannelId)
-            => SendMessageToDiscordChannel(msg, sourceChannelId);
-
         public override void HandleCommand(ICommandPayload payload, string result, ulong sourceChannelId)
         {
             result = result.Replace("</br>", "\n");
@@ -380,13 +378,21 @@ namespace TCRDiscord
             messageQueue.QueueMessage(sourceChannelId, result);
         }
 
-        public async void SendMessageToDiscordChannel(string message, ulong channelId)
-        {
-            message = message.Replace("\\", "\\\\");
-            message = message.Replace("\"", "\\\"");
-            message = message.Replace("\n", "\\n");
-            string json = DiscordMessageFactory.CreateTextMessage(message);
+        public override void SendMessageToClient(string msg, ulong sourceChannelId)
+            => SendMessageToClient(msg, null, sourceChannelId);
 
+        public void SendMessageToClient(string msg, Embed embed, ulong sourceChannelId)
+        {
+            msg = msg.Replace("\\", "\\\\");
+            msg = msg.Replace("\"", "\\\"");
+            msg = msg.Replace("\n", "\\n");
+            string json = DiscordMessageFactory.CreateTextMessage(msg, embed);
+
+            SendJsonPayloadToDiscordChannel(json, sourceChannelId);
+        }
+
+        public async void SendJsonPayloadToDiscordChannel(string json, ulong channelId)
+        {
             string response = null;
             try
             {

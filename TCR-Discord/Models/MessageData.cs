@@ -42,6 +42,9 @@ namespace TCRDiscord.Models
         [JsonProperty("tts")]
         public bool IsTextToSpeech { get; set; }
 
+        [JsonProperty("embeds")]
+        public Embed[] Embeds { get; set; }
+
         [JsonProperty("pinned")]
         public bool IsPinned { get; set; }
     }

@@ -9,7 +9,7 @@ namespace TerrariaChatRelay.Command.Commands
 	[Command]
 	public class CmdPlayersOnline : ICommand
 	{
-		public string Name { get; } = "Player List";
+		public string Name { get; } = "Players Online";
 
 		public string CommandKey { get; } = "playing";
 

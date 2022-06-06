@@ -15,6 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR-TModLoader", "TCR-TModL
 		{D9BA95FA-F737-4196-A84E-E7B67131537D} = {D9BA95FA-F737-4196-A84E-E7B67131537D}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8040BC16-F5B4-4987-8CAD-5EF7A482C089}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		TModLoader|Any CPU = TModLoader|Any CPU
