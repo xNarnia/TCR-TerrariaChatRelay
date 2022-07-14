@@ -34,6 +34,7 @@ namespace TerrariaChatRelay
 			base.Load();
 
 			ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
 			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
 
@@ -98,7 +99,6 @@ namespace TerrariaChatRelay
 		/// </summary>
 		public async Task GetLatestVersionNumber()
 		{
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 			var http = HttpWebRequest.CreateHttp("https://raw.githubusercontent.com/xPanini/TCR-TerrariaChatRelay/master/TCR-TModLoader/TerrariaChatRelay/build.txt");
 
 			WebResponse res = null;

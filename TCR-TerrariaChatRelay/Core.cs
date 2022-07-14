@@ -137,10 +137,31 @@ namespace TerrariaChatRelay
 
         public static void DisconnectClients()
         {
-            foreach (var subscriber in Subscribers)
+			var i = 0;
+            while (i < Subscribers.Count)
             {
-                subscriber.Disconnect();
-            }
+				i++;
+				var subcriberName = Subscribers[0].GetType().ToString();
+				try
+				{
+					Subscribers[0].Disconnect();
+					PrettyPrint.Log(subcriberName, $"Disconnecting...");
+				}
+				catch (Exception)
+				{
+					PrettyPrint.Log(subcriberName, "Failed to disconnect!");
+				}
+
+				try
+				{
+					Subscribers[0].Dispose();
+					PrettyPrint.Log(subcriberName, $"Disposing...");
+				}
+				catch (Exception)
+				{
+					PrettyPrint.Log(subcriberName, "Failed to dispose!");
+				}
+			}
 
 			Subscribers.Clear();
         }

@@ -108,6 +108,7 @@ namespace TCRDiscord
             errorCounter = 0;
 
             Socket = new WebSocket(GATEWAY_URL);
+            Socket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
             Socket.Compression = CompressionMethod.Deflate;
             Socket.OnOpen += (object sender, EventArgs e) =>
             {
@@ -143,16 +144,6 @@ namespace TCRDiscord
         /// </summary>
         public override void Disconnect()
         {
-            // Detach events
-            Socket.OnMessage -= Socket_OnDataReceived;
-            Socket.OnMessage -= Socket_OnHeartbeatReceived;
-            Socket.OnError -= Socket_OnError;
-
-            // Dispose WebSocket client
-            if (Socket.ReadyState != WebSocketState.Closed)
-                Socket.Close();
-            Socket = null;
-
             // Detach queue from event and dispose
             messageQueue.OnReadyToSend -= OnMessageReadyToSend;
             messageQueue.Clear();
@@ -162,6 +153,16 @@ namespace TCRDiscord
             heartbeatTimer.Stop();
             heartbeatTimer.Dispose();
             heartbeatTimer = null;
+
+            // Detach events
+            Socket.OnMessage -= Socket_OnDataReceived;
+            Socket.OnMessage -= Socket_OnHeartbeatReceived;
+            Socket.OnError -= Socket_OnError;
+
+            // Dispose WebSocket client
+            if (Socket.ReadyState != WebSocketState.Closed)
+                Socket.Close();
+            Socket = null;
         }
 
         /// <summary>
@@ -396,6 +397,13 @@ namespace TCRDiscord
             string response = null;
             try
             {
+                if (debug)
+                {
+                    Console.WriteLine($"Sending JSON to: {API_URL}/channels/{channelId}/messages");
+                    Console.WriteLine(json);
+                }
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 response = await SimpleRequest.SendJsonDataAsync($"{API_URL}/channels/{channelId}/messages",
                     new WebHeaderCollection()
                         {
@@ -415,6 +423,10 @@ namespace TCRDiscord
                 else
                 {
                     PrettyPrint.Log("Discord", e.Message, ConsoleColor.Red);
+                }
+				if (debug)
+				{
+                    Console.WriteLine(e);
                 }
             }
 

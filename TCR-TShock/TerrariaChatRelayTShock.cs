@@ -24,7 +24,7 @@ namespace TCRTShock
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(1, 0, 3, 5);
+		public override Version Version => new Version(1, 4, 1);
 
 		public override string Author => "Panini";
 
@@ -135,10 +135,7 @@ namespace TCRTShock
 		private void OnReload(ReloadEventArgs reloadEventArgs)
 		{
 			Core.DisconnectClients();
-			Global.Config = null;
-
-			new TCRDiscord.Main();
-
+			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
 			Core.ConnectClients();
 		}
 
@@ -293,7 +290,7 @@ namespace TCRTShock
 		/// </summary>
 		public async Task GetLatestVersionNumber()
 		{
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 			var http = HttpWebRequest.CreateHttp("https://raw.githubusercontent.com/xPanini/TCR-TerrariaChatRelay/master/version.txt");
 
 			WebResponse res = null;

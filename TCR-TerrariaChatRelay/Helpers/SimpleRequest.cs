@@ -64,17 +64,30 @@ namespace TerrariaChatRelay.Helpers
             foreach (var header in headers.AllKeys)
             {
                 webRequest.Headers.Add($"{header}: {headers[header]}");
+                // Console.WriteLine($"{header}: {headers[header]}");
             }
 
-            var reqStream = await webRequest.GetRequestStreamAsync().ConfigureAwait(false);
-            reqStream.Write(content, 0, content.Length);
-
-            var res = await webRequest.GetResponseAsync().ConfigureAwait(false);
-
-            using (StreamReader sr = new StreamReader(res.GetResponseStream()))
+			try
             {
-                return sr.ReadToEnd();
+                var reqStream = await webRequest.GetRequestStreamAsync().ConfigureAwait(false);
+                reqStream.Write(content, 0, content.Length);
+
+                var res = await webRequest.GetResponseAsync().ConfigureAwait(false);
+
+                using (StreamReader sr = new StreamReader(res.GetResponseStream()))
+                {
+                    return sr.ReadToEnd();
+                }
             }
+            catch (WebException e)
+			{
+
+                using (StreamReader sr = new StreamReader(e.Response.GetResponseStream()))
+                {
+                    Console.WriteLine(sr.ReadToEnd());
+                }
+                throw;
+			}
         }
     }
 }
