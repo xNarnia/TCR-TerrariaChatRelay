@@ -40,8 +40,9 @@ namespace TCRDiscord
 
         // TCR Variables
         private List<IChatClient> parent { get; set; }
-        private WebSocket Socket;
+        public WebSocket Socket;
         private int errorCounter;
+        private static int fatalErrorCounter;
 
         // Other
         private bool debug = false;
@@ -113,19 +114,21 @@ namespace TCRDiscord
             Socket.OnOpen += (object sender, EventArgs e) =>
             {
                 PrettyPrint.Log("Discord", "Connection established. Logging in!");
+                fatalErrorCounter = 0;
                 Socket.Send(DiscordMessageFactory.CreateLogin(BOT_TOKEN));
             };
 
             Socket.OnMessage += Socket_OnDataReceived;
             Socket.OnMessage += Socket_OnHeartbeatReceived;
             Socket.OnError += Socket_OnError;
+			Socket.OnClose += Socket_OnClose;
             if (!debug)
                 Socket.Log.Output = (_, __) => { };
             else
                 Socket.Log.Output = (logData, output) =>
                 {
-                    PrettyPrint.Log("Discord", output);
-                    PrettyPrint.Log("Discord", logData.Message);
+                    //PrettyPrint.Log("Discord", output);
+                    //PrettyPrint.Log("Discord", logData.Message);
                 };
 
             Socket.Connect();
@@ -139,29 +142,40 @@ namespace TCRDiscord
             }
         }
 
-        /// <summary>
-        /// Unsubscribes all WebSocket events, then releases all resources used by the WebSocket.
-        /// </summary>
-        public override void Disconnect()
+		/// <summary>
+		/// Unsubscribes all WebSocket events, then releases all resources used by the WebSocket.
+		/// </summary>
+		public override void Disconnect()
         {
             // Detach queue from event and dispose
-            messageQueue.OnReadyToSend -= OnMessageReadyToSend;
-            messageQueue.Clear();
+            if(messageQueue != null)
+			{
+                messageQueue.OnReadyToSend -= OnMessageReadyToSend;
+                messageQueue.Clear();
+            }
             messageQueue = null;
 
             // Dispose heartbeat timer
-            heartbeatTimer.Stop();
-            heartbeatTimer.Dispose();
+            if(heartbeatTimer != null)
+			{
+                heartbeatTimer.Stop();
+                heartbeatTimer.Dispose();
+            }
             heartbeatTimer = null;
 
             // Detach events
-            Socket.OnMessage -= Socket_OnDataReceived;
-            Socket.OnMessage -= Socket_OnHeartbeatReceived;
-            Socket.OnError -= Socket_OnError;
+            if(Socket != null)
+			{
+                Socket.OnMessage -= Socket_OnDataReceived;
+                Socket.OnMessage -= Socket_OnHeartbeatReceived;
+                Socket.OnError -= Socket_OnError;
+                Socket.OnClose -= Socket_OnClose;
 
-            // Dispose WebSocket client
-            if (Socket.ReadyState != WebSocketState.Closed)
-                Socket.Close();
+                // Dispose WebSocket client
+                if (Socket.ReadyState != WebSocketState.Closed)
+                    Socket.Close();
+            }
+
             Socket = null;
         }
 
@@ -263,25 +277,93 @@ namespace TCRDiscord
             }
             catch (Exception ex)
             {
-                PrettyPrint.Log("Discord", ex.Message, ConsoleColor.Red);
+                PrettyPrint.Log("Discord", "Error receiving data: " + ex.Message, ConsoleColor.Red);
+
+                if (debug)
+                    Console.WriteLine(ex);
             }
         }
 
+        public void ForceFail()
+		{
+            Socket_OnError(this, null);
+		}
+
         /// <summary>
-        /// Attempts to reconnect after receiving an error.
+        /// Logs connection close reason and attempts to reconnect.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Socket_OnClose(object sender, CloseEventArgs e)
+        {
+            PrettyPrint.Log("Discord", $"Connection Closed: Code {e.Code} - {e.Reason}", ConsoleColor.Red);
+            ScheduleRetry();
+        }
+
+        /// <summary>
+        /// Logs error and attempts to reconnect.
         /// </summary>
         private void Socket_OnError(object sender, WebSocketSharp.ErrorEventArgs e)
         {
-            PrettyPrint.Log("Discord", e.Message, ConsoleColor.Red);
+            PrettyPrint.Log("Discord", "Socket Error: " + e.Message, ConsoleColor.Red);
+            if (debug)
+                Console.WriteLine(e.Exception);
+            ScheduleRetry();
+        }
 
-            if (Socket.IsAlive
-                && Socket.ReadyState != WebSocketState.Closed
-                && Socket.ReadyState != WebSocketState.Closing)
-                return;
+        /// <summary>
+        /// Sets a timer to retry after a specified time in the configuration.
+        /// </summary>
+        private void ScheduleRetry()
+		{
+            PrettyPrint.Log("Discord", $"Attempting to reconnect in {Main.Config.SecondsToWaitBeforeRetryingAgain} seconds...", ConsoleColor.Yellow);
+            var retryTimer = new System.Timers.Timer(Main.Config.SecondsToWaitBeforeRetryingAgain * 1000);
+            retryTimer.Elapsed += (senderr, ee) =>
+            {
+                RetryAfterConnectionError();
+                retryTimer.Stop();
+                retryTimer.Dispose();
+            };
+            retryTimer.Start();
+        }
+
+        /// <summary>
+        /// Checks the state of the socket. If it is in an error state, 
+        /// it will dispose of the Discord ChatClient and reinitialize a new one from scratch.
+        /// </summary>
+        private void RetryAfterConnectionError()
+        {
+            if(Main.Config.NumberOfTimesToRetryConnectionAfterError < 0
+                && fatalErrorCounter == 0)
+			{
+                PrettyPrint.Log("Discord", $"Connection retry count set to infinite...", ConsoleColor.Yellow);
+            }
+
+            fatalErrorCounter++;
+
+            try
+			{
+                if (Socket.IsAlive
+                    && Socket.ReadyState != WebSocketState.Closed
+                    && Socket.ReadyState != WebSocketState.Closing)
+                    return;
+            }
+			catch
+			{
+                PrettyPrint.Log("Discord", "Socket Error: Fatal exception", ConsoleColor.Red);
+            } 
 
             Disconnect();
 
-            PrettyPrint.Log("Discord", "Restarting client...", ConsoleColor.Yellow);
+            if(fatalErrorCounter >= Main.Config.NumberOfTimesToRetryConnectionAfterError 
+                && Main.Config.NumberOfTimesToRetryConnectionAfterError > 0)
+			{
+                PrettyPrint.Log("Discord", $"Unable to establish a connection after {Main.Config.NumberOfTimesToRetryConnectionAfterError} attempts.", ConsoleColor.Red);
+                PrettyPrint.Log("Discord", "Please use the reload command to re-establish connection.", ConsoleColor.Red);
+                return;
+            }
+
+            PrettyPrint.Log("Discord", $"#{fatalErrorCounter} - Restarting client...", ConsoleColor.Yellow);
             var restartClient = new ChatClient(parent, BOT_TOKEN, Channel_IDs.ToArray());
             restartClient.Reconnect = true;
             restartClient.Connect();
@@ -369,6 +451,12 @@ namespace TCRDiscord
 
         public override void HandleCommand(ICommandPayload payload, string result, ulong sourceChannelId)
         {
+            if (messageQueue == null)
+			{
+                Console.WriteLine("Error: Message queue is not available.");
+                return;
+            }
+
             result = result.Replace("</br>", "\n");
             result = result.Replace("</b>", "**");
             result = result.Replace("</i>", "*");

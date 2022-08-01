@@ -24,7 +24,7 @@ namespace TCRTShock
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(1, 4, 1);
+		public override Version Version => new Version(1, 4, 2, 1);
 
 		public override string Author => "Panini";
 

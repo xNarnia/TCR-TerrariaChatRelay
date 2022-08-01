@@ -19,6 +19,12 @@ namespace TCRDiscord
 
 				if (Config.CommandPrefix.Length < 1)
 					Config.CommandPrefix = "t!";
+
+				if (Config.SecondsToWaitBeforeRetryingAgain < 1)
+				{
+					Config.SecondsToWaitBeforeRetryingAgain = 1;
+					Config.SaveJson();
+				}
 			}
 
 			// not appropriate to have a ScanForCommands method in the interface but too lazy to think this out

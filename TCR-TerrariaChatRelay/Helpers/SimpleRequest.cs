@@ -39,7 +39,15 @@ namespace TerrariaChatRelay.Helpers
             var contentType = "application/json";
             var content = await new StringContent(json, Encoding.UTF8, contentType).ReadAsByteArrayAsync();
 
-            return await SendRequestAsync(uri, headers, methodType, contentType, content);
+			try
+			{
+                return await SendRequestAsync(uri, headers, methodType, contentType, content);
+            }
+			catch
+			{
+                PrettyPrint.Log("Discord", "Fatal error attempting to send data", ConsoleColor.Red);
+                return "";
+			}
         }
 
         /// <summary>
@@ -70,24 +78,30 @@ namespace TerrariaChatRelay.Helpers
 			try
             {
                 var reqStream = await webRequest.GetRequestStreamAsync().ConfigureAwait(false);
-                reqStream.Write(content, 0, content.Length);
 
-                var res = await webRequest.GetResponseAsync().ConfigureAwait(false);
+                if(reqStream != null)
+				{
 
-                using (StreamReader sr = new StreamReader(res.GetResponseStream()))
-                {
-                    return sr.ReadToEnd();
+                    reqStream.Write(content, 0, content.Length);
+                    var res = await webRequest.GetResponseAsync().ConfigureAwait(false);
+                    using (StreamReader sr = new StreamReader(res.GetResponseStream()))
+                    {
+                        return sr.ReadToEnd();
+                    }
                 }
             }
             catch (WebException e)
 			{
-
                 using (StreamReader sr = new StreamReader(e.Response.GetResponseStream()))
                 {
-                    Console.WriteLine(sr.ReadToEnd());
+                    Console.WriteLine("Error sending request: " + sr.ReadToEnd());
                 }
-                throw;
 			}
+            catch (Exception e)
+			{
+                Console.WriteLine("Fatal error sending request: " + e.Message);
+            }
+            return null;
         }
     }
 }
