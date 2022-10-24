@@ -382,6 +382,7 @@ namespace TCRDiscord
 
                 if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has joined."))
                     outMsg = Configuration.PlayerLoggedInFormat;
+                    
                 else if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has left."))
                     outMsg = Configuration.PlayerLoggedOutFormat;
                 else if (msg.Player.Name != "Server" && msg.Player.PlayerId != -1)

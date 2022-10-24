@@ -119,7 +119,7 @@ namespace TCRTShock
 				ServerApi.Hooks.ServerBroadcast.Register(this, OnServerBroadcast);
 
 			if (Global.Config.ShowServerStartMessage)
-				Hooks.Game.PostInitialize += OnServerStart;
+				ServerApi.Hooks.GamePostInitialize.Register(this, OnServerStart);
 
 			ServerApi.Hooks.ServerJoin.Register(this, OnServerJoin);
 			ServerApi.Hooks.ServerLeave.Register(this, OnServerLeave);
@@ -218,7 +218,7 @@ namespace TCRTShock
 			}
 		}
 
-		private void OnServerStart()
+		private void OnServerStart(EventArgs args)
 		{
 			Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, "The server is starting!");
 		}
@@ -273,7 +273,7 @@ namespace TCRTShock
 					ServerApi.Hooks.ServerBroadcast.Deregister(this, OnServerBroadcast);
 
 				if (Global.Config.ShowServerStartMessage)
-					Hooks.Game.PostInitialize -= OnServerStart;
+					ServerApi.Hooks.GamePostInitialize.Deregister(this, OnServerStart);
 
 				ServerApi.Hooks.ServerJoin.Deregister(this, OnServerJoin);
 				ServerApi.Hooks.ServerLeave.Deregister(this, OnServerLeave);
