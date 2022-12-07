@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputPath>bin\TModLoader\</OutputPath>
+    <DefineConstants>TRACE;TMODLOADER</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <TargetFramework>net6.0</TargetFramework>
+    <Authors>Narnia</Authors>
+    <Product>TCR.Core</Product>
+    <PackageId>TCR.Core</PackageId>
+    <Configurations>TModLoader</Configurations>
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>TerrariaChatRelay</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="tModLoader">
+      <HintPath>..\lib\Terraria\1.4.2.3\tModLoader.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Core.TML", "TCR.Core\TCR.Core.TML.csproj", "{3B5DF98F-5B1E-466B-BE21-06EA28044C72}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.TModLoader", "TCR.TModLoader\TerrariaChatRelay\TCR.TModLoader.csproj", "{1ACE160A-BB55-4356-A544-FF1B19C8B671}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3B5DF98F-5B1E-466B-BE21-06EA28044C72} = {3B5DF98F-5B1E-466B-BE21-06EA28044C72}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8040BC16-F5B4-4987-8CAD-5EF7A482C089}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Discord", "TCR.Discord\TCR.Discord.TML.csproj", "{D38DEF61-250C-4654-AC3A-E9376A432FA0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		TModLoader|Any CPU = TModLoader|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.TModLoader|Any CPU.ActiveCfg = TModLoader|Any CPU
+		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
+		{1ACE160A-BB55-4356-A544-FF1B19C8B671}.TModLoader|Any CPU.ActiveCfg = TModLoader|Any CPU
+		{1ACE160A-BB55-4356-A544-FF1B19C8B671}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
+		{D38DEF61-250C-4654-AC3A-E9376A432FA0}.TModLoader|Any CPU.ActiveCfg = TModLoader|Any CPU
+		{D38DEF61-250C-4654-AC3A-E9376A432FA0}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D5C1BE9-47D1-4D59-B8CF-DADAF72F05C2}
+	EndGlobalSection
+EndGlobal

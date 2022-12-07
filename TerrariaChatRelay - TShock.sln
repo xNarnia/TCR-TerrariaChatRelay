@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8040BC16-F5B4-4987-8CAD-5EF7A482C089}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.TShock", "TCR.TShock\TCR.TShock.csproj", "{7AB0CF37-19AE-4D89-B6B2-00767B6075C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Core.TShock", "TCR.Core\TCR.Core.TShock.csproj", "{B9F9E3CD-0229-4BF3-861C-A48C4854FA0D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Discord.TShock", "TCR.Discord\TCR.Discord.TShock.csproj", "{641933D9-00F1-4F59-A153-A92C17A688AF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		TModLoader|Any CPU = TModLoader|Any CPU
+		TShock|Any CPU = TShock|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7AB0CF37-19AE-4D89-B6B2-00767B6075C8}.TModLoader|Any CPU.ActiveCfg = TShock|Any CPU
+		{7AB0CF37-19AE-4D89-B6B2-00767B6075C8}.TModLoader|Any CPU.Build.0 = TShock|Any CPU
+		{7AB0CF37-19AE-4D89-B6B2-00767B6075C8}.TShock|Any CPU.ActiveCfg = TShock|Any CPU
+		{7AB0CF37-19AE-4D89-B6B2-00767B6075C8}.TShock|Any CPU.Build.0 = TShock|Any CPU
+		{B9F9E3CD-0229-4BF3-861C-A48C4854FA0D}.TModLoader|Any CPU.ActiveCfg = TShock|Any CPU
+		{B9F9E3CD-0229-4BF3-861C-A48C4854FA0D}.TModLoader|Any CPU.Build.0 = TShock|Any CPU
+		{B9F9E3CD-0229-4BF3-861C-A48C4854FA0D}.TShock|Any CPU.ActiveCfg = TShock|Any CPU
+		{B9F9E3CD-0229-4BF3-861C-A48C4854FA0D}.TShock|Any CPU.Build.0 = TShock|Any CPU
+		{641933D9-00F1-4F59-A153-A92C17A688AF}.TModLoader|Any CPU.ActiveCfg = TModLoader|Any CPU
+		{641933D9-00F1-4F59-A153-A92C17A688AF}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
+		{641933D9-00F1-4F59-A153-A92C17A688AF}.TShock|Any CPU.ActiveCfg = TShock|Any CPU
+		{641933D9-00F1-4F59-A153-A92C17A688AF}.TShock|Any CPU.Build.0 = TShock|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D5C1BE9-47D1-4D59-B8CF-DADAF72F05C2}
+	EndGlobalSection
+EndGlobal
