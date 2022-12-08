@@ -83,27 +83,9 @@ namespace TCRTShock
 			ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
 			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
+			
 			// Add subscribers to list
 			Core.Initialize(new TShockAdapter());
-
-			// Clients auto subscribe to list.
-			//foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
-			//{
-			//	var OnLoadConfigAssemblies = asm.GetTypes()
-			//		.Where(type => !type.IsAbstract  && type.IsSubclassOf(typeof(TCRPlugin)));
-
-			//	if (OnLoadConfigAssemblies.Count() > 0)
-			//	{
-			//		foreach (Type type in OnLoadConfigAssemblies)
-			//		{
-			//			// Get the constructor and create an instance of Config
-			//			ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes);
-			//			TCRPlugin plugin = (TCRPlugin)constructor.Invoke(new object[] { });
-			//			plugin.Init(TerrariaChatRelay.Subscribers);
-			//		}
-			//	}
-			//}
-
 			Core.ConnectClients();
 
 			if (Global.Config.CheckForLatestVersion)

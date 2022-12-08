@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Core.TML", "TCR.Core\TCR.Core.TML.csproj", "{3B5DF98F-5B1E-466B-BE21-06EA28044C72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.TModLoader", "TCR.TModLoader\TerrariaChatRelay\TCR.TModLoader.csproj", "{1ACE160A-BB55-4356-A544-FF1B19C8B671}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Adapter.TModLoader", "TCR.TModLoader\TerrariaChatRelay\TCR.Adapter.TModLoader.csproj", "{1ACE160A-BB55-4356-A544-FF1B19C8B671}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3B5DF98F-5B1E-466B-BE21-06EA28044C72} = {3B5DF98F-5B1E-466B-BE21-06EA28044C72}
 	EndProjectSection
@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Discord", "TCR.Discord\TCR.Discord.TML.csproj", "{D38DEF61-250C-4654-AC3A-E9376A432FA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Discord.TML", "TCR.Discord\TCR.Discord.TML.csproj", "{D38DEF61-250C-4654-AC3A-E9376A432FA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

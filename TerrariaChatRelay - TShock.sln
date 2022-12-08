@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.TShock", "TCR.TShock\TCR.TShock.csproj", "{7AB0CF37-19AE-4D89-B6B2-00767B6075C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Adapter.TShock", "TCR.TShock\TCR.Adapter.TShock.csproj", "{7AB0CF37-19AE-4D89-B6B2-00767B6075C8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Core.TShock", "TCR.Core\TCR.Core.TShock.csproj", "{B9F9E3CD-0229-4BF3-861C-A48C4854FA0D}"
 EndProject

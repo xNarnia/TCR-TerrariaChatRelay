@@ -41,6 +41,7 @@ namespace TCRDiscord
         private int errorCounter;
         private static int fatalErrorCounter;
         private bool retryConnection = false;
+        private bool manualDisconnect = false;
 
         // Other
         private bool debug = false;
@@ -144,8 +145,10 @@ namespace TCRDiscord
 		/// </summary>
 		public override void Disconnect()
         {
+            manualDisconnect = true;
+
             // Detach queue from event and dispose
-            if(messageQueue != null)
+            if (messageQueue != null)
 			{
                 messageQueue.OnReadyToSend -= OnMessageReadyToSend;
                 messageQueue.Clear();
@@ -156,7 +159,7 @@ namespace TCRDiscord
             if(Socket != null)
 			{
                 Socket.MessageReceived -= ClientMessageReceived;
-                Socket.Dispose();
+                Socket.StopAsync().GetAwaiter();
             }
 
             Socket = null;
@@ -181,12 +184,9 @@ namespace TCRDiscord
                     if (!msg.Author.IsBot)
                     {
                         string msgout = msg.Content;
+                        bool command = Core.CommandServ.IsCommand(msgout, Main.Config.CommandPrefix);
 
-                        // Lazy add commands until I take time to design a command service properly
-                        //if (ExecuteCommand(chatmsg))
-                        //    return;
-
-                        if (!Core.CommandServ.IsCommand(msgout, Main.Config.CommandPrefix))
+                        if (!command)
                         {
                             msgout = chatParser.ConvertUserIdsToNames(msgout, msg.MentionedUsers);
                             msgout = chatParser.ShortenEmojisToName(msgout);
@@ -207,7 +207,7 @@ namespace TCRDiscord
 
                         msgout = $"<{msg.Author.Username}> {msgout}";
 
-                        if (Channel_IDs.Count > 1)
+                        if (Channel_IDs.Count > 1 && !command)
                         {
                             messageQueue.QueueMessage(
                                 Channel_IDs.Where(x => x != msg.Channel.Id),
@@ -235,7 +235,7 @@ namespace TCRDiscord
 
         public void ForceFail()
 		{
-            //Socket_OnError(this, null);
+            ScheduleRetry(new Exception("This is a test"));
 		}
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace TCRDiscord
         /// </summary>
         private Task ScheduleRetry(Exception e)
         {
-            if(retryConnection == true)
+            if(retryConnection == true || manualDisconnect == true)
                 return Task.CompletedTask;
 
             retryConnection = true;

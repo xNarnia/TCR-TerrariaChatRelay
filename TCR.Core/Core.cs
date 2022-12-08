@@ -103,7 +103,6 @@ namespace TerrariaChatRelay
 		public static void ConnectClients()
         {
 			PrettyPrint.Log("Connecting clients...");
-			Console.WriteLine("1");
 
 			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 			{
@@ -127,11 +126,10 @@ namespace TerrariaChatRelay
 					}
 				}
 			}
-			Console.WriteLine("3");
 
 			for (var i = 0; i < Subscribers.Count; i++)
 			{
-				PrettyPrint.Log(Subscribers[i].GetType().ToString() + " Connecting...");
+				PrettyPrint.Log(Subscribers[i].GetType().Assembly.GetName().Name.ToString() + " Connecting...");
 				Subscribers[i].ConnectAsync();
             }
 			Console.ResetColor();
@@ -147,7 +145,7 @@ namespace TerrariaChatRelay
 				try
 				{
 					Subscribers[0].Disconnect();
-					PrettyPrint.Log(subcriberName, $"Disconnecting...");
+					PrettyPrint.Log(subcriberName, $"Disconnecting {subcriberName}...");
 				}
 				catch (Exception)
 				{
@@ -157,7 +155,7 @@ namespace TerrariaChatRelay
 				try
 				{
 					Subscribers[0].Dispose();
-					PrettyPrint.Log(subcriberName, $"Disposing...");
+					PrettyPrint.Log(subcriberName, $"Disposing {subcriberName}...");
 				}
 				catch (Exception)
 				{

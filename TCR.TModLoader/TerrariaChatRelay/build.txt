@@ -5,6 +5,6 @@ homepage = https://forums.terraria.org/index.php?threads/tcr-terrariachatrelay.7
 includePDB=true
 includeSource=false
 languageVersion=6
-dllReferences = TCR.Core.TML, TCR.Discord, Discord.Net.Core, Discord.Net.Rest, Discord.Net.WebSocket
+dllReferences = TCR.Core.TML, TCR.Discord.TML, Discord.Net.Core, Discord.Net.Rest, Discord.Net.WebSocket
 buildIgnore=.git/,.vs/,.bin/,app.config,TerrariaChatRelay.csproj.user
 side = Server
