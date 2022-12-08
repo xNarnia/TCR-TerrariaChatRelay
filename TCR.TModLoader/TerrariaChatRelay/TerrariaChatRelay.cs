@@ -1,21 +1,16 @@
 using On.Terraria.GameContent.NetModules;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using Terraria;
 using Terraria.Chat;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Net;
-using Terraria.UI.Chat;
-using TerrariaChatRelay;
 using Microsoft.Xna.Framework;
 using TerrariaChatRelay.Helpers;
 using System.Threading.Tasks;
-using TerrariaChatRelay.Command;
 using System.Net.Http;
 
 namespace TerrariaChatRelay
