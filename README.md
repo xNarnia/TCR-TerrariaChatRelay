@@ -18,7 +18,12 @@ Self-serving Terraria Chat Relay with extensible chat service support.
 
 If you want to suggest a chat service, prioritize another, or contribute some code, please feel free to say so!
 
-### Helpful Links:
+### Server Owner Resources
 * [First Time Setup - Server Owner](https://github.com/xPanini/TCR-TerrariaChatRelay/wiki/First-Time-Setup-Server-Owner)
 * [Command List](https://github.com/xPanini/TCR-TerrariaChatRelay/wiki/Commands)
 * [Discord Support Server](https://discord.gg/xAQGT4VetN)
+
+### Developer Resources
+These resources are aimed to help you design your own chat relay mod using TCR as a core framework.
+* [Getting Started](https://github.com/xPanini/TCR-TerrariaChatRelay/wiki/Getting-Started)
+* [TCR Application Layers](https://github.com/xPanini/TCR-TerrariaChatRelay/wiki/Application-Layers)
