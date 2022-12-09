@@ -25,5 +25,5 @@ If you want to suggest a chat service, prioritize another, or contribute some co
 
 ### Developer Resources
 These resources are aimed to help you design your own chat relay mod using TCR as a core framework.
-* [Getting Started](Getting-Started)
-* [TCR Application Layers](Application-Layers)
+* [Getting Started](https://github.com/xPanini/TCR-TerrariaChatRelay/wiki/Getting-Started)
+* [TCR Application Layers](https://github.com/xPanini/TCR-TerrariaChatRelay/wiki/Application-Layers)
