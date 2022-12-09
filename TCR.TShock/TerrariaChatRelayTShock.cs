@@ -23,9 +23,9 @@ namespace TCRTShock
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(1, 4, 2, 2);
+		public override Version Version => new Version(2, 0, 0, 0);
 
-		public override string Author => "Panini";
+		public override string Author => "Narnia";
 
 		public override string Description => "A chat redirecting plugin to send chat to your favorite messaging platforms.";
 
@@ -304,7 +304,7 @@ namespace TCRTShock
 
 							LatestVersion = new Version(line);
 							if (LatestVersion > Version)
-								PrettyPrint.Log($"A new version of TCR is available: V.{LatestVersion.ToString()}");
+								PrettyPrint.Log($"A new version of TCR is available: V.{LatestVersion.ToString()}", ConsoleColor.Green);
 
 							line = null;
 						}

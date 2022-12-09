@@ -16,13 +16,15 @@ namespace TCRDiscord.Commands
 
 		public string CommandKey { get; } = "listadmin";
 
+		public string[] Aliases { get; } = { };
+
 		public string Description { get; } = "Lists all users given access to Administrator level commands.";
 
 		public string Usage { get; } = "listadmin";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.Owner;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			return "**Administrators for TerrariaChatRelay:**\n" + string.Join("\n", Main.Config.AdminUserIds.Where(x => x != 0).Select(x => $"<@{x}> - ID: {x}\n"));
 		}

@@ -16,13 +16,15 @@ namespace TCRDiscord.Commands
 
 		public string CommandKey { get; } = "removeadmin";
 
+		public string[] Aliases { get; } = { };
+
 		public string Description { get; } = "Removes the user's access to Administrator level commands.";
 
 		public string Usage { get; } = "removeadmin @DiscordUser";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.Owner;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			input = input.Replace("<@", "");
 			input = input.Replace("!", "");

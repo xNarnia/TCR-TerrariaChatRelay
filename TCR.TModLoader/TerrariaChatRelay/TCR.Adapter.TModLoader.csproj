@@ -10,7 +10,7 @@
     <Authors>Narnia</Authors>
     <Product></Product>
     <PackageId>$(PackageName)</PackageId>
-    <Version>1.0.2</Version>
+    <Version>2.0.0</Version>
     <RootNamespace>TerrariaChatRelay</RootNamespace>
   </PropertyGroup>
   <ItemGroup>

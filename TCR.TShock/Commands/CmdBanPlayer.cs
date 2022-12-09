@@ -15,13 +15,15 @@ namespace TerrariaChatRelay.Command.Commands
 
 		public string CommandKey { get; } = "ban";
 
+		public string[] Aliases { get; } = { };
+
 		public string Description { get; } = "Bans the specified player. (Careful not to trigger other Discord bots!)";
 
 		public string Usage { get; } = "ban PlayerName, silent/loud, reason, duration(s/m/d)";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.Manager;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			input = input.ToLower();
 

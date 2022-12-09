@@ -20,6 +20,11 @@ namespace TerrariaChatRelay.Command
 		string CommandKey { get; }
 
 		/// <summary>
+		/// Alternate sequences of characters sent from a client user that identifies this command to run.
+		/// </summary>
+		string[] Aliases { get; }
+
+		/// <summary>
 		/// Summarized explanation of the command's functionality.
 		/// </summary>
 		string Description { get; }
@@ -40,6 +45,6 @@ namespace TerrariaChatRelay.Command
 		/// <param name="input">Parameters sent when the command was executed. Example: "!poke Narnia 50" would return "Narnia 50"</param>
 		/// <param name="whoRanCommand">The client user who initiated the command.</param>
 		/// <returns>Message result based on the command. Should be a message explaining the status of the execution.</returns>
-		string Execute(string input = null, TCRClientUser whoRanCommand = null);
+		string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null);
 	}
 }

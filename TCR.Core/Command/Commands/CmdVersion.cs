@@ -13,23 +13,25 @@ namespace TerrariaChatRelay.Command.Commands
 
 		public string CommandKey { get; } = "version";
 
+		public string[] Aliases { get; } = { };
+
 		public string Description { get; } = "Displays the version of TCR!";
 
 		public string Usage { get; } = "version";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.User;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			string terraria = "";
 #if TSHOCK
-			terraria = "TShock - v";
+			terraria = "TShock";
 #endif
 #if TMODLOADER
-			terraria = "tModLoader 1.3 - v";
+			terraria = "tModLoader 1.4";
 #endif
 
-			return "</b>TerrariaChatRelay Version:</b> " + terraria + typeof(Core).Assembly.GetName().Version.ToString();
+			return $"</b>TerrariaChatRelay Version:</b> {terraria} - v{Core.TCRVersion}";
 		}
 	}
 }

@@ -12,6 +12,6 @@ namespace TerrariaChatRelay.Command
 		string Parameters { get; }
 		TCRClientUser UserExecutor { get; }
 		bool Executed { get; }
-		string Execute();
+		string Execute(object sender);
 	}
 }

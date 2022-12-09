@@ -23,9 +23,9 @@ namespace TerrariaChatRelay.Command
 			Executed = false;
 		}
 
-		public string Execute()
+		public string Execute(object sender)
 		{
-			return CommandServ.ExecuteCommand(this);
+			return CommandServ.ExecuteCommand(sender, this);
 		}
 	}
 }

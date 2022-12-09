@@ -16,13 +16,15 @@ namespace TCRDiscord.Commands
 
 		public string CommandKey { get; } = "addmanager";
 
+		public string[] Aliases { get; } = { };
+
 		public string Description { get; } = "Grants the user access to Manager level commands.";
 
 		public string Usage { get; } = "addmanager @DiscordUser";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.Admin;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			input = input.Replace("<@", "");
 			input = input.Replace("!", "");

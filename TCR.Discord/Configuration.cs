@@ -30,7 +30,17 @@ namespace TCRDiscord
 		[JsonProperty(Order = 120)]
 		public List<ulong> AdminUserIds { get; set; } = new List<ulong>();
 		[JsonProperty(Order = 130)]
+		public string EndpointHelp1 { get; set; } = "Use commands to handle denying sending and receiving! Use 't!help admin' for more information";
+		[JsonProperty(Order = 133)]
 		public List<Endpoint> EndPoints { get; set; } = new List<Endpoint>();
+		[JsonProperty(Order = 134)]
+		public string GameStatusHelp1 { get; set; } = "Sets the bots now playing status. Can be configured with variables";
+		[JsonProperty(Order = 135)]
+		public string GameStatusHelp2 { get; set; } = "%playercount% = Number of current players on the server";
+		[JsonProperty(Order = 136)]
+		public string GameStatusHelp3 { get; set; } = "%maxplayers% = Maximum number of players allowed, based on serverconfig.txt or command prompt entry";
+		[JsonProperty(Order = 138)]
+		public string GameStatus { get; set; } = "with %playercount%/%maxplayers% players!";
 		[JsonProperty(Order = 140)]
 		public string RetryHelp { get; set; } = "Set NumberOfTimesToRetryConnectionAfterError to -1 to retry infinitely";
 		[JsonProperty(Order = 150)]
@@ -52,8 +62,10 @@ namespace TCRDiscord
 		[JsonProperty(Order = 230)]
 		public string FormatHelp7 { get; set; } = "%groupsuffix% = Group suffix";
 
+		[JsonProperty(Order = 235)]
+		public static string TerrariaInGameDiscordPrefix = "[c/7489d8:Discord] - ";
 		[JsonProperty(Order = 240)]
-		public static string PlayerChatFormat = ":speech_left: **%playername%:** %message%";
+		public static string PlayerChatFormat = "> **%playername%:** %message%";
 		[JsonProperty(Order = 250)]
 		public static string PlayerLoggedInFormat = ":small_blue_diamond: **%playername%** joined the server.";
 		[JsonProperty(Order = 260)]
@@ -83,5 +95,7 @@ namespace TCRDiscord
 	{
 		public string BotToken { get; set; } = "BOT_TOKEN";
 		public ulong[] Channel_IDs { get; set; } = { 0 };
+		public List<ulong> DenySendingMessagesToGame { get; set; } = new List<ulong>();
+		public List<ulong> DenyReceivingMessagesFromGame { get; set; } = new List<ulong>();
 	}
 }

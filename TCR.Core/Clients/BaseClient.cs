@@ -75,7 +75,7 @@ namespace TerrariaChatRelay.Clients
         /// <param name="payload">The payload that was ran before being sent to this handler. Boolean Executed updated to reflect whether it successfully executed or not.</param>
         /// <param name="msg">The output message from the command execution detailing the status of the command.</param>
         /// <param name="sourceChannelId">Optional id for clients that require id's to send to channels. Id of the channel the message originated from.</param>
-        public abstract void HandleCommand(ICommandPayload payload, string msg, ulong sourceChannelId = 0);
+        public abstract void HandleCommandOutput(ICommandPayload payload, string msg, ulong sourceChannelId = 0);
 
         // Events
         //public abstract Task ClientMessageReceived_Handler(string msg);

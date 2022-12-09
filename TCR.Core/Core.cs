@@ -9,13 +9,15 @@ using TerrariaChatRelay.Models;
 
 namespace TerrariaChatRelay
 {
-    public class Core
-    {
-        /// <summary>
-        /// IChatClients list for clients to register with.
-        /// </summary>
-        public static List<IChatClient> Subscribers { get; set; }
+	public class Core
+	{
+		/// <summary>
+		/// IChatClients list for clients to register with.
+		/// </summary>
+		public static List<IChatClient> Subscribers { get; set; }
 		public static ICommandService CommandServ { get; set; }
+
+		public static Version TCRVersion { get; set; } = new Version(2, 0, 0);
 
         public static event EventHandler<TerrariaChatEventArgs> OnGameMessageReceived;
         public static event EventHandler<TerrariaChatEventArgs> OnGameMessageSent;
@@ -65,8 +67,8 @@ namespace TerrariaChatRelay
 			if(CommandServ.IsCommand(msg, commandPrefix))
 			{
 				var payload = CommandServ.GetExecutableCommand(msg, commandPrefix, user);
-				msg = payload.Execute();
-				((IChatClient)sender).HandleCommand(payload, msg, sourceChannelId);
+				msg = payload.Execute(sender);
+				((IChatClient)sender).HandleCommandOutput(payload, msg, sourceChannelId);
 			}
 			else
 			{

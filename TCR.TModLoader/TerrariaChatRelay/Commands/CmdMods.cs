@@ -15,6 +15,7 @@ namespace TerrariaChatRelay.Commands
 		public string Name { get; } = "Show Mods";
 
 		public string CommandKey { get; } = "mods";
+		public string[] Aliases { get; } = { "modlist" };
 
 		public string Description { get; } = "Displays current mods on the server";
 
@@ -22,7 +23,7 @@ namespace TerrariaChatRelay.Commands
 
 		public Permission DefaultPermissionLevel { get; } = Permission.User;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			return $"</b>Mod List:</b></br></box>{string.Join(", ", ModLoader.Mods.Select(x => x.DisplayName).Where(x => x != "tModLoader"))}</box>";
 		}

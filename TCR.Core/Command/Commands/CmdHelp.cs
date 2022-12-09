@@ -13,29 +13,77 @@ namespace TerrariaChatRelay.Command.Commands
 
 		public string CommandKey { get; } = "help";
 
+		public string[] Aliases { get; } = { "info" };
+
 		public string Description { get; } = "Displays this help message!";
 
-		public string Usage { get; } = "help";
+		public string Usage { get; } = "help, help manager, help admin, help owner, help all";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.User;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
-			return string.Join("</br></br>", 
-				Core.CommandServ.Commands
-					.Where(x => x.Value.DefaultPermissionLevel <= whoRanCommand.PermissionLevel)
-					.OrderBy(x => x.Value.DefaultPermissionLevel)
-					.Select(x => $"</quote></b>{(x.Value.DefaultPermissionLevel == Permission.User ? "" : $"[{x.Value.DefaultPermissionLevel.ToString()}] - ")}{x.Value.CommandKey}</b> - {x.Value.Description}</br></quote>     </b>Example:</b> </code>{x.Value.Usage}</code>")
-			);
+			Permission permissionRequested;
+
+			switch (input.ToLower())
+			{
+				case "manager":
+					permissionRequested = Permission.Manager;
+					break;
+				case "admin":
+					permissionRequested = Permission.Admin;
+					break;
+				case "owner":
+					permissionRequested = Permission.Owner;
+					break;
+				case "all":
+					permissionRequested = whoRanCommand.PermissionLevel;
+					break;
+				default:
+					permissionRequested = Permission.User;
+					break;
+			}
+
+			if (permissionRequested > whoRanCommand.PermissionLevel)
+				return "</b>You don't have permission to use this command!</b>";
+
+			var commands = Core.CommandServ.Commands
+					.Where(x => x.Value.DefaultPermissionLevel <= whoRanCommand.PermissionLevel && (x.Value.DefaultPermissionLevel == permissionRequested || input.ToLower() == "all"))
+					.Where(x => !x.Value.Aliases.Contains(x.Key))
+					.OrderBy(x => x.Value.DefaultPermissionLevel);
+
+			var helpList = new List<string>();
+			string output = "";
+
+			foreach (var command in commands)
+			{
+				// First line
+				output += "</br></br></quote></b>";
+
+				if (command.Value.DefaultPermissionLevel != Permission.User)
+				{
+					output += $"[{command.Value.DefaultPermissionLevel}] - ";
+				}
+
+				output += $"{command.Value.CommandKey}</b> - {command.Value.Description}</br>";
+
+				// Next line, show aliases if available
+				if (command.Value.Aliases.Count() > 0)
+				{
+					var aliases = command.Value.Aliases
+						.Select(x => $"</code>{x}</code>");
+
+					output += $"</quote>     </b>Aliases: </b>{string.Join(", ", aliases)}</br>";
+				}
+
+				// Last line
+				if (command.Value.Usage != null && command.Value.Usage != "")
+				{
+					output += $"</quote>     </b>Example:</b> </code>{command.Value.Usage}</code>";
+				}
+			}
+
+			return output;
 		}
-	}
-
-	// Lazy alias until I can get around to adding aliases
-	[Command]
-	public class CmdInfo : CmdHelp, ICommand
-	{
-		public new string CommandKey { get; } = "info";
-
-		public new string Usage { get; } = "info";
 	}
 }

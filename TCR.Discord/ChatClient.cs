@@ -10,6 +10,7 @@ using TerrariaChatRelay;
 using TerrariaChatRelay.Command;
 using Discord.WebSocket;
 using Discord;
+using System.Timers;
 
 namespace TCRDiscord
 {
@@ -20,8 +21,11 @@ namespace TCRDiscord
 
         // Discord Variables
         public List<ulong> Channel_IDs { get; set; }
+        public List<ulong> SendOnlyChannel_IDs { get; set; }
+        public List<ulong> ReceiveOnlyChannel_IDs { get; set; }
+        public Endpoint Endpoint { get; set; }
         public bool Reconnect { get; set; } = false;
-        private string BOT_TOKEN;
+        private string BOT_TOKEN { get; set; }
         private ChatParser chatParser { get; set; }
 
         // Message Queue
@@ -34,17 +38,22 @@ namespace TCRDiscord
         private static int fatalErrorCounter;
         private bool retryConnection = false;
         private bool manualDisconnect = false;
+        private Timer statusTimer;
 
         // Other
         private bool debug = false;
 
-        public ChatClient(List<IChatClient> _parent, string bot_token, ulong[] channel_ids)
+        public ChatClient(List<IChatClient> _parent, Endpoint _endpoint)
             : base(_parent)
         {
             parent = _parent;
-            BOT_TOKEN = bot_token;
+            BOT_TOKEN = _endpoint.BotToken;
+            Channel_IDs = _endpoint.Channel_IDs.ToList();
+            Endpoint = _endpoint;
             chatParser = new ChatParser();
-            Channel_IDs = channel_ids.ToList();
+
+            statusTimer = new Timer(12000);
+            statusTimer.Elapsed += GameStatusUpdate;
 
             messageQueue = new DiscordMessageQueue(500);
             messageQueue.OnReadyToSend += OnMessageReadyToSend;
@@ -129,6 +138,8 @@ namespace TCRDiscord
             fatalErrorCounter = 0;
             retryConnection = false;
             Socket.Connected -= ConnectionSuccessful;
+            statusTimer.Start();
+
             return Task.CompletedTask;
 		}
 
@@ -147,8 +158,15 @@ namespace TCRDiscord
             }
             messageQueue = null;
 
+            if (statusTimer != null)
+			{
+                statusTimer.Stop();
+                statusTimer.Dispose();
+            }
+            statusTimer = null;
+
             // Detach events
-            if(Socket != null)
+            if (Socket != null)
 			{
                 Socket.MessageReceived -= ClientMessageReceived;
                 Socket.StopAsync().GetAwaiter();
@@ -180,6 +198,9 @@ namespace TCRDiscord
 
                         if (!command)
                         {
+                            if (Endpoint.DenySendingMessagesToGame.Contains(msg.Channel.Id))
+                                return Task.CompletedTask;
+                            
                             msgout = chatParser.ConvertUserIdsToNames(msgout, msg.MentionedUsers);
                             msgout = chatParser.ShortenEmojisToName(msgout);
                         }
@@ -195,14 +216,29 @@ namespace TCRDiscord
                             userPermission = Permission.User;
 
                         var user = new TCRClientUser("Discord", msg.Author.Username, userPermission);
-                        TerrariaChatRelay.Core.RaiseClientMessageReceived(this, user, "[c/7489d8:Discord] - ", msgout, Main.Config.CommandPrefix, msg.Channel.Id);
+
+                        // There needs to be a better way of doing this rather than making exceptions that couple to commands
+						if (command)
+						{
+                            string[] channelCommands = { "denysend", "denyreceive", "allowsend", "allowreceive" };
+
+                            foreach(var commandKey in channelCommands)
+							{
+                                if(msgout.StartsWith(Main.Config.CommandPrefix + commandKey))
+								{
+                                    msgout = Main.Config.CommandPrefix + commandKey + " " + msg.Channel.Id;
+								}
+							}
+                        }
+
+                        TerrariaChatRelay.Core.RaiseClientMessageReceived(this, user, Configuration.TerrariaInGameDiscordPrefix, msgout, Main.Config.CommandPrefix, msg.Channel.Id);
 
                         msgout = $"<{msg.Author.Username}> {msgout}";
 
                         if (Channel_IDs.Count > 1 && !command)
                         {
                             messageQueue.QueueMessage(
-                                Channel_IDs.Where(x => x != msg.Channel.Id),
+                                Channel_IDs.Where(x => x != msg.Channel.Id && !Endpoint.DenyReceivingMessagesFromGame.Contains(x)),
                                 $"**[Discord]** <{msg.Author.Username}> {msg.Content}");
                         }
 
@@ -225,10 +261,26 @@ namespace TCRDiscord
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// A debug method that forcefully schedules the bot to retry connection.
+        /// </summary>
         public void ForceFail()
 		{
             ScheduleRetry(new Exception("This is a test"));
 		}
+
+        /// <summary>
+        /// Updates the bot's now playing status periodically using a timer.
+        /// </summary>
+        private void GameStatusUpdate(object sender, ElapsedEventArgs e)
+        {
+            string status = Main.Config.GameStatus;
+            status = status.Replace("%playercount%", TerrariaChatRelay.Game.GetCurrentPlayerCount().ToString());
+            status = status.Replace("%maxplayers%", TerrariaChatRelay.Game.GetMaxPlayerCount().ToString());
+            status = status.Replace("%worldname%", TerrariaChatRelay.Game.World.GetName());
+
+            Socket.SetGameAsync(status);
+        }
 
         /// <summary>
         /// Sets a timer to retry after a specified time in the configuration.
@@ -288,7 +340,7 @@ namespace TCRDiscord
             }
 
             PrettyPrint.Log("Discord", $"#{fatalErrorCounter} - Restarting client...", ConsoleColor.Yellow);
-            var restartClient = new ChatClient(parent, BOT_TOKEN, Channel_IDs.ToArray());
+            var restartClient = new ChatClient(parent, Endpoint);
             restartClient.Reconnect = true;
             restartClient.ConnectAsync();
             parent.Add(restartClient);
@@ -299,8 +351,14 @@ namespace TCRDiscord
         {
             if (errorCounter > 2)
                 return;
+
+            var ChannelsToSendTo = Channel_IDs.Except(Endpoint.DenyReceivingMessagesFromGame);
+            if (ChannelsToSendTo.Count() <= 0)
+                return;
+
             try
             {
+
                 string outMsg = "";
                 string bossName = "";
 
@@ -356,13 +414,18 @@ namespace TCRDiscord
                     outMsg = outMsg.Replace("%playername%", playerName);
                 }
 
+                outMsg = outMsg.Replace("%playercount%", TerrariaChatRelay.Game.GetCurrentPlayerCount().ToString());
+                outMsg = outMsg.Replace("%maxplayers%", TerrariaChatRelay.Game.GetMaxPlayerCount().ToString());
                 outMsg = outMsg.Replace("%worldname%", TerrariaChatRelay.Game.World.GetName());
                 outMsg = outMsg.Replace("%message%", msg.Message);
+
+                // Remove pings
+                outMsg = chatParser.RemoveUserMentions(outMsg);
 
                 if (outMsg == "" || outMsg == null)
                     return;
 
-                messageQueue.QueueMessage(Channel_IDs, outMsg);
+                messageQueue.QueueMessage(ChannelsToSendTo, outMsg);
             }
             catch (Exception e)
             {
@@ -378,7 +441,7 @@ namespace TCRDiscord
             }
         }
 
-        public override void HandleCommand(ICommandPayload payload, string result, ulong sourceChannelId)
+        public override void HandleCommandOutput(ICommandPayload payload, string result, ulong sourceChannelId)
         {
             if (messageQueue == null)
 			{

@@ -15,13 +15,15 @@ namespace TerrariaChatRelay.Command.Commands
 
 		public string CommandKey { get; } = "kill";
 
+		public string[] Aliases { get; } = { };
+
 		public string Description { get; } = "Kills the designated player >:)";
 
 		public string Usage { get; } = "kill PlayerName";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.Manager;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			if(input == null || input == "")
 				return "Please designate a player to kill. Example: \"kill Unlucky Player\"";

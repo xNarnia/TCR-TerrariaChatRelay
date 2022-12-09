@@ -46,21 +46,28 @@ namespace TerrariaChatRelay
 		}
 
 		/// <summary>
-		/// Adds a command to the CommandService.
+		/// Adds a command to the CommandService using it's key and aliases.
 		/// </summary>
 		/// <param name="command">Command to add to the CommandService.</param>
 		public void AddCommand(ICommand command)
-			=> Commands.Add(command.CommandKey, command);
+		{
+			Commands.Add(command.CommandKey, command);
+			
+			foreach(string alias in command.Aliases)
+			{
+				Commands.Add(alias, command);
+			}
+		}
 
 		/// <summary>
 		/// Receives raw input from the game and checks whether it has an associated command. If it does, it checks if the user has permission to run it.
 		/// </summary>
 		/// <param name="payload">Command payload containing which command to run, as well as all necessary data to run it.</param>
 		/// <returns>If successful, returns a response from the command's executor. If no permission, returns a message indicating so.</returns>
-		public string ExecuteCommand(ICommandPayload payload)
+		public string ExecuteCommand(object sender, ICommandPayload payload)
 		{
 			if (payload.UserExecutor.PermissionLevel >= payload.Command.DefaultPermissionLevel)
-				return payload.Command.Execute(payload.Parameters, payload.UserExecutor);
+				return payload.Command.Execute(sender, payload.Parameters, payload.UserExecutor);
 			else
 				return "You don't have permission to use this command!";
 		}

@@ -41,6 +41,6 @@ namespace TerrariaChatRelay.Command
 		/// </summary>
 		/// <param name="commandRun">Command payload containing which command to run, as well as all necessary data to run it.</param>
 		/// <returns>If successful, returns a response from the command's executor. If no permission, returns a message indicating so.</returns>
-		string ExecuteCommand(ICommandPayload commandRun);
+		string ExecuteCommand(object sender, ICommandPayload commandRun);
 	}
 }

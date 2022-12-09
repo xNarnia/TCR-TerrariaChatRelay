@@ -14,13 +14,15 @@ namespace TerrariaChatRelay.Command.Commands
 
 		public string CommandKey { get; } = "kick";
 
+		public string[] Aliases { get; } = { };
+
 		public string Description { get; } = "Kicks the specified player. (Careful not to trigger other Discord bots!)";
 
 		public string Usage { get; } = "kick PlayerName";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.Manager;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			input = input.ToLower();
 			if (input == null || input == "")

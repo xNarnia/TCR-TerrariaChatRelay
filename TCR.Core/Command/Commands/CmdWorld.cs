@@ -7,13 +7,15 @@
 
 		public string CommandKey { get; } = "world";
 
+		public string[] Aliases { get; } = { };
+
 		public string Description { get; } = "Displays the world info!";
 
 		public string Usage { get; } = "world";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.User;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			var worldinfo = new System.Text.StringBuilder();
 

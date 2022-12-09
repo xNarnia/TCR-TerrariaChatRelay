@@ -11,12 +11,14 @@ namespace TCRDiscord.Helpers
     public class ChatParser
     {
         Regex specialFinder { get; }
+        Regex userMentionFinder { get; }
         Regex colorCodeFinder { get; }
         Regex itemCodeFinder { get; }
 
         public ChatParser()
         {
             specialFinder = new Regex(@":[^:\s]*(?:::[^:\s]*)*>");
+            userMentionFinder = new Regex(@"(?<=<)(.\d+?)(?=>)");
             colorCodeFinder = new Regex(@"\[c\/.*?:(.*?)\]");
             itemCodeFinder = new Regex(@"\[i:(.*?)\]");
         }
@@ -39,6 +41,13 @@ namespace TCRDiscord.Helpers
             chatMessage = chatMessage.Replace("<a:", ":");
 
             return chatMessage;
+        }
+
+        public string RemoveUserMentions(string chatMessage)
+		{
+            chatMessage = userMentionFinder.Replace(chatMessage, "User Ping Removed");
+            return chatMessage;
+
         }
 
         public string RemoveTerrariaColorAndItemCodes(string chatMessage)

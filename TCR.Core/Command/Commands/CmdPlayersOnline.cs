@@ -13,13 +13,15 @@ namespace TerrariaChatRelay.Command.Commands
 
 		public string CommandKey { get; } = "playing";
 
+		public string[] Aliases { get; } = { "online", "who" };
+
 		public string Description { get; } = "Displays the list of players online";
 
 		public string Usage { get; } = "playing";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.User;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			var players = Terraria.Main.player.Where(x => x.name.Length != 0);
 			if (players.Count() == 0)
@@ -28,14 +30,5 @@ namespace TerrariaChatRelay.Command.Commands
 			}
 			return $"</b>Players Online:</b> {players.Count()} / {Terraria.Main.maxNetPlayers}" + "</br></box>" + string.Join(", ", players.Select(x => x.name)).Replace("`", "") + "</box>";
 		}
-	}
-
-	// Lazy alias until I can get around to adding aliases
-	[Command]
-	public class CmdPlayersOnlineAlias : CmdPlayersOnline, ICommand
-	{
-		public new string CommandKey { get; } = "online";
-
-		public new string Usage { get; } = "online";
 	}
 }

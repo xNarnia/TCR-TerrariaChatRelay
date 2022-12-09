@@ -14,13 +14,13 @@ namespace TCRDiscord
 
 			if (Config.EnableDiscord)
 			{
-				foreach (var discordClient in Config.EndPoints)
-					new ChatClient(Subscribers, discordClient.BotToken, discordClient.Channel_IDs);
+				foreach (var endpoint in Config.EndPoints)
+					new ChatClient(Subscribers, endpoint);
 
-				if (Config.CommandPrefix.Length < 1)
+				if (Config.CommandPrefix.Length <= 0)
 					Config.CommandPrefix = "t!";
 
-				if (Config.SecondsToWaitBeforeRetryingAgain < 1)
+				if (Config.SecondsToWaitBeforeRetryingAgain <= 0)
 				{
 					Config.SecondsToWaitBeforeRetryingAgain = 1;
 					Config.SaveJson();

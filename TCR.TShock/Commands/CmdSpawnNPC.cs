@@ -14,14 +14,16 @@ namespace TerrariaChatRelay.Command.Commands
 	{
 		public string Name { get; } = "Spawn NPC";
 
-		public string CommandKey { get; } = "sm";
+		public string CommandKey { get; } = "spawnmob";
+
+		public string[] Aliases { get; } = { "sm" };
 
 		public string Description { get; } = "Spawn NPC to designated player.";
 
-		public string Usage { get; } = "sm playername, npcname/id, amount";
+		public string Usage { get; } = "spawnmob playername, npcname/id, amount";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.Admin;
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			input = input.ToLower();
 

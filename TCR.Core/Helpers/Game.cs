@@ -44,5 +44,11 @@ namespace TerrariaChatRelay
 
 		public static string GetOnlinePlayers()
 			 => string.Join(", ", Terraria.Main.player.Where(x => x.name.Length != 0).Select(x => x.name));
+
+		public static int GetCurrentPlayerCount()
+			=> Terraria.Main.player.Where(x => x.name.Length != 0).Count();
+
+		public static int GetMaxPlayerCount()
+			=> Terraria.Main.maxNetPlayers;
 	}
 }

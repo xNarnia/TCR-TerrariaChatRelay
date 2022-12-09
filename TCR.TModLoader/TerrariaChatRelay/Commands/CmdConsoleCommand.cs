@@ -18,6 +18,7 @@ namespace TerrariaChatRelay
 		public string Name { get; } = "Console Command";
 
 		public string CommandKey { get; } = "cmd";
+		public string[] Aliases { get; } = { };
 
 		public string Description { get; } = "Run any command as if you were on the server console!";
 
@@ -25,7 +26,7 @@ namespace TerrariaChatRelay
 
 		public Permission DefaultPermissionLevel { get; } = Permission.Admin;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			Main.ExecuteCommand(input, new TCRCommandCaller());
 

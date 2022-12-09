@@ -15,13 +15,15 @@ namespace TerrariaChatRelay.Command.Commands
 
 		public string CommandKey { get; } = "unban";
 
+		public string[] Aliases { get; } = { };
+
 		public string Description { get; } = "Unbans the specified player.";
 
 		public string Usage { get; } = "unban banID";
 
 		public Permission DefaultPermissionLevel { get; } = Permission.Manager;
 
-		public string Execute(string input = null, TCRClientUser whoRanCommand = null)
+		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
 			input = input.ToLower();
 			if (!int.TryParse(input, out int banId))
