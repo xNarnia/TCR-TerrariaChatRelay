@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+    <TargetFramework>net6.0</TargetFramework>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <Configurations>TShock</Configurations>
+    <RootNamespace>TCRTShock</RootNamespace>
+    <Version>2.0.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TCR.Core\TCR.Core.TShock.csproj" />
+    <ProjectReference Include="..\TCR.Discord\TCR.Discord.TShock.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="OTAPI">
+      <HintPath>..\lib\Terraria\1.4.2.3\OTAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="TerrariaServer">
+      <HintPath>..\lib\TerrariaServer.exe</HintPath>
+    </Reference>
+    <Reference Include="TShockAPI">
+      <HintPath>..\lib\TShockAPI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
