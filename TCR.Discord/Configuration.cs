@@ -61,6 +61,10 @@ namespace TCRDiscord
 		public string FormatHelp6 { get; set; } = "%groupprefix% = Group prefix";
 		[JsonProperty(Order = 230)]
 		public string FormatHelp7 { get; set; } = "%groupsuffix% = Group suffix";
+		[JsonProperty(Order = 66)]
+		public string RegexHelp1 { get; set; } = "For more advanced users, you can use RegexMessageReplace to modify/filter the final message being sent.";
+		[JsonProperty(Order = 67)]
+		public string RegexHelp2 { get; set; } = "Example (Filtering nth mob kill annoucements): { \"^.+ has defeated the \\d+th .+$\": \"\" }";
 
 		[JsonProperty(Order = 235)]
 		public static string TerrariaInGameDiscordPrefix = "[c/7489d8:Discord] - ";
@@ -78,6 +82,12 @@ namespace TCRDiscord
 		public static string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
 		[JsonProperty(Order = 305)]
 		public static string VanillaBossSpawned = ":anger: **%bossname% has awoken!**";
+		
+		[JsonProperty(Order = 120)]
+		public bool RegexMessageEnabled { get; set; } = false;
+		[JsonProperty(Order = 125)]
+		public Dictionary<string, string> RegexMessageReplace { get; set; } = new Dictionary<string, string>();
+
 
 		public Configuration()
 		{
@@ -87,6 +97,12 @@ namespace TCRDiscord
 				EndPoints.Add(new Endpoint());
 				ManagerUserIds.Add(0);
 				AdminUserIds.Add(0);
+
+				// Regex
+				RegexMessageReplace = new Dictionary<string, string>
+                {
+					["^(.*)$"] = "$1"
+                };
 			}
 		}
 	}
