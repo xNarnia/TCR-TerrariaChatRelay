@@ -419,9 +419,14 @@ namespace TCRDiscord
                 outMsg = outMsg.Replace("%worldname%", TerrariaChatRelay.Game.World.GetName());
                 outMsg = outMsg.Replace("%message%", msg.Message);
 
-                // Remove pings
-                outMsg = chatParser.RemoveUserMentions(outMsg);
-
+                if (Main.Config.RegexMessageEnabled)
+                {
+                    foreach (KeyValuePair<string, string> regex in Main.Config.RegexMessageReplace)
+                    {
+                        outMsg = Regex.Replace(outMsg, regex.Key, regex.Value);
+                    }
+                }    
+                
                 if (outMsg == "" || outMsg == null)
                     return;
 
