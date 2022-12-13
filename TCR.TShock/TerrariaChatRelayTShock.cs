@@ -75,13 +75,13 @@ namespace TCRTShock
 		{
 			Global.SavePath = Path.Combine(Directory.GetCurrentDirectory(), TShock.SavePath);
 			Global.ModConfigPath = Path.Combine(Directory.GetCurrentDirectory(), TShock.SavePath, "TerrariaChatRelay");
-			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
+			Global.Config = new TCRConfig().GetOrCreateConfiguration();
 
 			CommandPrefix = TShock.Config.Settings.CommandSpecifier;
 
 			ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
-			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
+			Global.Config = new TCRConfig().GetOrCreateConfiguration();
 			
 			// Add subscribers to list
 			Core.Initialize(new TShockAdapter());
@@ -173,7 +173,7 @@ namespace TCRTShock
 		{
 			try
 			{
-				if(Main.player[args.Who].name != ""
+				if (Main.player[args.Who].name != ""
 					&& Main.player[args.Who].name != " "
 					&& Main.player[args.Who].name != null
 					&& Main.player[args.Who].name.Replace("*" , "") != ""

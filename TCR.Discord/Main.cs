@@ -10,7 +10,7 @@ namespace TCRDiscord
 
 		public override void Init(List<IChatClient> Subscribers)
 		{
-			Config = (Configuration)new Configuration().GetOrCreateConfiguration();
+			Config = new Configuration().GetOrCreateConfiguration();
 
 			if (Config.EnableDiscord)
 			{

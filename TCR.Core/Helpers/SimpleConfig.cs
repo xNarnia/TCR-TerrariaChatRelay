@@ -8,7 +8,7 @@ using Terraria;
 
 namespace TerrariaChatRelay.Helpers
 {
-    public abstract class SimpleConfig<T> : ISimpleConfig where T : SimpleConfig<T>, new()
+    public abstract class SimpleConfig<T> : ISimpleConfig<T> where T : SimpleConfig<T>, new()
     {
         [JsonIgnore]
         public abstract string FileName { get; set; }
@@ -31,7 +31,7 @@ namespace TerrariaChatRelay.Helpers
             File.WriteAllText(file, ToJson(config));
         }
 
-        public virtual ISimpleConfig GetOrCreateConfiguration()
+        public virtual T GetOrCreateConfiguration()
         {
             string file = Path.Combine(Terraria.Main.SavePath, FileName);
             T config;
@@ -73,7 +73,7 @@ namespace TerrariaChatRelay.Helpers
         }
     }
 
-    public interface ISimpleConfig
+    public interface ISimpleConfig<T>
     {
         // Variables
         string FileName { get; set; }
@@ -82,6 +82,6 @@ namespace TerrariaChatRelay.Helpers
         string ToJson();
         void SaveJson();
         bool Exists();
-        ISimpleConfig GetOrCreateConfiguration();
+        T GetOrCreateConfiguration();
     }
 }
