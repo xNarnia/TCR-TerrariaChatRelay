@@ -241,7 +241,7 @@ namespace TCRSlack
 					if (cb.Event is MessageCallbackEvent && cb.Event.Type == "message")
 					{
 						var ev = (MessageCallbackEvent)cb.Event;
-						await ClientMessageReceived(ev);
+						await SlackMessageReceivedHandler(ev);
 					}
 				}
 			}
@@ -251,7 +251,7 @@ namespace TCRSlack
 		/// Parses data when Slack sends a message.
 		/// </summary>
 		/// 
-		private Task ClientMessageReceived(MessageCallbackEvent msg)
+		private Task SlackMessageReceivedHandler(MessageCallbackEvent msg)
 		{
 			try
 			{
