@@ -11,8 +11,8 @@ using Terraria.Localization;
 using Terraria.Net;
 using Terraria.UI.Chat;
 using TerrariaApi.Server;
-using TerrariaChatRelay;
-using TerrariaChatRelay.Helpers;
+using TCRCore;
+using TCRCore.Helpers;
 using TShockAPI;
 using TShockAPI.Hooks;
 
@@ -158,7 +158,7 @@ namespace TCRTShock
 
 				NetPacket packet =
 					Terraria.GameContent.NetModules.NetTextModule.SerializeServerMessage(
-						NetworkText.FromFormattable("This chat is powered by TerrariaChatRelay."), Color.LawnGreen, byte.MaxValue);
+						NetworkText.FromFormattable("This chat is powered by TCRCore."), Color.LawnGreen, byte.MaxValue);
 				NetManager.Instance.SendToClient(packet, args.Who);
 
 				Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(-1), $"{Main.player[args.Who].name} has joined.");
@@ -238,7 +238,7 @@ namespace TCRTShock
 		//private void OnBroadcastMessage(NetworkText text, ref Color color, ref int ignorePlayer)
 		//{
 		//	var literalText = Language.GetText(text._text).Value;
-		//	TerrariaChatRelay.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, string.Format(literalText, text._substitutions));
+		//	TCRCore.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, string.Format(literalText, text._substitutions));
 		//}
 
 		protected override void Dispose(bool disposing)

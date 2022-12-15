@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TerrariaChatRelay;
-using TerrariaChatRelay.Command;
+using TCRCore;
+using TCRCore.Command;
 using TShockAPI;
 
 namespace TCRTShock.Commands
@@ -22,7 +22,7 @@ namespace TCRTShock.Commands
 
 		public string Usage { get; } = "cmd ConsoleCommand ConsoleCommandParameters LIKE cmd time noon";
 
-		public TerrariaChatRelay.Command.Permission DefaultPermissionLevel { get; } = TerrariaChatRelay.Command.Permission.Admin;
+		public TCRCore.Command.Permission DefaultPermissionLevel { get; } = TCRCore.Command.Permission.Admin;
 
 		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
@@ -38,6 +38,6 @@ namespace TCRTShock.Commands
 			=> Group = new SuperAdminGroup();
 
 		public override void SendMessage(string msg, byte red, byte green, byte blue)
-			=> TerrariaChatRelay.Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, msg);
+			=> TCRCore.Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, msg);
 	}
 }

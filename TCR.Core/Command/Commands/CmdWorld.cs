@@ -23,14 +23,14 @@
 			worldinfo.Append($"</box>World Name: {TCRCore.Game.World.GetName()} </br>");
 			worldinfo.Append($"Evil: {TCRCore.Game.World.GetEvilType()} </br>");
 #if TSHOCK
-			worldinfo.Append($"Difficulty: {(TerrariaChatRelay.Game.World.IsMasterMode() ? "Master" : (TerrariaChatRelay.Game.World.IsExpertMode() ? "Expert" : "Normal"))} </br>");
+			worldinfo.Append($"Difficulty: {(TCRCore.Game.World.IsMasterMode() ? "Master" : (TCRCore.Game.World.IsExpertMode() ? "Expert" : "Normal"))} </br>");
 #endif
 			worldinfo.Append($"Hardmode: {(TCRCore.Game.World.IsHardMode() ? "Yes" : "No")} </br>");
 			worldinfo.Append($"World Size: {TCRCore.Game.World.getWorldSize()}");
 
 #if TSHOCK
 			if(Global.Config.ShowWorldSeed)
-				worldinfo.Append($"</br>World Seed : {TerrariaChatRelay.Game.World.GetWorldSeed()}");
+				worldinfo.Append($"</br>World Seed : {TCRCore.Game.World.GetWorldSeed()}");
 #endif
 
 			worldinfo.Append("</box>");

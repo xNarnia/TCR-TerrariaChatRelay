@@ -7,7 +7,7 @@ using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
 
-namespace TerrariaChatRelay.Command.Commands
+namespace TCRCore.Command.Commands
 {
 	[Command]
 	public class CmdSpawnNPC : ICommand

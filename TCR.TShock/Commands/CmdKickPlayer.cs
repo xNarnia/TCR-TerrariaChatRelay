@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 
-namespace TerrariaChatRelay.Command.Commands
+namespace TCRCore.Command.Commands
 {
 	[Command]
 	public class CmdKickPlayer : ICommand

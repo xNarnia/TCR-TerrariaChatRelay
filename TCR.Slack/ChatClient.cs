@@ -125,7 +125,7 @@ namespace TCRSlack
             {
 				Socket = new SocketModeClient();
 
-				Api = new SlackWebApiClient("xoxb-4521122783844-4520611793218-3vhSwK6aaN4ziE3iRa6wwwZC");
+				Api = new SlackWebApiClient(Endpoint.xoxb_BotToken);
 
 				// Gets you your user list
 				var users = await Api.Users.List();
@@ -150,7 +150,7 @@ namespace TCRSlack
 
 				var Client = Socket.WebSocket;
 				var cancel = new System.Threading.CancellationTokenSource();
-				await Socket.ConnectAsync("xapp-1-A04FP70JMS5-4514010386038-423735bac2b2095de9a341f35700991f4bbc835711f83eab0fceafa0073fdd0f", cancel.Token);
+				await Socket.ConnectAsync(Endpoint.xapp_BotToken, cancel.Token);
                 await ConnectionSuccessful();
 				Core.OnClientMessageReceived += Core_OnClientMessageReceived;
 

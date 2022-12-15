@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Terraria;
 using TShockAPI.DB;
 
-namespace TerrariaChatRelay.Command.Commands
+namespace TCRCore.Command.Commands
 {
 	[Command]
 	public class CmdBanPlayer : ICommand
