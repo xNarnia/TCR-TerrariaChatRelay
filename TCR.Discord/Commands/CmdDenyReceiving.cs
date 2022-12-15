@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TerrariaChatRelay;
-using TerrariaChatRelay.Command;
+using TCRCore;
+using TCRCore.Command;
 
 namespace TCRDiscord.Commands
 {

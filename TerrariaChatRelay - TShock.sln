@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Core.TShock", "TCR.Core
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Discord.TShock", "TCR.Discord\TCR.Discord.TShock.csproj", "{641933D9-00F1-4F59-A153-A92C17A688AF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Slack.TShock", "TCR.Slack\TCR.Slack.TShock.csproj", "{510E381B-09AB-45F3-8F08-3F60D28FF416}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		TModLoader|Any CPU = TModLoader|Any CPU
@@ -32,6 +34,10 @@ Global
 		{641933D9-00F1-4F59-A153-A92C17A688AF}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
 		{641933D9-00F1-4F59-A153-A92C17A688AF}.TShock|Any CPU.ActiveCfg = TShock|Any CPU
 		{641933D9-00F1-4F59-A153-A92C17A688AF}.TShock|Any CPU.Build.0 = TShock|Any CPU
+		{510E381B-09AB-45F3-8F08-3F60D28FF416}.TModLoader|Any CPU.ActiveCfg = TModLoader|Any CPU
+		{510E381B-09AB-45F3-8F08-3F60D28FF416}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
+		{510E381B-09AB-45F3-8F08-3F60D28FF416}.TShock|Any CPU.ActiveCfg = TShock|Any CPU
+		{510E381B-09AB-45F3-8F08-3F60D28FF416}.TShock|Any CPU.Build.0 = TShock|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

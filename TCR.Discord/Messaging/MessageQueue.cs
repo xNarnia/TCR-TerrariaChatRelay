@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace TerrariaChatRelay.Clients.Discord
+namespace TCRCore.Clients.Discord
 {
     public class DiscordMessageQueue : Dictionary<ulong, Queue<string>>
     {

@@ -17,17 +17,30 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Discord.TML", "TCR.Discord\TCR.Discord.TML.csproj", "{D38DEF61-250C-4654-AC3A-E9376A432FA0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TCR.Slack.TML", "TCR.Slack\TCR.Slack.TML.csproj", "{75F965D5-7975-4AF3-A891-75B3F86B948C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		TModLoader|Any CPU = TModLoader|Any CPU
+		TShock|Any CPU = TShock|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.TModLoader|Any CPU.ActiveCfg = TModLoader|Any CPU
 		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
+		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.TShock|Any CPU.ActiveCfg = TModLoader|Any CPU
+		{3B5DF98F-5B1E-466B-BE21-06EA28044C72}.TShock|Any CPU.Build.0 = TModLoader|Any CPU
 		{1ACE160A-BB55-4356-A544-FF1B19C8B671}.TModLoader|Any CPU.ActiveCfg = TModLoader|Any CPU
 		{1ACE160A-BB55-4356-A544-FF1B19C8B671}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
+		{1ACE160A-BB55-4356-A544-FF1B19C8B671}.TShock|Any CPU.ActiveCfg = TModLoader|Any CPU
+		{1ACE160A-BB55-4356-A544-FF1B19C8B671}.TShock|Any CPU.Build.0 = TModLoader|Any CPU
 		{D38DEF61-250C-4654-AC3A-E9376A432FA0}.TModLoader|Any CPU.ActiveCfg = TModLoader|Any CPU
 		{D38DEF61-250C-4654-AC3A-E9376A432FA0}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
+		{D38DEF61-250C-4654-AC3A-E9376A432FA0}.TShock|Any CPU.ActiveCfg = TShock|Any CPU
+		{D38DEF61-250C-4654-AC3A-E9376A432FA0}.TShock|Any CPU.Build.0 = TShock|Any CPU
+		{75F965D5-7975-4AF3-A891-75B3F86B948C}.TModLoader|Any CPU.ActiveCfg = TModLoader|Any CPU
+		{75F965D5-7975-4AF3-A891-75B3F86B948C}.TModLoader|Any CPU.Build.0 = TModLoader|Any CPU
+		{75F965D5-7975-4AF3-A891-75B3F86B948C}.TShock|Any CPU.ActiveCfg = TShock|Any CPU
+		{75F965D5-7975-4AF3-A891-75B3F86B948C}.TShock|Any CPU.Build.0 = TShock|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

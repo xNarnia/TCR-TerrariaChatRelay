@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using TerrariaChatRelay.Command;
+using TCRCore.Command;
 
-namespace TerrariaChatRelay
+namespace TCRCore
 {
 	public class CommandService : ICommandService
 	{

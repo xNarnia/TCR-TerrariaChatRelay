@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TerrariaChatRelay;
-using TerrariaChatRelay.Helpers;
+using TCRCore;
+using TCRCore.Helpers;
 
 namespace TCRDiscord
 {

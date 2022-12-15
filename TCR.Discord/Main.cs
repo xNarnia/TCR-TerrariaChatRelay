@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using TerrariaChatRelay;
-using TerrariaChatRelay.Clients;
+using TCRCore;
+using TCRCore.Clients;
 
 namespace TCRDiscord
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TerrariaChatRelay.Command.Commands
+namespace TCRCore.Command.Commands
 {
 	[Command]
 	public class CmdPlayersOnline : ICommand

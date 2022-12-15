@@ -2,7 +2,7 @@
 using Terraria.Localization;
 using Terraria.Net;
 using Terraria.UI.Chat;
-using TerrariaChatRelay.Models;
+using TCRCore.Models;
 
 namespace TerrariaChatRelay
 {

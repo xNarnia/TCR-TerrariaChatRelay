@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
-using TerrariaChatRelay.Helpers;
+using TCRCore.Helpers;
 
-namespace TerrariaChatRelay
+namespace TCRCore
 {
     public class TCRConfig : SimpleConfig<TCRConfig>
     {

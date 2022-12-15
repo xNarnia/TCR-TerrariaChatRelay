@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 
-namespace TerrariaChatRelay.Helpers
+namespace TCRCore.Helpers
 {
     public abstract class SimpleConfig<T> : ISimpleConfig<T> where T : SimpleConfig<T>, new()
     {

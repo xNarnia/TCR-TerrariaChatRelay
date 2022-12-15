@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 
-namespace TerrariaChatRelay.Command.Commands
+namespace TCRCore.Command.Commands
 {
 	[Command]
 	public class CmdKillPlayer : ICommand

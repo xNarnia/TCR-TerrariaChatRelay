@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace TerrariaChatRelay
+namespace TCRCore
 {
 	public class Global
 	{

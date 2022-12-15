@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TCRDiscord;
-using TerrariaChatRelay;
-using TerrariaChatRelay.Command;
+using TCRCore;
+using TCRCore.Command;
 
 namespace TCRDiscord.Commands
 {

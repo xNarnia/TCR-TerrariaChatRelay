@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using TerrariaChatRelay.Clients;
-using TerrariaChatRelay.Command;
-using TerrariaChatRelay.Helpers;
-using TerrariaChatRelay.Models;
+using TCRCore.Clients;
+using TCRCore.Command;
+using TCRCore.Helpers;
+using TCRCore.Models;
 
-namespace TerrariaChatRelay
+namespace TCRCore
 {
 	public class Core
 	{
@@ -20,10 +20,7 @@ namespace TerrariaChatRelay
 		public static Version TCRVersion { get; set; } = new Version(2, 0, 0);
 
         public static event EventHandler<TerrariaChatEventArgs> OnGameMessageReceived;
-        public static event EventHandler<TerrariaChatEventArgs> OnGameMessageSent;
-
 		public static event EventHandler<ClientChatEventArgs> OnClientMessageReceived;
-		public static event EventHandler<ClientChatEventArgs> OnClientMessageSent;
 
 		private static ITCRAdapter _adapter;
 
@@ -50,8 +47,8 @@ namespace TerrariaChatRelay
 		/// <param name="msg">Text content of the message</param>
 		/// <param name="commandPrefix">Command prefix to indicate a command is being used.</param>
 		/// <param name="sourceChannelId">Optional id for clients that require id's to send to channels. Id of the channel the message originated from.</param>
-		public static void RaiseClientMessageReceived(object sender, TCRClientUser user, string msg, string commandPrefix, ulong sourceChannelId = 0)
-			=> RaiseClientMessageReceived(sender, user, "", msg, commandPrefix, sourceChannelId);
+		public static void RaiseClientMessageReceived(object sender, TCRClientUser user, string msg, string commandPrefix, string sourceChannelId = "")
+			=> RaiseClientMessageReceived(sender, user, "", "", msg, commandPrefix, sourceChannelId);
 
 		/// <summary>
 		/// Emits a message to TerrariaChatRelay that a client message have been received.
@@ -62,7 +59,7 @@ namespace TerrariaChatRelay
 		/// <param name="commandPrefix">Command prefix to indicate a command is being used.</param>
 		/// <param name="clientPrefix">String to insert before the main chat message.</param>
 		/// <param name="sourceChannelId">Optional id for clients that require id's to send to channels. Id of the channel the message originated from.</param>
-		public static void RaiseClientMessageReceived(object sender, TCRClientUser user, string clientPrefix, string msg, string commandPrefix, ulong sourceChannelId = 0)
+		public static void RaiseClientMessageReceived(object sender, TCRClientUser user, string clientName, string clientPrefix, string msg, string commandPrefix, string sourceChannelId = "")
 		{
 			if(CommandServ.IsCommand(msg, commandPrefix))
 			{
@@ -73,7 +70,7 @@ namespace TerrariaChatRelay
 			else
 			{
 				_adapter.BroadcastChatMessage($"{clientPrefix}<{user.Username}> {msg}", -1);
-				OnClientMessageReceived?.Invoke(sender, new ClientChatEventArgs(user, msg));
+				OnClientMessageReceived?.Invoke(sender, new ClientChatEventArgs(clientName, user, msg));
 			}
 		}
 
@@ -100,7 +97,7 @@ namespace TerrariaChatRelay
 
 		public static void ConnectClients()
         {
-			PrettyPrint.Log("Connecting clients...");
+			PrettyPrint.Log("Connecting clients...", ConsoleColor.Cyan);
 
 			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 			{
@@ -127,7 +124,7 @@ namespace TerrariaChatRelay
 
 			for (var i = 0; i < Subscribers.Count; i++)
 			{
-				PrettyPrint.Log(Subscribers[i].GetType().Assembly.GetName().Name.ToString() + " Connecting...");
+				PrettyPrint.Log(Subscribers[i].GetType().Assembly.GetName().Name.ToString() + " Connecting...", ConsoleColor.Cyan);
 				Subscribers[i].ConnectAsync();
             }
 			Console.ResetColor();
@@ -143,7 +140,7 @@ namespace TerrariaChatRelay
 				try
 				{
 					Subscribers[0].Disconnect();
-					PrettyPrint.Log(subcriberName, $"Disconnecting {subcriberName}...");
+					PrettyPrint.Log(subcriberName, $"Disconnecting {subcriberName}...", ConsoleColor.Cyan);
 				}
 				catch (Exception)
 				{
@@ -153,11 +150,11 @@ namespace TerrariaChatRelay
 				try
 				{
 					Subscribers[0].Dispose();
-					PrettyPrint.Log(subcriberName, $"Disposing {subcriberName}...");
+					PrettyPrint.Log(subcriberName, $"Disposing {subcriberName}...", ConsoleColor.Cyan);
 				}
 				catch (Exception)
 				{
-					PrettyPrint.Log(subcriberName, "Failed to dispose!");
+					PrettyPrint.Log(subcriberName, "Failed to dispose!", ConsoleColor.Red);
 				}
 			}
 
@@ -188,6 +185,7 @@ namespace TerrariaChatRelay
 
 	public class ClientChatEventArgs : EventArgs
 	{
+		public string ClientName { get; set; }
 		public TCRClientUser User { get; set; }
 		public string Message { get; set; }
 
@@ -197,8 +195,9 @@ namespace TerrariaChatRelay
 		/// <param name="player">Id of player in respect to Main.Player[i], where i is the index of the player.</param>
 		/// <param name="color">Color to display the text.</param>
 		/// <param name="msg">Text content of the message</param>
-		public ClientChatEventArgs(TCRClientUser user, string msg)
+		public ClientChatEventArgs(string clientName, TCRClientUser user, string msg)
 		{
+			ClientName = clientName;
 			User = user;
 			Message = msg;
 		}

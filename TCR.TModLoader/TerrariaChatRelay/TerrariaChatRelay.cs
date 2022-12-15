@@ -1,21 +1,18 @@
+using On.Terraria.GameContent.NetModules;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using Terraria;
 using Terraria.Chat;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Net;
-using Terraria.UI.Chat;
-using TerrariaChatRelay;
 using Microsoft.Xna.Framework;
-using TerrariaChatRelay.Helpers;
+using TCRCore.Helpers;
 using System.Threading.Tasks;
-using TerrariaChatRelay.Command;
 using System.Net.Http;
+using TCRCore;
 
 namespace TerrariaChatRelay
 {
@@ -39,14 +36,13 @@ namespace TerrariaChatRelay
 			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
 
 			// Intercept DeserializeAsServer method
-			//NetTextModule.DeserializeAsServer += NetTextModule_DeserializeAsServer;
-
-			On_ChatHelper.BroadcastChatMessage += BroadcastChatMessage;
-			On_WorldGen.serverLoadWorld += OnWorldLoadStart;
-			On_Netplay.StopListening += OnServerStop;
-			On_NetMessage.SyncConnectedPlayer += OnPlayerJoin_NetMessage_SyncConnectedPlayer;
-			On_RemoteClient.Reset += RemoteClient_Reset;
-			On_NetMessage.greetPlayer += NetMessage_greetPlayer;
+			NetTextModule.DeserializeAsServer += NetTextModule_DeserializeAsServer;
+			On.Terraria.Chat.ChatHelper.BroadcastChatMessage += BroadcastChatMessage;
+			On.Terraria.IO.WorldFile.LoadWorld_Version2 += OnWorldLoadStart;
+			On.Terraria.Netplay.StopListening += OnServerStop;
+			On.Terraria.NetMessage.SyncConnectedPlayer += OnPlayerJoin_NetMessage_SyncConnectedPlayer;
+			On.Terraria.RemoteClient.Reset += RemoteClient_Reset;
+			On.Terraria.NetMessage.greetPlayer += NetMessage_greetPlayer;
 
 			PlayerJoinEndingString = Language.GetText("LegacyMultiplayer.19").Value.Split(new string[] { "{0}" }, StringSplitOptions.None).Last();
 			PlayerLeaveEndingString = Language.GetText("LegacyMultiplayer.20").Value.Split(new string[] { "{0}" }, StringSplitOptions.None).Last();
@@ -67,14 +63,14 @@ namespace TerrariaChatRelay
 				Task.Run(GetLatestVersionNumber);
 		}
 
-		private void NetMessage_greetPlayer(On_NetMessage.orig_greetPlayer orig, int plr)
+		private void NetMessage_greetPlayer(On.Terraria.NetMessage.orig_greetPlayer orig, int plr)
 		{
 			NetPacket packet = Terraria.GameContent.NetModules.NetTextModule.SerializeServerMessage(NetworkText.FromLiteral("This chat is powered by TerrariaChatRelay"), Color.LawnGreen, byte.MaxValue);
 			NetManager.Instance.SendToClient(packet, plr);
 			orig(plr);
 		}
 
-		private void RemoteClient_Reset(On_RemoteClient.orig_Reset orig, RemoteClient self)
+		private void RemoteClient_Reset(On.Terraria.RemoteClient.orig_Reset orig, RemoteClient self)
 		{
 			if (self.Id >= 0)
 			{
@@ -87,7 +83,7 @@ namespace TerrariaChatRelay
 			orig(self);
 		}
 
-		private void OnPlayerJoin_NetMessage_SyncConnectedPlayer(On_NetMessage.orig_SyncConnectedPlayer orig, int plr)
+		private void OnPlayerJoin_NetMessage_SyncConnectedPlayer(On.Terraria.NetMessage.orig_SyncConnectedPlayer orig, int plr)
 		{
 			orig(plr);
 			var tcrPlayer = Main.player[plr].ToTCRPlayer(-1);
@@ -147,15 +143,15 @@ namespace TerrariaChatRelay
 		public override void Unload()
 		{
 			Core.DisconnectClients();
-			//NetTextModule.DeserializeAsServer -= NetTextModule_DeserializeAsServer;
-			On_ChatHelper.BroadcastChatMessage -= BroadcastChatMessage;
+			NetTextModule.DeserializeAsServer -= NetTextModule_DeserializeAsServer;
+			On.Terraria.Chat.ChatHelper.BroadcastChatMessage -= BroadcastChatMessage;
 			Global.Config = null;
 		}
 
 		/// <summary>
 		/// Hooks onto the World Load method to send a message when the server is starting.
 		/// </summary>
-		private Task OnWorldLoadStart(On_WorldGen.orig_serverLoadWorld orig)
+		private int OnWorldLoadStart(On.Terraria.IO.WorldFile.orig_LoadWorld_Version2 orig, BinaryReader reader)
 		{
 			try
 			{
@@ -173,13 +169,13 @@ namespace TerrariaChatRelay
 				PrettyPrint.Log("Error checking for version update: " + e.Message, ConsoleColor.Red);
 			}
 
-			return orig();
+			return orig(reader);
 		}
 
 		/// <summary>
 		/// Hooks onto the StopListening method to send a message when the server is stopping.
 		/// </summary>
-		private void OnServerStop(On_Netplay.orig_StopListening orig)
+		private void OnServerStop(On.Terraria.Netplay.orig_StopListening orig)
 		{
 			if (Global.Config.ShowServerStopMessage)
 				Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, "The server is stopping!");
@@ -190,7 +186,7 @@ namespace TerrariaChatRelay
 		/// <summary>
 		/// Intercept all other messages from Terraria. E.g. blood moon, death notifications, and player join/leaves.
 		/// </summary>
-		private void BroadcastChatMessage(On_ChatHelper.orig_BroadcastChatMessage orig, NetworkText text, Color color, int excludedPlayer)
+		private void BroadcastChatMessage(On.Terraria.Chat.ChatHelper.orig_BroadcastChatMessage orig, NetworkText text, Color color, int excludedPlayer)
 		{
 			if (Global.Config.ShowGameEvents && !text.ToString().EndsWith(PlayerJoinEndingString) && !text.ToString().EndsWith(PlayerLeaveEndingString))
 				Core.RaiseTerrariaMessageReceived(this, (excludedPlayer > 0 ? Main.player[excludedPlayer].ToTCRPlayer(excludedPlayer) : TCRPlayer.Server), text.ToString());
@@ -201,20 +197,21 @@ namespace TerrariaChatRelay
 		/// <summary>
 		/// Intercept chat messages sent from players.
 		/// </summary>
-		//private bool NetTextModule_DeserializeAsServer(NetTextModule.orig_DeserializeAsServer orig, Terraria.GameContent.NetModules.NetTextModule self, BinaryReader reader, int senderPlayerId)
-		//{
-		//	long savedPosition = reader.BaseStream.Position;
-		//	ChatMessage message = ChatMessage.Deserialize(reader);
+		private bool NetTextModule_DeserializeAsServer(NetTextModule.orig_DeserializeAsServer orig, Terraria.GameContent.NetModules.NetTextModule self, BinaryReader reader, int senderPlayerId)
+		{
+			long savedPosition = reader.BaseStream.Position;
+			ChatMessage message = ChatMessage.Deserialize(reader);
 
-		//	if (Global.Config.ShowChatMessages)
-		//		Core.RaiseTerrariaMessageReceived(this, new TCRPlayer() { 
-		//			PlayerId = senderPlayerId,
-		//			Name = Main.player[senderPlayerId].name
-		//		}, message.Text);
+			if (Global.Config.ShowChatMessages)
+				Core.RaiseTerrariaMessageReceived(this, new TCRPlayer()
+				{
+					PlayerId = senderPlayerId,
+					Name = Main.player[senderPlayerId].name
+				}, message.Text);
 
-		//	reader.BaseStream.Position = savedPosition;
-		//	return orig(self, reader, senderPlayerId);
-		//}
+			reader.BaseStream.Position = savedPosition;
+			return orig(self, reader, senderPlayerId);
+		}
 	}
 	public static class Extensions
 	{

@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TerrariaChatRelay.Helpers
+namespace TCRCore.Helpers
 {
     public static class SimpleRequest
     {

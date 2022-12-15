@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
-using TerrariaChatRelay.Command;
+using TCRCore.Command;
 
-namespace TerrariaChatRelay.Commands
+namespace TCRCore.Commands
 {
 	[Command]
 	public class CmdMods : ICommand

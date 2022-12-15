@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using TerrariaChatRelay.Clients;
+using TCRCore.Clients;
 
-namespace TerrariaChatRelay
+namespace TCRCore
 {
 	public abstract class TCRPlugin
 	{

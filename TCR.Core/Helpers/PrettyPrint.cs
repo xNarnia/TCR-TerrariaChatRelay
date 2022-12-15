@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TerrariaChatRelay.Helpers
+namespace TCRCore.Helpers
 {
 	public static class PrettyPrint
 	{
@@ -24,7 +24,7 @@ namespace TerrariaChatRelay.Helpers
 			Console.ResetColor();
 		}
 
-		public static void Log(string text, ConsoleColor? msgForegroundColor = null, ConsoleColor? msgBackgroundColor = null)
+		internal static void Log(string text, ConsoleColor? msgForegroundColor = null, ConsoleColor? msgBackgroundColor = null)
 		{
 			PrettyPrint.Write(" [TerrariaChatRelay]: ", ConsoleColor.DarkCyan);
 			SetColor(msgForegroundColor, msgBackgroundColor);

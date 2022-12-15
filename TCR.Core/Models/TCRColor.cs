@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TerrariaChatRelay
+namespace TCRCore
 {
 	public class TCRColor
 	{

@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
 using TerrariaChatRelay;
-using TerrariaChatRelay.Command;
-using TerrariaChatRelay.Helpers;
+using TCRCore.Command;
+using TCRCore.Helpers;
+using TCRCore;
 
 namespace TerrariaChatRelay
 {

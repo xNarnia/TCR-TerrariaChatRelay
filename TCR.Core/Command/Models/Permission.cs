@@ -1,4 +1,4 @@
-﻿namespace TerrariaChatRelay.Command
+﻿namespace TCRCore.Command
 {
 	/// <summary>
 	/// Permission levels used to authenticate command usage for client users.
