@@ -21,7 +21,7 @@
       <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="tModLoader">
-      <HintPath>..\lib\Terraria\1.4.2.3\tModLoader.dll</HintPath>
+      <HintPath>..\lib\Terraria\latest\tModLoader.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

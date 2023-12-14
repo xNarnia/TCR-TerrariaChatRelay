@@ -50,7 +50,6 @@ namespace TCRSlack
         private static int fatalErrorCounter;
         private bool retryConnection = false;
         private bool manualDisconnect = false;
-        private Timer statusTimer;
 
 		// Other
 		private bool debug = false;
@@ -64,9 +63,6 @@ namespace TCRSlack
 			Channel_IDs = _endpoint.Channel_IDs.ToList();
             Endpoint = _endpoint;
             chatParser = new ChatParser();
-
-            statusTimer = new Timer(12000);
-            statusTimer.Elapsed += GameStatusUpdate;
 
             messageQueue = new MessageQueue(700);
             messageQueue.OnReadyToSend += OnMessageReadyToSend;
@@ -194,13 +190,6 @@ namespace TCRSlack
                 messageQueue.Clear();
             }
             messageQueue = null;
-
-            if (statusTimer != null)
-			{
-                statusTimer.Stop();
-                statusTimer.Dispose();
-            }
-            statusTimer = null;
 
             // Detach events
             if (Socket != null)
@@ -357,27 +346,6 @@ namespace TCRSlack
 								.Replace("%worldname%", TCRCore.Game.World.GetName()));
 		}
 
-		/// <summary>
-		/// A debug method that forcefully schedules the bot to retry connection.
-		/// </summary>
-		public void ForceFail()
-		{
-            ScheduleRetry(new Exception("This is a test"));
-		}
-
-        /// <summary>
-        /// Updates the bot's now playing status periodically using a timer.
-        /// </summary>
-        private void GameStatusUpdate(object sender, ElapsedEventArgs e)
-        {
-            string status = Main.Config.GameStatus;
-            status = status.Replace("%playercount%", TCRCore.Game.GetCurrentPlayerCount().ToString());
-            status = status.Replace("%maxplayers%", TCRCore.Game.GetMaxPlayerCount().ToString());
-            status = status.Replace("%worldname%", TCRCore.Game.World.GetName());
-
-            //Socket.SetGameAsync(status);
-        }
-
         /// <summary>
         /// Sets a timer to retry after a specified time in the configuration.
         /// </summary>
@@ -521,7 +489,7 @@ namespace TCRSlack
                 //    {
                 //        outMsg = Regex.Replace(outMsg, regex.Key, regex.Value);
                 //    }
-                //}    
+                //}
                 
                 if (outMsg == "" || outMsg == null)
                     return;
