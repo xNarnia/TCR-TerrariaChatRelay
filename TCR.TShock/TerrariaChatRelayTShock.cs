@@ -32,6 +32,7 @@ namespace TCRTShock
 		public Version LatestVersion = new Version("0.0.0.0");
 
 		public string CommandPrefix;
+		public string SilentCommandPrefix;
 
 		// Really weird way to fix the double broadcasting issue. TShock's code simply will not allow any other way.
 		public List<Chatter> ChatHolder = new List<Chatter>();
@@ -42,7 +43,7 @@ namespace TCRTShock
 			public string Text;
 			public Chatter()
 			{
-				
+
 			}
 		}
 
@@ -54,7 +55,9 @@ namespace TCRTShock
 			13, // Eater of Worlds	
 			266, // Brain of Cthulu
 			35, // Skeletron
+			668, // Deerclops
 			113, // Wall of Flesh
+			657, // Queen Slime
 			125, // Retinazer
 			127, // Skeletron Prime	
 			134, // The Destroyer
@@ -78,11 +81,12 @@ namespace TCRTShock
 			Global.Config = new TCRConfig().GetOrCreateConfiguration();
 
 			CommandPrefix = TShock.Config.Settings.CommandSpecifier;
+			SilentCommandPrefix = TShock.Config.Settings.CommandSilentSpecifier;
 
 			ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
 			Global.Config = new TCRConfig().GetOrCreateConfiguration();
-			
+
 			// Add subscribers to list
 			Core.Initialize(new TShockAdapter());
 			Core.ConnectClients();
@@ -122,16 +126,37 @@ namespace TCRTShock
 
 		private void OnChatReceived(ServerChatEventArgs args)
 		{
-			if (args.Text.StartsWith(CommandPrefix) || args.Text.StartsWith("."))
+			string text = args.Text;
+
+			// Terraria's client side commands remove the command prefix, 
+			// which results in arguments of that command show up on the Discord.
+			// Thus, it needs to be reversed
+			foreach (var item in Terraria.UI.Chat.ChatManager.Commands._localizedCommands)
+			{
+				if (item.Value._name == args.CommandId._name)
+				{
+					if (!string.IsNullOrEmpty(text))
+					{
+						text = item.Key.Value + ' ' + text;
+					}
+					else
+					{
+						text = item.Key.Value;
+					}
+					break;
+				}
+			}
+
+			if (text.StartsWith(CommandPrefix) || text.StartsWith(SilentCommandPrefix))
 				return;
 
-			if (args.Text == "" || args.Text == null)
+			if (text == "" || text == null)
 				return;
 
 			if (TShock.Players[args.Who].mute == true)
 				return;
 
-			var snippets = ChatManager.ParseMessage(args.Text, Color.White);
+			var snippets = ChatManager.ParseMessage(text, Color.White);
 
 			string outmsg = "";
 			foreach (var snippet in snippets)
@@ -139,14 +164,13 @@ namespace TCRTShock
 				outmsg += snippet.Text;
 			}
 
-			ChatHolder.Add(new Chatter() 
-			{ 
-				Player = Main.player[args.Who].ToTCRPlayer(args.Who), 
+			ChatHolder.Add(new Chatter()
+			{
+				Player = Main.player[args.Who].ToTCRPlayer(args.Who),
 				Text = $"{outmsg}"
 			});
 
-
-			Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(args.Who), args.Text);
+			Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(args.Who), text);
 		}
 
 		private void OnPlayerGreet(GreetPlayerEventArgs args)
@@ -176,7 +200,7 @@ namespace TCRTShock
 				if (Main.player[args.Who].name != ""
 					&& Main.player[args.Who].name != " "
 					&& Main.player[args.Who].name != null
-					&& Main.player[args.Who].name.Replace("*" , "") != ""
+					&& Main.player[args.Who].name.Replace("*", "") != ""
 					&& Netplay.Clients[args.Who].State >= 3)
 				{
 					var player = Main.player[args.Who];
@@ -193,7 +217,7 @@ namespace TCRTShock
 		private void OnNPCSpawn(NpcSpawnEventArgs args)
 		{
 			NPC npc = Main.npc[args.NpcId];
-			
+
 			if (BossIDs.Contains(npc.netID))
 			{
 				Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, $"{npc.FullName} has awoken!");
@@ -221,7 +245,7 @@ namespace TCRTShock
 				literalText.EndsWith(" has joined.") || // User joined
 				literalText.EndsWith(" has left.") || // User left
 				literalText.EndsWith(" has awoken!") //|| // Boss Spawn
-				//Regex.IsMatch(literalText, @".*?:\s+.*") // Chat
+													 //Regex.IsMatch(literalText, @".*?:\s+.*") // Chat
 				)
 				return;
 
@@ -232,7 +256,7 @@ namespace TCRTShock
 				return;
 			}
 
-				Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, literalText);
+			Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, literalText);
 		}
 
 		//private void OnBroadcastMessage(NetworkText text, ref Color color, ref int ignorePlayer)
