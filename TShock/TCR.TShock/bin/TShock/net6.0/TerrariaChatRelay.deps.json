@@ -1,0 +1,139 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "TerrariaChatRelay/2.0.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3",
+          "Discord.Net.Core": "3.17.0.0",
+          "Discord.Net.Rest": "3.17.0.0",
+          "Discord.Net.WebSocket": "3.17.0.0",
+          "OTAPI": "1.4.4.9",
+          "System.Linq.Async": "6.0.0.0",
+          "TerrariaServer": "5.2.0.0",
+          "TShockAPI": "5.2.1.0"
+        },
+        "runtime": {
+          "TerrariaChatRelay.dll": {}
+        }
+      },
+      "Newtonsoft.Json/13.0.3": {
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.3.27908"
+          }
+        }
+      },
+      "Discord.Net.Core/3.17.0.0": {
+        "runtime": {
+          "Discord.Net.Core.dll": {
+            "assemblyVersion": "3.17.0.0",
+            "fileVersion": "3.17.0.0"
+          }
+        }
+      },
+      "Discord.Net.Rest/3.17.0.0": {
+        "runtime": {
+          "Discord.Net.Rest.dll": {
+            "assemblyVersion": "3.17.0.0",
+            "fileVersion": "3.17.0.0"
+          }
+        }
+      },
+      "Discord.Net.WebSocket/3.17.0.0": {
+        "runtime": {
+          "Discord.Net.WebSocket.dll": {
+            "assemblyVersion": "3.17.0.0",
+            "fileVersion": "3.17.0.0"
+          }
+        }
+      },
+      "OTAPI/1.4.4.9": {
+        "runtime": {
+          "OTAPI.dll": {
+            "assemblyVersion": "1.4.4.9",
+            "fileVersion": "1.4.4.9"
+          }
+        }
+      },
+      "System.Linq.Async/6.0.0.0": {
+        "runtime": {
+          "System.Linq.Async.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.1.35981"
+          }
+        }
+      },
+      "TerrariaServer/5.2.0.0": {
+        "runtime": {
+          "TerrariaServer.dll": {
+            "assemblyVersion": "5.2.0.0",
+            "fileVersion": "5.2.0.0"
+          }
+        }
+      },
+      "TShockAPI/5.2.1.0": {
+        "runtime": {
+          "TShockAPI.dll": {
+            "assemblyVersion": "5.2.1.0",
+            "fileVersion": "5.2.1.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TerrariaChatRelay/2.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Newtonsoft.Json/13.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "path": "newtonsoft.json/13.0.3",
+      "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
+    },
+    "Discord.Net.Core/3.17.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Discord.Net.Rest/3.17.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Discord.Net.WebSocket/3.17.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "OTAPI/1.4.4.9": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Linq.Async/6.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TerrariaServer/5.2.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TShockAPI/5.2.1.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

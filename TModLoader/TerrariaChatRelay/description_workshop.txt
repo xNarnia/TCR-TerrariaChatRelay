@@ -1,0 +1,41 @@
+Send messages from Terraria to your favorite Chat Services!
+
+* [url=https://github.com/xNarnia/TCR-TerrariaChatRelay/wiki/First-Time-Setup-Server-Owner]First-time Setup Guide[/url]
+* [url=https://discord.gg/xAQGT4VetN]Discord Support Server[/url]
+* [url=https://github.com/xNarnia/TCR-TerrariaChatRelay]Source Code[/url]
+
+[h1][b]Chat with your friends from Discord and Terraria![/b][/h1]
+[h1][b]Moderate straight from Discord to deal with pesky members![/b][/h1]
+[img]https://raw.githubusercontent.com/xNarnia/Gif-Repo/refs/heads/main/TerrariaChatRelay/TCR-features.jpg[/img]
+Available for tModLoader and TShock.
+
+Currently supports:
+Discord, Slack
+
+It will allow you to send chat from Terraria to multiple Chat Services (such as Discord) and vice versa.
+
+[list]
+[*]Terraria <-> Discord Chat <-> Slack Chat!
+  Send chat from Terraria to Discord to Slack and vice versa!
+[*] Extensible Eventing Framework!
+  Helps other developers easily add on to the code so they can help out!
+[*] Self-serving relay!
+  No additional installations required. All you need is the mod installed!
+[*] Robust Command System!
+  Run commands straight from any channel to Terraria!
+[*] Server-side only design!
+  No need to waste other people's resources, only the servers!
+[*] Item Tag parsers so you can see the name of the linked item in chat
+[*] Handles emojis so they show their name (If you have Emojis downloaded)
+[/list]
+
+Supported Chat Services: Discord, Slack
+
+Changelog
+- [2.3.0.1] Add a sortAfter for SubworldLib to ensure TCR is loaded after Subworld (if present)
+- [2.3] Add manager commands for banning, unbanning, kicking, and banfile locating
+- [2.2] Rewrite using Discord.NET, SubworldLibrary support, t!restart command, Embeds, Config bugfix, and more!
+- [2.0.1.5] Updated icon, updated workshop icon, added foundation for localization support
+- [2.0.0] ModConfig support finallized, Fixed an issue where visiting ModList would require a reload, fixed version checker
+- [1.5.1] Foundation for ModConfig support, "Host & Play" support
+- [1.5.0] Ported to 1.4.4

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Import tModLoader mod properties -->
+	<Import Project="..\tModLoader.targets" />
+
+	<!-- General -->
+	<PropertyGroup>
+	  <TargetFramework>net8.0</TargetFramework>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Reference Include="Discord.Net.Core">
+	    <HintPath>lib\Discord.Net.Core.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Discord.Net.Rest">
+	    <HintPath>lib\Discord.Net.Rest.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Discord.Net.WebSocket">
+	    <HintPath>lib\Discord.Net.WebSocket.dll</HintPath>
+	  </Reference>
+	  <Reference Include="SubworldLibrary">
+	    <HintPath>lib\SubworldLibrary.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<!-- References -->
+
+</Project>

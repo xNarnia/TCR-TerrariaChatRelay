@@ -1,0 +1,146 @@
+Configs: {
+	Config: {
+		SpecialThanks: {
+			Tooltip: ""
+			Label: Special Thanks
+		}
+
+		OpenDiscordSupportServer: {
+			Tooltip: ""
+			Label: Open Discord Support Server
+		}
+
+		Headers: {
+			StillNeedHelp: Still Need Help Header
+			Formatting: Formatting Header
+			UserManagement: User Management Header
+			General: General Header
+		}
+
+		VanillaBossSpawned: {
+			Tooltip: ""
+			Label: Vanilla Boss Spawned
+		}
+
+		ServerStoppingFormat: {
+			Tooltip: ""
+			Label: Server Stopping Format
+		}
+
+		ServerStartingFormat: {
+			Tooltip: ""
+			Label: Server Starting Format
+		}
+
+		WorldEventFormat: {
+			Tooltip: ""
+			Label: World Event Format
+		}
+
+		PlayerLoggedOutFormat: {
+			Tooltip: ""
+			Label: Player Logged Out Format
+		}
+
+		PlayerLoggedInFormat: {
+			Tooltip: ""
+			Label: Player Logged In Format
+		}
+
+		PlayerChatFormat: {
+			Tooltip: ""
+			Label: Player Chat Format
+		}
+
+		TerrariaInGameDiscordPrefix: {
+			Tooltip: ""
+			Label: Terraria In Game Discord Prefix
+		}
+
+		HoverHereForFormatHelp: {
+			Tooltip: ""
+			Label: Hover Here For Format Help
+		}
+
+		Endpoints: {
+			Tooltip: ""
+			Label: Endpoints
+		}
+
+		OpenDiscordTokenGuide: {
+			Tooltip: ""
+			Label: Open Discord Token Guide
+		}
+
+		AdminUserIds: {
+			Tooltip: ""
+			Label: Admin User Ids
+		}
+
+		ManagerUserIds: {
+			Tooltip: ""
+			Label: Manager User Ids
+		}
+
+		OwnerUserId: {
+			Tooltip: ""
+			Label: Owner User Id
+		}
+
+		SecondsToWaitBeforeRetryingAgain: {
+			Tooltip: ""
+			Label: Seconds To Wait Before Retrying Again
+		}
+
+		NumberOfTimesToRetryConnectionAfterError: {
+			Tooltip: ""
+			Label: Number Of Times To Retry Connection After Error
+		}
+
+		ShowPoweredByMessageOnStartup: {
+			Tooltip: ""
+			Label: Show Powered By Message On Startup
+		}
+
+		CommandPrefix: {
+			Tooltip: ""
+			Label: Command Prefix
+		}
+
+		DisplayName: Config
+
+		BotStatus: {
+			Label: Bot Status
+			Tooltip: ""
+		}
+
+		BotChannelDescription: {
+			Label: Bot Channel Description
+			Tooltip: ""
+		}
+	}
+
+	Endpoint: {
+		DenyReceivingMessagesFromGame: {
+			Tooltip: ""
+			Label: Deny Receiving Messages From Game
+		}
+
+		DenySendingMessagesToGame: {
+			Tooltip: ""
+			Label: Deny Sending Messages To Game
+		}
+
+		Channel_IDs: {
+			Tooltip: ""
+			Label: Channel_ I Ds
+		}
+
+		BotToken: {
+			Tooltip: ""
+			Label: Bot Token
+		}
+
+		Tooltip: ""
+	}
+}

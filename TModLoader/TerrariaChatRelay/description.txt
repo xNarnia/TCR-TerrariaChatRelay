@@ -1,0 +1,18 @@
+﻿TerrariaChatRelay
+Supported Chat Services: Discord
+
+Allows you to re-route Terraria's chat to different places.
+
+Mod config file will generate if one is not found.
+This mod is open source!
+
+TerrariaChatRelay Features:
+- Mod Config file to change options
+- Easily extensible framework so developers can add on to it
+- Item Tag parsers so you can see the name of the linked item in chat
+- Send game events and chat messages to your desired, supported, chat service
+
+Discord <-> Terraria Features:
+- Allow relaying to Discord channels from one Discord bot
+- Handles emojis so they show their name
+- Emphasizes pings on Discord in-game as blue
