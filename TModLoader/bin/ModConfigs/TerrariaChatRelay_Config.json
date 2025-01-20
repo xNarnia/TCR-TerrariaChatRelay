@@ -1,0 +1,17 @@
+{
+  "OwnerUserId": "0",
+  "Endpoints": [
+    {
+      "BotToken": "",
+      "Channel_IDs": [
+        ""
+      ],
+      "DenySendingMessagesToGame": [
+        "0"
+      ],
+      "DenyReceivingMessagesFromGame": [
+        "0"
+      ]
+    }
+  ]
+}

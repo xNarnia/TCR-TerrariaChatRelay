@@ -1,0 +1,54 @@
+{
+    "CommentGuide": "Setup Guide: https://tinyurl.com/TCR-Setup",
+    "EnableDiscord": true,
+    "CommandPrefix": "t!",
+    "BotStatus": "TerrariaChatRelay",
+    "BotChannelDescription": "%worldname% - **Players Online:** %playercount% / %maxplayers%",
+    "ShowPoweredByMessageOnStartup": true,
+    "RegexHelp1": "For more advanced users, you can use RegexMessageReplace to modify/filter the final message being sent.",
+    "RegexHelp2": "Example (Filtering nth mob kill annoucements): { \"^.+ has defeated the \\d+th .+$\": \"\" }",
+    "OwnerUserId": 0,
+    "ManagerUserIds": [
+        0
+    ],
+    "AdminUserIds": [
+        0
+    ],
+    "RegexMessageEnabled": false,
+    "RegexMessageReplace": {
+        "^(.*)$": "$1"
+    },
+    "EndpointHelp1": "Use commands to handle denying sending and receiving! Use 't!help admin' for more information",
+    "EndPoints": [
+        {
+            "BotToken": "BOT_TOKEN",
+            "Channel_IDs": [
+                0
+            ],
+            "DenySendingMessagesToGame": [],
+            "DenyReceivingMessagesFromGame": []
+        }
+    ],
+    "GameStatusHelp1": "Sets the bots now playing status. Can be configured with variables",
+    "GameStatusHelp2": "%playercount% = Number of current players on the server",
+    "GameStatusHelp3": "%maxplayers% = Maximum number of players allowed, based on serverconfig.txt or command prompt entry",
+    "GameStatus": "with %playercount%/%maxplayers% players!",
+    "RetryHelp": "Set NumberOfTimesToRetryConnectionAfterError to -1 to retry infinitely",
+    "NumberOfTimesToRetryConnectionAfterError": 5,
+    "SecondsToWaitBeforeRetryingAgain": 10,
+    "FormatHelp1": "You can insert any of these formatters to change how your message looks! (CASE SENSITIVE)",
+    "FormatHelp2": "%playername% = Player Name",
+    "FormatHelp3": "%worldname% = World Name",
+    "FormatHelp4": "%message% = Initial message content",
+    "FormatHelp5": "%bossname% = Name of boss being summoned (only for VanillaBossSpawned)",
+    "FormatHelp6": "%groupprefix% = Group prefix",
+    "FormatHelp7": "%groupsuffix% = Group suffix",
+    "TerrariaInGameDiscordPrefix": "[c/7489d8:Discord] - ",
+    "PlayerChatFormat": "> **%playername%:** %message%",
+    "PlayerLoggedInFormat": ":small_blue_diamond: **%playername%** joined the server.",
+    "PlayerLoggedOutFormat": ":small_orange_diamond: **%playername%** left the server.",
+    "WorldEventFormat": "**%message%**",
+    "ServerStartingFormat": ":small_blue_diamond: **%message%**",
+    "ServerStoppingFormat": ":small_orange_diamond: **%message%**",
+    "VanillaBossSpawned": ":anger: **%bossname% has awoken!**"
+}

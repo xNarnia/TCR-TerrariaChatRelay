@@ -34,8 +34,8 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-TShock/[Bb]in/
-TModLoader/[Bb]in/
+TShock/TerrariaChatRelay/[Bb]in/
+TModLoader/TerrariaChatRelay/[Bb]in/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
