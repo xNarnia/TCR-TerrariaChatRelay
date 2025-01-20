@@ -18,3 +18,6 @@ If you want to suggest a chat service, prioritize another, or contribute some co
 ### Developer Resources
 These resources are aimed to help you design your own chat relay mod using TCR as a core framework.
 * [Getting Started](https://github.com/xNarnia/TCR-TerrariaChatRelay/wiki/Getting-Started)
+### Download
+* [TModLoader - Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2669581349)
+* [TShock - Releases](https://github.com/xNarnia/TCR-TerrariaChatRelay/releases)
