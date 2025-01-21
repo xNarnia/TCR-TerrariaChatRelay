@@ -58,7 +58,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			chatParser = new ChatParser();
 			Channel_IDs = _endpoint.Channel_IDs.ToList();
 			Endpoint = _endpoint;
-			botUpdateTimer = new Timer(30000);
+			botUpdateTimer = new Timer(60000);
 
 			messageQueue = new DiscordMessageQueue(500);
 			messageQueue.OnReadyToSend += OnMessageReadyToSend;
@@ -146,9 +146,16 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			var status = DiscordPlugin.Config.BotGameStatus;
 			status = chatParser.ReplaceCustomStringVariables(status);
 
-			// Don't send an update if the status hasn't changed
-            if (Socket.CurrentUser.Activities?.FirstOrDefault()?.Name != status)
-                await Socket.SetGameAsync(status);
+			try
+			{
+                // Don't send an update if the status hasn't changed
+                if (Socket.CurrentUser.Activities?.FirstOrDefault()?.Name != status)
+                    await Socket.SetGameAsync(status);
+            }
+			catch(Exception ex)
+			{
+				PrettyPrint.Log("Discord", "Unable to set game status.");
+			}
         }
 
         /// <summary>
@@ -183,8 +190,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 						else
 						{
 							botUpdateTimer.Stop();
-							throw;
-						}
+                            PrettyPrint.Log("Discord", "Unable to set channel description.");
+                        }
 					}
 				}
 				await Task.Delay(50);
