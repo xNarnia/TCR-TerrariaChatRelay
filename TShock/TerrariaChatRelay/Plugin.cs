@@ -84,8 +84,6 @@ namespace TerrariaChatRelay
 
 			ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
 
-			Global.Config = new TCRConfig().GetOrCreateConfiguration();
-
 			// Add subscribers to list
 			Core.Initialize(new Adapter());
 			Core.ConnectClients();
@@ -93,14 +91,12 @@ namespace TerrariaChatRelay
 			if (Global.Config.CheckForLatestVersion)
 				Task.Run(GetLatestVersionNumber);
 
-			//Hook into the chat. This specific hook catches the chat before it is sent out to other clients.
-			//This allows us to edit the chat message before others get it.
+            //Hook into the chat. This specific hook catches the chat before it is sent out to other clients.
+            //This allows us to edit the chat message before others get it.
 
-			if (Global.Config.ShowChatMessages)
-			{
-				PlayerHooks.PlayerChat += OnChatReceived;
-			}
-			if (Global.Config.ShowGameEvents)
+            if (Global.Config.ShowChatMessages)
+                ServerApi.Hooks.ServerChat.Register(this, OnChatReceived);
+            if (Global.Config.ShowGameEvents)
 				ServerApi.Hooks.ServerBroadcast.Register(this, OnServerBroadcast);
 
 			if (Global.Config.ShowServerStartMessage)
@@ -118,40 +114,66 @@ namespace TerrariaChatRelay
 		}
 
 		private void OnReload(ReloadEventArgs reloadEventArgs)
-		{
-			Core.DisconnectClients();
+        {
+            Global.Config = new TCRConfig().GetOrCreateConfiguration();
+            CommandPrefix = TShock.Config.Settings.CommandSpecifier;
+            SilentCommandPrefix = TShock.Config.Settings.CommandSilentSpecifier;
+
+            Core.DisconnectClients();
 			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
 			Core.ConnectClients();
 		}
 
-		private void OnChatReceived(PlayerChatEventArgs args)
-		{
-			string text = args.RawText;
+        private void OnChatReceived(ServerChatEventArgs args)
+        {
+            string text = args.Text;
 
-			if (text == "" || text == null)
-				return;
+            // Terraria's client side commands remove the command prefix, 
+            // which results in arguments of that command show up on the Discord.
+            // Thus, it needs to be reversed
+            foreach (var item in Terraria.UI.Chat.ChatManager.Commands._localizedCommands)
+            {
+                if (item.Value._name == args.CommandId._name)
+                {
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        text = item.Key.Value + ' ' + text;
+                    }
+                    else
+                    {
+                        text = item.Key.Value;
+                    }
+                    break;
+                }
+            }
 
-			if (TShock.Players[args.Player.Index].mute == true)
-				return;
+            if (text.StartsWith(CommandPrefix) || text.StartsWith(SilentCommandPrefix))
+                return;
 
-			var snippets = ChatManager.ParseMessage(text, Color.White);
+            if (text == "" || text == null)
+                return;
 
-			string outmsg = "";
-			foreach (var snippet in snippets)
-			{
-				outmsg += snippet.Text;
-			}
+            if (TShock.Players[args.Who].mute == true)
+                return;
 
-			ChatHolder.Add(new Chatter()
-			{
-				Player = Main.player[args.Player.Index].ToTCRPlayer(args.Player.Index),
-				Text = $"{outmsg}"
-			});
+            var snippets = ChatManager.ParseMessage(text, Color.White);
 
-			Core.RaiseTerrariaMessageReceived(this, Main.player[args.Player.Index].ToTCRPlayer(args.Player.Index), text);
-		}
+            string outmsg = "";
+            foreach (var snippet in snippets)
+            {
+                outmsg += snippet.Text;
+            }
 
-		private void OnPlayerGreet(GreetPlayerEventArgs args)
+            ChatHolder.Add(new Chatter()
+            {
+                Player = Main.player[args.Who].ToTCRPlayer(args.Who),
+                Text = $"{outmsg}"
+            });
+
+            Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(args.Who), text);
+        }
+
+        private void OnPlayerGreet(GreetPlayerEventArgs args)
 		{
 			try
 			{
@@ -251,7 +273,7 @@ namespace TerrariaChatRelay
 					OnServerStop();
 
 				if (Global.Config.ShowChatMessages)
-					PlayerHooks.PlayerChat -= OnChatReceived;
+					ServerApi.Hooks.ServerChat.Deregister(this, OnChatReceived);
 
 				if (Global.Config.ShowGameEvents)
 					ServerApi.Hooks.ServerBroadcast.Deregister(this, OnServerBroadcast);

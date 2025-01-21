@@ -10,7 +10,7 @@ namespace TerrariaChatRelay.Helpers
 
         public string ToJson()
         {
-			return JsonConvert.SerializeObject(this);
+			return JsonConvert.SerializeObject(this, Formatting.Indented);
 		}
 
 		public void SaveJson()

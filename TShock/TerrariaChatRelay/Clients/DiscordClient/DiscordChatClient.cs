@@ -157,7 +157,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 					}
 					catch (HttpException ex)
 					{
-						if (ex.Message.ToLower().Contains("missing permissions"))
+						if (ex.Message.ToLower().Contains("missing permission"))
 						{
 							PrettyPrint.Log("Discord", "Missing Permission - Manage Channels: Could not update channel description.", ConsoleColor.Red);
 							PrettyPrint.Log("Discord", $"   Update permissions then restart using {DiscordPlugin.Config.CommandPrefix}restart.", ConsoleColor.Red);
