@@ -234,10 +234,18 @@ namespace TerrariaChatRelay.Clients.DiscordClient
                 var SocketToDestroy = Socket;
                 SocketToDestroy.MessageReceived -= ClientMessageReceived;
                 Task.Run(async () => {
-                    await SocketToDestroy.StopAsync();
-                    await SocketToDestroy.LogoutAsync();
-                    SocketToDestroy.Dispose();
-                });
+					try
+					{
+						await SocketToDestroy.StopAsync();
+						await SocketToDestroy.LogoutAsync();
+						await SocketToDestroy.DisposeAsync();
+					}
+					catch (Exception ex)
+					{
+						PrettyPrint.Log("Discord", ex.Message);
+						Console.WriteLine(ex.StackTrace);
+					}
+				});
 			}
 
 			Socket = null;
@@ -345,6 +353,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		{
 			if (retryConnection == true)
 				return Task.CompletedTask;
+			if (Socket.LoginState == LoginState.LoggingOut)
+				return Task.CompletedTask;
 
 			retryConnection = true;
 			PrettyPrint.Log("Discord", $"Error: {e.Message}", ConsoleColor.Red);
@@ -414,6 +424,9 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 
 			try
 			{
+				if (DiscordPlugin.Config.HideMessagesWithString?.Any(x => msg.Message.Contains(x)) ?? false)
+					return;
+
 				string outMsg = "";
 				string bossName = "";
 

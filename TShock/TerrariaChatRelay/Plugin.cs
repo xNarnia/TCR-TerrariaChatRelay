@@ -22,7 +22,7 @@ namespace TerrariaChatRelay
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(2, 3, 0, 2);
+		public override Version Version => new Version(2, 3, 0, 4);
 
 		public override string Author => "Narnia";
 
@@ -120,7 +120,6 @@ namespace TerrariaChatRelay
             SilentCommandPrefix = TShock.Config.Settings.CommandSilentSpecifier;
 
             Core.DisconnectClients();
-			Global.Config = (TCRConfig)new TCRConfig().GetOrCreateConfiguration();
 			Core.ConnectClients();
 		}
 
@@ -131,7 +130,7 @@ namespace TerrariaChatRelay
             // Terraria's client side commands remove the command prefix, 
             // which results in arguments of that command show up on the Discord.
             // Thus, it needs to be reversed
-            foreach (var item in Terraria.UI.Chat.ChatManager.Commands._localizedCommands)
+            foreach (var item in ChatManager.Commands._localizedCommands)
             {
                 if (item.Value._name == args.CommandId._name)
                 {
@@ -156,7 +155,10 @@ namespace TerrariaChatRelay
             if (TShock.Players[args.Who].mute == true)
                 return;
 
-            var snippets = ChatManager.ParseMessage(text, Color.White);
+			if (!TShock.Players[args.Who].HasPermission(Permissions.canchat))
+				return;
+
+			var snippets = ChatManager.ParseMessage(text, Color.White);
 
             string outmsg = "";
             foreach (var snippet in snippets)
@@ -182,7 +184,7 @@ namespace TerrariaChatRelay
 
 				NetPacket packet =
 					Terraria.GameContent.NetModules.NetTextModule.SerializeServerMessage(
-						NetworkText.FromFormattable("This chat is powered by TCRCore."), Color.LawnGreen, byte.MaxValue);
+						NetworkText.FromFormattable("This chat is powered by TerrariaChatRelay."), Color.LawnGreen, byte.MaxValue);
 				NetManager.Instance.SendToClient(packet, args.Who);
 
 				Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(-1), $"{Main.player[args.Who].name} has joined.");

@@ -107,6 +107,8 @@ namespace TerrariaChatRelay
 		[ReloadRequired]
 		public string VanillaBossSpawned { get; set; }
 
+		public List<string> HideMessagesWithString { get; set; } = new List<string>();
+
 		[JsonIgnore]
 		[ShowDespiteJsonIgnore]
 		[Header("StillNeedHelp")]

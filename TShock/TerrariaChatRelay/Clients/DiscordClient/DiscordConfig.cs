@@ -58,11 +58,6 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public string HelpFormat6 { get; set; } = "%groupprefix% = Group prefix";
 		[JsonProperty(Order = 230)]
 		public string HelpFormat7 { get; set; } = "%groupsuffix% = Group suffix";
-		[JsonProperty(Order = 66)]
-		public string HelpRegex1 { get; set; } = "For more advanced users, you can use RegexMessageReplace to modify/filter the final message being sent.";
-		[JsonProperty(Order = 67)]
-		public string HelpRegex2 { get; set; } = "Example (Filtering nth mob kill annoucements): { \"^.+ has defeated the \\d+th .+$\": \"\" }";
-
 		[JsonProperty(Order = 235)]
 		public static string TerrariaInGameDiscordPrefix = "[c/7489d8:Discord] - ";
 		[JsonProperty(Order = 240)]
@@ -79,11 +74,19 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public static string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
 		[JsonProperty(Order = 305)]
 		public static string VanillaBossSpawned = ":anger: **%bossname% has awoken!**";
-
-		[JsonProperty(Order = 120)]
+		[JsonProperty(Order = 315)]
+		public string HelpRegex1 { get; set; } = "For more advanced users, you can use RegexMessageReplace to modify/filter the final message being sent.";
+		[JsonProperty(Order = 322)]
+		public string HelpRegex2 { get; set; } = "Example (Filtering nth mob kill annoucements): { \"^.+ has defeated the \\d+th .+$\": \"\" }";
+		[JsonProperty(Order = 330)]
 		public bool RegexMessageEnabled { get; set; } = false;
-		[JsonProperty(Order = 125)]
+		[JsonProperty(Order = 340)]
 		public Dictionary<string, string> RegexMessageReplace { get; set; } = new Dictionary<string, string>();
+		[JsonProperty(Order = 350)]
+		public string HelpHideMessageWithString { get; set; } = "If the raw message has any of the strings in this list, it will not relay the message.";
+		[JsonProperty(Order = 360)]
+		public List<string> HideMessagesWithString { get; set; } = new List<string>();
+
 
 
 		public DiscordConfig()

@@ -32,6 +32,8 @@ It will allow you to send chat from Terraria to multiple Chat Services (such as 
 Supported Chat Services: Discord, Slack
 
 Changelog
+- [2.3.0.4] - Config regen, new features, stability improvements and more!
+- [2.3.0.2] - Gentle Bugfixes, Code Cleanup, Quality of Life
 - [2.3.0.1] Add a sortAfter for SubworldLib to ensure TCR is loaded after Subworld (if present)
 - [2.3] Add manager commands for banning, unbanning, kicking, and banfile locating
 - [2.2] Rewrite using Discord.NET, SubworldLibrary support, t!restart command, Embeds, Config bugfix, and more!

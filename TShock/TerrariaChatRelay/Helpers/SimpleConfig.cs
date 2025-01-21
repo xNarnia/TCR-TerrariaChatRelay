@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace TerrariaChatRelay.Helpers
 {
@@ -27,9 +29,19 @@ namespace TerrariaChatRelay.Helpers
             if (!File.Exists(file))
                 config = CreateConfigurationAt(file);
             else
-                config = GetConfigurationsAt(file);
+            {
+				var rawConfig = File.ReadAllText(FileName);
+				config = JsonConvert.DeserializeObject<T>(rawConfig);
+				var deserializedConfig = config.ToJson();
 
-            return config;
+                // If entries are missing or the config isn't formatted, fix it
+				if (rawConfig != deserializedConfig)
+				{
+					File.WriteAllText(FileName, deserializedConfig);
+				}
+			}
+
+			return config;
         }
 
         public bool Exists()
@@ -41,12 +53,6 @@ namespace TerrariaChatRelay.Helpers
         public static T LoadConfigFile()
 		{
 			return new T().GetOrCreateConfiguration() as T;
-        }
-
-        private T GetConfigurationsAt(string file)
-		{
-			var config = JsonConvert.DeserializeObject<T>(File.ReadAllText(file));
-            return config;
         }
 
         private T CreateConfigurationAt(string file)

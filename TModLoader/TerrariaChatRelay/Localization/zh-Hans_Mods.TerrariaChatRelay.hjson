@@ -1,0 +1,165 @@
+Configs: {
+	Config: {
+		// DisplayName: TCR - Discord Config
+
+		Headers: {
+			// General: General
+			// UserManagement: User Management
+			// Formatting: Formatting
+			// StillNeedHelp: Still Need Help?
+		}
+
+		CommandPrefix: {
+			// Label: Command Prefix
+			/* Tooltip:
+				'''
+				Prefix to use for commands
+				   Example: t!help
+				''' */
+		}
+
+		ShowPoweredByMessageOnStartup: {
+			// Label: Show Powered By Message On Startup
+			// Tooltip: Disable (Powered By TerrariaChatRelay) startup message in Discord when BOT comes online
+		}
+
+		OwnerUserId: {
+			// Label: Owner User Id
+			// Tooltip: Discord User ID of master user to allow full ownership commands for the bot
+		}
+
+		ManagerUserIds: {
+			// Label: Manager User Ids
+			// Tooltip: Discord User ID's of users to allow access to moderation commands
+		}
+
+		AdminUserIds: {
+			// Label: Admin User Ids
+			// Tooltip: Discord User ID's of users to allow moderation commands and direct server console access
+		}
+
+		Endpoints: {
+			// Label: Discord Bot Settings - [c/FF1919:Manual Reload Required]
+			// Tooltip: To learn how to get your BOT token, see the Discord Token Guide above
+		}
+
+		NumberOfTimesToRetryConnectionAfterError: {
+			// Label: Number Of Times To Retry Connection After Error
+			// Tooltip: Set this to -1 to retry infinitely
+		}
+
+		SecondsToWaitBeforeRetryingAgain: {
+			// Label: Seconds To Wait Before Retrying Again
+			// Tooltip: Waits X seconds before retrying when there is a connection error
+		}
+
+		TerrariaInGameDiscordPrefix: {
+			// Label: Terraria In Game Discord Prefix
+			// Tooltip: Prefix to append to chat sent from Discord to Terraria
+		}
+
+		PlayerChatFormat: {
+			// Label: Player Chat Format
+			// Tooltip: Formatting for Player Chat send from Terraria to Discord
+		}
+
+		PlayerLoggedInFormat: {
+			// Label: Player Logged In Format
+			// Tooltip: Formatting for Player Logins sent from Terraria to Discord
+		}
+
+		PlayerLoggedOutFormat: {
+			// Label: Player Logged Out Format
+			// Tooltip: Formatting for Player Logouts sent from Terraria to Discord
+		}
+
+		WorldEventFormat: {
+			// Label: World Event Format
+			// Tooltip: Formatting for World Events sent from Terraria to Discord
+		}
+
+		ServerStartingFormat: {
+			// Label: Server Starting Format
+			// Tooltip: Formatting for server startup message sent from Terraria to Discord
+		}
+
+		ServerStoppingFormat: {
+			// Label: Server Stopping Format
+			// Tooltip: Formatting for server shutdown message sent from Terraria to Discord
+		}
+
+		VanillaBossSpawned: {
+			// Label: Vanilla Boss Spawned
+			// Tooltip: Formatting for when vanilla bosses spawn sent from Terraria to Discord
+		}
+
+		HoverHereForFormatHelp: {
+			// Label: Hover Here For Format Help
+			/* Tooltip:
+				'''
+				You can insert any of these formatters to change how your message looks! (CASE SENSITIVE)
+				   %playername% = Player Name
+				   %worldname% = World Name
+				   %message% = Initial message content
+				   %bossname% = Name of boss being summoned (only for Vanilla Bosses Spawned)
+				   %groupprefix% = Group prefix
+				   %groupsuffix% = Group suffix
+				''' */
+		}
+
+		OpenDiscordTokenGuide: {
+			// Label: Open Discord Token Guide
+			/* Tooltip:
+				'''
+				This will open your browser to the following link:
+				   [c/57b3ff:https://github.com/xNarnia/TCR-TerrariaChatRelay/wiki/Discord-Relay-Setup]
+				''' */
+		}
+
+		OpenDiscordSupportServer: {
+			/* Tooltip:
+				'''
+				This will open your browser to the following link:
+				   [c/57b3ff:https://discord.gg/xAQGT4VetN]
+				''' */
+			// Label: Join the Discord for More Support
+		}
+
+		SpecialThanks: {
+			/* Tooltip:
+				'''
+				Github Contributions:
+				   hdseventh, PotatoCider, Metacinnabar, 
+				   grandoth, StellarPurr, Soof4
+
+				Translators:
+				   -
+				''' */
+			// Label: Special Thanks to our Contributors
+		}
+	}
+
+	Endpoint: {
+		// Tooltip: ""
+
+		BotToken: {
+			// Label: Bot Token
+			// Tooltip: To learn how to get your BOT token, see the Discord Token Guide above
+		}
+
+		Channel_IDs: {
+			Label: 频道 ID
+			Tooltip: Discord Channel ID of the channel you want to send/receive messages
+		}
+
+		DenySendingMessagesToGame: {
+			Label: 频道 ID - No Send
+			Tooltip: Discord Channel ID of the channels you want to prevent Discord to Terraria chat
+		}
+
+		DenyReceivingMessagesFromGame: {
+			Label: 频道 ID - No Receive
+			Tooltip: Discord Channel ID of the channels you want to prevent Terraria to Discord chat
+		}
+	}
+}

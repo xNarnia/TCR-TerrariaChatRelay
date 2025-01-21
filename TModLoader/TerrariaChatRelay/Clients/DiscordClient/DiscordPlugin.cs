@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using TerrariaChatRelay.Clients;
 
@@ -12,6 +13,14 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public override void Init(List<IChatClient> Subscribers)
 		{
 			Config = new DiscordConfig().GetOrCreateConfiguration();
+
+			// If config is missing entries or not indented, fix it
+			var rawConfig = File.ReadAllText(Config.FileName);
+			var toJsonConfig = Config.ToJson();
+			if (rawConfig != toJsonConfig)
+			{
+				File.WriteAllText(Config.FileName, toJsonConfig);
+			}
 
 			if (Config.EnableDiscord)
 			{
