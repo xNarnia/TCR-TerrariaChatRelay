@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TerrariaChatRelay.Command;
-using TerrariaChatRelay.Helpers;
-using TerrariaChatRelay.Clients.DiscordClient;
+﻿using TerrariaChatRelay.Clients.DiscordClient;
 
 namespace TerrariaChatRelay.Command.Commands.Discord
 {

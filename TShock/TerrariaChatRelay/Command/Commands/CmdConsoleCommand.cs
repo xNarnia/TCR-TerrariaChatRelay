@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TerrariaChatRelay;
-using TerrariaChatRelay.Command;
+﻿using TerrariaChatRelay.Command;
 using TShockAPI;
 
 namespace TerrariaChatRelay.Commands
@@ -22,7 +16,7 @@ namespace TerrariaChatRelay.Commands
 
 		public string Usage { get; } = "cmd ConsoleCommand ConsoleCommandParameters LIKE cmd time noon";
 
-		public TerrariaChatRelay.Command.Permission DefaultPermissionLevel { get; } = TerrariaChatRelay.Command.Permission.Admin;
+		public Command.Permission DefaultPermissionLevel { get; } = Command.Permission.Admin;
 
 		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
@@ -38,6 +32,6 @@ namespace TerrariaChatRelay.Commands
 			=> Group = new SuperAdminGroup();
 
 		public override void SendMessage(string msg, byte red, byte green, byte blue)
-			=> TerrariaChatRelay.Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, msg);
+			=> Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, msg);
 	}
 }

@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Discord.WebSocket;
+using Terraria;
+using TerrariaChatRelay.Helpers;
 
 namespace TerrariaChatRelay.Clients.DiscordClient.Helpers
 {
@@ -71,5 +74,16 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Helpers
 
 			return chatMessage;
 		}
+
+		public string ReplaceCustomStringVariables(string input)
+		{
+            var players = Main.player.Where(x => x.name.Length != 0);
+
+            input = input.Replace("%worldname%", Game.World.GetName())
+                    .Replace("%playercount%", players.Count().ToString())
+                    .Replace("%maxplayers%", Main.maxNetPlayers.ToString());
+
+			return input;
+        }
 	}
 }

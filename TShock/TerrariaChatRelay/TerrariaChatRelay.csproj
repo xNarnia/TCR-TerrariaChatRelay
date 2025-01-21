@@ -7,10 +7,11 @@
     <LangVersion>latest</LangVersion>
     <Configurations>TShock</Configurations>
     <RootNamespace>TerrariaChatRelay</RootNamespace>
-    <Version>2.3.0.1</Version>
+    <Version>2.3.0.2</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="TShock" Version="5.2.1" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Discord.Net.Core">
@@ -22,17 +23,8 @@
     <Reference Include="Discord.Net.WebSocket">
       <HintPath>lib\Discord.Net.WebSocket.dll</HintPath>
     </Reference>
-    <Reference Include="OTAPI">
-      <HintPath>lib\OTAPI.dll</HintPath>
-    </Reference>
     <Reference Include="System.Linq.Async">
       <HintPath>lib\System.Linq.Async.dll</HintPath>
-    </Reference>
-    <Reference Include="TerrariaServer">
-      <HintPath>lib\TerrariaServer.dll</HintPath>
-    </Reference>
-    <Reference Include="TShockAPI">
-      <HintPath>lib\TShockAPI.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

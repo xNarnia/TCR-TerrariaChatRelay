@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TerrariaChatRelay.Helpers
 {
-	public static class GameHelper
+	public static class Game
 	{
 		public static class World
 		{

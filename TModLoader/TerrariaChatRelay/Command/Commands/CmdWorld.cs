@@ -22,13 +22,13 @@ namespace TerrariaChatRelay.Command.Commands
 			var worldinfo = new System.Text.StringBuilder();
 
 			worldinfo.Append("</b>Information about the currently running world</b> </br>");
-			worldinfo.Append($"</box>World Name: {GameHelper.World.GetName()} </br>");
-			worldinfo.Append($"Evil: {GameHelper.World.GetEvilType()} </br>");
+			worldinfo.Append($"</box>World Name: {Game.World.GetName()} </br>");
+			worldinfo.Append($"Evil: {Game.World.GetEvilType()} </br>");
 #if TSHOCK
 			worldinfo.Append($"Difficulty: {(TCRCore.Game.World.IsMasterMode() ? "Master" : (TCRCore.Game.World.IsExpertMode() ? "Expert" : "Normal"))} </br>");
 #endif
-			worldinfo.Append($"Hardmode: {(GameHelper.World.IsHardMode() ? "Yes" : "No")} </br>");
-			worldinfo.Append($"World Size: {GameHelper.World.getWorldSize()}");
+			worldinfo.Append($"Hardmode: {(Game.World.IsHardMode() ? "Yes" : "No")} </br>");
+			worldinfo.Append($"World Size: {Game.World.getWorldSize()}");
 
 #if TSHOCK
 			if(Global.Config.ShowWorldSeed)

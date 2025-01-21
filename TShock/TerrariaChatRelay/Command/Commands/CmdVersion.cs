@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TerrariaChatRelay.Command.Commands
+﻿namespace TerrariaChatRelay.Command.Commands
 {
 	[Command]
 	public class CmdVersion : ICommand
@@ -23,15 +17,7 @@ namespace TerrariaChatRelay.Command.Commands
 
 		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
-			string terraria = "";
-#if TSHOCK
-			terraria = "TShock";
-#endif
-#if TMODLOADER
-			terraria = "tModLoader 1.4";
-#endif
-
-			return $"</b>TerrariaChatRelay Version:</b> {terraria} - v{Core.TCRVersion}";
+			return $"</b>TerrariaChatRelay Version:</b> v{Core.TCRVersion}\n</b>TShock Version:</b> v{TShockAPI.TShock.VersionNum}";
 		}
 	}
 }

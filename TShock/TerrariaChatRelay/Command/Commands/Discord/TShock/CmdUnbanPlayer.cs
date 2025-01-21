@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
-using TShockAPI.DB;
-
-namespace TerrariaChatRelay.Command.Commands
+﻿namespace TerrariaChatRelay.Command.Commands
 {
 	[Command]
 	public class CmdUnbanPlayer : ICommand

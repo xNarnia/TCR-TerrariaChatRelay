@@ -16,7 +16,7 @@ namespace TerrariaChatRelay
 		public static List<IChatClient> Subscribers { get; set; }
 		public static ICommandService CommandServ { get; set; }
 
-		public static Version TCRVersion { get; set; } = new Version(2, 0, 0);
+		public static Version TCRVersion { get; set; } = new Version(2, 3, 0, 2);
 
         public static event EventHandler<TerrariaChatEventArgs> OnGameMessageReceived;
 		public static event EventHandler<ClientChatEventArgs> OnClientMessageReceived;

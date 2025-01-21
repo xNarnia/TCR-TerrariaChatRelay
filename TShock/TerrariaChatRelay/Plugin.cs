@@ -22,7 +22,7 @@ namespace TerrariaChatRelay
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(2, 3, 0, 1);
+		public override Version Version => new Version(2, 3, 0, 2);
 
 		public override string Author => "Narnia";
 

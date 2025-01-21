@@ -1,5 +1,5 @@
 author = Lady Narnia
-version = 2.3.0.1
+version = 2.3.0.2
 displayName = TerrariaChatRelay (Discord)
 homepage = https://steamcommunity.com/sharedfiles/filedetails/?id=2669581349
 includePDB=true

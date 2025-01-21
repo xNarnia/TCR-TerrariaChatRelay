@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TerrariaChatRelay.Command;
 
 namespace TerrariaChatRelay.Clients

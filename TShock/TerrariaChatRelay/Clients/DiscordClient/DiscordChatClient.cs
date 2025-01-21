@@ -14,9 +14,11 @@ using TerrariaChatRelay.Helpers;
 using Game = TerrariaChatRelay.Helpers.Game;
 using System.Timers;
 using Discord.Net;
+using Terraria;
 using System.Configuration;
 using TerrariaChatRelay.Clients.DiscordClient.Helpers;
 using TerrariaChatRelay.Clients.DiscordClient.Messaging;
+using static Terraria.GameContent.Animations.Actions;
 
 namespace TerrariaChatRelay.Clients.DiscordClient
 {
@@ -35,7 +37,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		private string BOT_TOKEN;
 		private ChatParser chatParser { get; set; }
 		private DiscordMessageQueue messageQueue { get; set; }
-		public Timer channelTitleTimer { get; set; }
+		public Timer botUpdateTimer { get; set; }
 
 		// TCR Variables
 		private List<IChatClient> parent { get; set; }
@@ -56,7 +58,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			chatParser = new ChatParser();
 			Channel_IDs = _endpoint.Channel_IDs.ToList();
 			Endpoint = _endpoint;
-			channelTitleTimer = new Timer(60000);
+			botUpdateTimer = new Timer(30000);
 
 			messageQueue = new DiscordMessageQueue(500);
 			messageQueue.OnReadyToSend += OnMessageReadyToSend;
@@ -126,12 +128,33 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			Socket.MessageReceived += ClientMessageReceived;
 			Socket.Connected += ConnectionSuccessful;
 			Socket.Disconnected += ScheduleRetry;
-			await Socket.SetGameAsync(DiscordPlugin.Config.BotStatus);
-			channelTitleTimer.Elapsed += ChannelTitleTimer_Elapsed;
-			channelTitleTimer.Start();
+
+			if (DiscordPlugin.Config.BotGameStatus != null && DiscordPlugin.Config.BotGameStatus != "")
+				botUpdateTimer.Elapsed += GameStatusTimer_Elapsed;
+
+            if (DiscordPlugin.Config.BotChannelDescription != null && DiscordPlugin.Config.BotChannelDescription != "")
+                botUpdateTimer.Elapsed += ChannelTitleTimer_Elapsed;
+			
+			botUpdateTimer.Start();
 		}
 
-		private async void ChannelTitleTimer_Elapsed(object sender, ElapsedEventArgs e)
+		/// <summary>
+		/// Continuously updates the Game Status of the bot.
+		/// </summary>
+        private async void GameStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+			var status = DiscordPlugin.Config.BotGameStatus;
+			status = chatParser.ReplaceCustomStringVariables(status);
+
+			// Don't send an update if the status hasn't changed
+            if (Socket.CurrentUser.Activities?.FirstOrDefault()?.Name != status)
+                await Socket.SetGameAsync(status);
+        }
+
+        /// <summary>
+        /// Continuously updates the Channel Descriptions the bot is relaying in.
+        /// </summary>
+        private async void ChannelTitleTimer_Elapsed(object sender, ElapsedEventArgs e)
 		{
 			foreach (var channelId in Channel_IDs)
 			{
@@ -139,17 +162,11 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 				if (channel is SocketTextChannel)
 				{
 					var textChannel = (SocketTextChannel)channel;
-					var players = Terraria.Main.player.Where(x => x.name.Length != 0);
 					var topic = DiscordPlugin.Config.BotChannelDescription;
-					topic =
-						topic.Replace("%worldname%", Game.World.GetName())
-							.Replace("%playercount%", players.Count().ToString())
-							.Replace("%maxplayers%", Terraria.Main.maxNetPlayers.ToString());
-
+					topic = chatParser.ReplaceCustomStringVariables(topic);
+						
 					if (topic == textChannel.Topic)
-					{
 						return;
-					}
 
 					try
 					{
@@ -161,15 +178,16 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 						{
 							PrettyPrint.Log("Discord", "Missing Permission - Manage Channels: Could not update channel description.", ConsoleColor.Red);
 							PrettyPrint.Log("Discord", $"   Update permissions then restart using {DiscordPlugin.Config.CommandPrefix}restart.", ConsoleColor.Red);
-							channelTitleTimer.Stop();
+							botUpdateTimer.Stop();
 						}
 						else
 						{
-							channelTitleTimer.Stop();
+							botUpdateTimer.Stop();
 							throw;
 						}
 					}
 				}
+				await Task.Delay(50);
 			}
 		}
 
@@ -205,19 +223,20 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 
 			// Detach events
 			if (Socket != null)
-			{
-				Task.Run(async () =>
-				{
-					await Socket.StopAsync();
-					await Socket.DisposeAsync();
-				});
-				Socket.MessageReceived -= ClientMessageReceived;
+            {
+                var SocketToDestroy = Socket;
+                SocketToDestroy.MessageReceived -= ClientMessageReceived;
+                Task.Run(async () => {
+                    await SocketToDestroy.StopAsync();
+                    await SocketToDestroy.LogoutAsync();
+                    SocketToDestroy.Dispose();
+                });
 			}
 
 			Socket = null;
 
-			channelTitleTimer.Stop();
-			channelTitleTimer.Dispose();
+			botUpdateTimer.Stop();
+			botUpdateTimer.Dispose();
 		}
 
 		/// <summary>
@@ -310,11 +329,6 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			}
 
 			return Task.CompletedTask;
-		}
-
-		public void ForceFail()
-		{
-			//Socket_OnError(this, null);
 		}
 
 		/// <summary>

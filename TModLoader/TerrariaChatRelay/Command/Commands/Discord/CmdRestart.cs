@@ -15,7 +15,7 @@ namespace TerrariaChatRelay.Command.Commands.Discord
 
 		public string CommandKey { get; } = "restart";
 
-		public string[] Aliases { get; } = { "reset", "reboot" };
+		public string[] Aliases { get; } = { "reset", "reboot", "reload" };
 
 		public string Description { get; } = "Restarts the bot.";
 
