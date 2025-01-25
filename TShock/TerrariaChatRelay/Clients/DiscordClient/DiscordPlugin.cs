@@ -27,6 +27,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 					Config.SecondsToWaitBeforeRetryingAgain = 1;
 					Config.SaveJson();
 				}
+
+
 			}
 		}
 	}

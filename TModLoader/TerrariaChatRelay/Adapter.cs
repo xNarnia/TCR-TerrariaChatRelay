@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
+using System.Reflection;
 using Terraria.Localization;
 using Terraria.Net;
 using Terraria.UI.Chat;
@@ -8,6 +10,8 @@ namespace TerrariaChatRelay
 {
 	class Adapter : ITCRAdapter
 	{
+		public Version Version { get; set; }
+
 		public void BroadcastChatMessage(string msg, int excludedPlayerId)
 		{
 			if (msg == null)

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Localization;
@@ -22,7 +23,7 @@ namespace TerrariaChatRelay
 	{
 		public override string Name => "TerrariaChatRelay";
 
-		public override Version Version => new Version(2, 3, 0, 4);
+		public override Version Version => Assembly.GetExecutingAssembly().GetName().Version;
 
 		public override string Author => "Narnia";
 
@@ -107,7 +108,7 @@ namespace TerrariaChatRelay
 			ServerApi.Hooks.NpcSpawn.Register(this, OnNPCSpawn);
 
 			//This hook is a part of TShock and not a part of TS-API. There is a strict distinction between those two assemblies.
-			//This event is provided through the C# ``event`` keyword, which is a feature of the language itself.
+			//This event is provided through the C# ``event`` keyword.
 			GeneralHooks.ReloadEvent += OnReload;
 
 			((CommandService)Core.CommandServ).ScanForCommands(this);

@@ -59,21 +59,21 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		[JsonProperty(Order = 230)]
 		public string HelpFormat7 { get; set; } = "%groupsuffix% = Group suffix";
 		[JsonProperty(Order = 235)]
-		public static string TerrariaInGameDiscordPrefix = "[c/7489d8:Discord] - ";
+		public string TerrariaInGameDiscordPrefix = "[c/7489d8:Discord] - ";
 		[JsonProperty(Order = 240)]
-		public static string PlayerChatFormat = "> **%playername%:** %message%";
+		public string PlayerChatFormat = "> **%playername%:** %message%";
 		[JsonProperty(Order = 250)]
-		public static string PlayerLoggedInFormat = ":small_blue_diamond: **%playername%** joined the server.";
+		public string PlayerLoggedInFormat = ":small_blue_diamond: **%playername%** joined the server.";
 		[JsonProperty(Order = 260)]
-		public static string PlayerLoggedOutFormat = ":small_orange_diamond: **%playername%** left the server.";
+		public string PlayerLoggedOutFormat = ":small_orange_diamond: **%playername%** left the server.";
 		[JsonProperty(Order = 270)]
-		public static string WorldEventFormat = "**%message%**";
+		public string WorldEventFormat = "**%message%**";
 		[JsonProperty(Order = 280)]
-		public static string ServerStartingFormat = ":small_blue_diamond: **%message%**";
+		public string ServerStartingFormat = ":small_blue_diamond: **%message%**";
 		[JsonProperty(Order = 290)]
-		public static string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
+		public string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
 		[JsonProperty(Order = 305)]
-		public static string VanillaBossSpawned = ":anger: **%bossname% has awoken!**";
+		public string VanillaBossSpawned = ":anger: **%bossname% has awoken!**";
 		[JsonProperty(Order = 315)]
 		public string HelpRegex1 { get; set; } = "For more advanced users, you can use RegexMessageReplace to modify/filter the final message being sent.";
 		[JsonProperty(Order = 322)]
@@ -108,7 +108,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 	public class Endpoint
 	{
 		public string BotToken { get; set; } = "BOT_TOKEN";
-		public ulong[] Channel_IDs { get; set; } = { 0 };
+		public List<ulong> Channel_IDs { get; set; } = new List<ulong>();
 		public List<ulong> DenySendingMessagesToGame { get; set; } = new List<ulong>();
 		public List<ulong> DenyReceivingMessagesFromGame { get; set; } = new List<ulong>();
 	}

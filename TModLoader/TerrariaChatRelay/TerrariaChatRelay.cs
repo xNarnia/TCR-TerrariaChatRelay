@@ -69,7 +69,9 @@ namespace TerrariaChatRelay
 			PlayerLeaveEndingString = Language.GetText("LegacyMultiplayer.20").Value.Split(new string[] { "{0}" }, StringSplitOptions.None).Last();
 
 			// Add subscribers to list
-			Core.Initialize(new Adapter());
+			var adapter = new Adapter();
+			adapter.Version = Version;
+			Core.Initialize(adapter);
 			Core.ConnectClients();
 
 			if (Global.Config.CheckForLatestVersion)

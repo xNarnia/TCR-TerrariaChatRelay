@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using TerrariaChatRelay.Command;
+using TerrariaChatRelay.TCRCommand;
 
 namespace TerrariaChatRelay.Clients
 {

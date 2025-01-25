@@ -2,29 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using Discord.WebSocket;
 using Discord;
 using TerrariaChatRelay.Clients;
-using TerrariaChatRelay.Command;
+using TerrariaChatRelay.TCRCommand;
 using TerrariaChatRelay.Helpers;
 using Game = TerrariaChatRelay.Helpers.Game;
 using System.Timers;
 using Discord.Net;
 using Terraria;
-using System.Configuration;
 using TerrariaChatRelay.Clients.DiscordClient.Helpers;
 using TerrariaChatRelay.Clients.DiscordClient.Messaging;
-using static Terraria.GameContent.Animations.Actions;
 
 namespace TerrariaChatRelay.Clients.DiscordClient
 {
 	public class DiscordChatClient : BaseClient
 	{
-		public const string GATEWAY_URL = "wss://gateway.discord.gg/?v=6&encoding=json";
 		public const string API_URL = "https://discordapp.com/api/v6";
 
 		// Discord Variables
@@ -43,9 +38,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		private List<IChatClient> parent { get; set; }
 		public override string Name { get; set; } = "Discord";
 
-		private int errorCounter;
-		private static int fatalErrorCounter;
-		private bool retryConnection = false;
+		private int errorCounter { get; set; }
 
 		// Other
 		private bool debug = false;
@@ -92,6 +85,96 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		}
 
 		/// <summary>
+		/// Continuously updates the Game Status of the bot.
+		/// </summary>
+		private async void GameStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
+		{
+			var status = DiscordPlugin.Config.BotGameStatus;
+			status = chatParser.ReplaceCustomStringVariables(status);
+
+			try
+			{
+				// Don't send an update if the status hasn't changed
+				if (Socket.CurrentUser.Activities?.FirstOrDefault()?.Name != status)
+					await Socket.SetGameAsync(status);
+			}
+			catch (Exception ex)
+			{
+				PrettyPrint.Log("Discord", "Unable to set game status.");
+			}
+		}
+
+		/// <summary>
+		/// Continuously updates the Channel Descriptions the bot is relaying in.
+		/// </summary>
+		private async void ChannelTitleTimer_Elapsed(object sender, ElapsedEventArgs e)
+		{
+			foreach (var channelId in Channel_IDs)
+			{
+				var channel = await Socket.GetChannelAsync(channelId);
+				if (channel is SocketTextChannel)
+				{
+					var textChannel = (SocketTextChannel)channel;
+					var topic = DiscordPlugin.Config.BotChannelDescription;
+					topic = chatParser.ReplaceCustomStringVariables(topic);
+
+					if (topic == textChannel.Topic)
+						return;
+
+					try
+					{
+						await textChannel.ModifyAsync(x => x.Topic = topic);
+					}
+					catch (Exception ex)
+					{
+						if (ex.Message.ToLower().Contains("missing permission"))
+						{
+							PrettyPrint.Log("Discord", "Missing Permission - Manage Channels: Could not update channel description.", ConsoleColor.Red);
+							PrettyPrint.Log("Discord", $"   Update permissions then restart using {DiscordPlugin.Config.CommandPrefix}restart.", ConsoleColor.Red);
+							botUpdateTimer.Stop();
+						}
+						else
+						{
+							botUpdateTimer.Stop();
+							PrettyPrint.Log("Discord", "Unable to set channel description.");
+						}
+					}
+				}
+				await Task.Delay(50);
+			}
+		}
+
+		private Task ConnectedEvent()
+		{
+			PrettyPrint.Log("Discord", "Connection Established!");
+
+			if (DiscordPlugin.Config.ShowPoweredByMessageOnStartup && !Reconnect)
+			{
+				messageQueue.QueueMessage(Channel_IDs,
+					$"**This bot is powered by TerrariaChatRelay**\nUse **{DiscordPlugin.Config.CommandPrefix}help** for more commands!");
+			}
+
+			errorCounter = 0;
+			Reconnect = false;
+			Socket.Connected -= ConnectedEvent;
+			return Task.CompletedTask;
+		}
+
+		/// <summary>
+		/// Event called when Discord socket client disconnects.
+		/// <para>
+		///		The Discord socket client automatically retries 
+		///		to reconnect indefinitely until a connection is established.
+		/// </para>
+		/// </summary>
+		private Task DisconnectedEvent(Exception e)
+		{
+			Reconnect = true;
+			PrettyPrint.Log("Discord", $"Disconnected. Reason: {e.Message}", ConsoleColor.Yellow);
+			return Task.CompletedTask;
+		}
+
+		/// <summary>
 		/// Create a new WebSocket and initiate connection with Discord servers. 
 		/// Utilizes BOT_TOKEN and CHANNEL_ID found in Mod Config.
 		/// </summary>
@@ -126,93 +209,16 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			await Socket.LoginAsync(TokenType.Bot, BOT_TOKEN);
 			await Socket.StartAsync();
 			Socket.MessageReceived += ClientMessageReceived;
-			Socket.Connected += ConnectionSuccessful;
-			Socket.Disconnected += ScheduleRetry;
+			Socket.Connected += ConnectedEvent;
+			Socket.Disconnected += DisconnectedEvent;
 
 			if (DiscordPlugin.Config.BotGameStatus != null && DiscordPlugin.Config.BotGameStatus != "")
 				botUpdateTimer.Elapsed += GameStatusTimer_Elapsed;
 
-            if (DiscordPlugin.Config.BotChannelDescription != null && DiscordPlugin.Config.BotChannelDescription != "")
-                botUpdateTimer.Elapsed += ChannelTitleTimer_Elapsed;
-			
+			if (DiscordPlugin.Config.BotChannelDescription != null && DiscordPlugin.Config.BotChannelDescription != "")
+				botUpdateTimer.Elapsed += ChannelTitleTimer_Elapsed;
+
 			botUpdateTimer.Start();
-		}
-
-		/// <summary>
-		/// Continuously updates the Game Status of the bot.
-		/// </summary>
-        private async void GameStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-			var status = DiscordPlugin.Config.BotGameStatus;
-			status = chatParser.ReplaceCustomStringVariables(status);
-
-			try
-			{
-                // Don't send an update if the status hasn't changed
-                if (Socket.CurrentUser.Activities?.FirstOrDefault()?.Name != status)
-                    await Socket.SetGameAsync(status);
-            }
-			catch(Exception ex)
-			{
-				PrettyPrint.Log("Discord", "Unable to set game status.");
-			}
-        }
-
-        /// <summary>
-        /// Continuously updates the Channel Descriptions the bot is relaying in.
-        /// </summary>
-        private async void ChannelTitleTimer_Elapsed(object sender, ElapsedEventArgs e)
-		{
-			foreach (var channelId in Channel_IDs)
-			{
-				var channel = await Socket.GetChannelAsync(channelId);
-				if (channel is SocketTextChannel)
-				{
-					var textChannel = (SocketTextChannel)channel;
-					var topic = DiscordPlugin.Config.BotChannelDescription;
-					topic = chatParser.ReplaceCustomStringVariables(topic);
-						
-					if (topic == textChannel.Topic)
-						return;
-
-					try
-					{
-						await textChannel.ModifyAsync(x => x.Topic = topic);
-					}
-					catch (HttpException ex)
-					{
-						if (ex.Message.ToLower().Contains("missing permission"))
-						{
-							PrettyPrint.Log("Discord", "Missing Permission - Manage Channels: Could not update channel description.", ConsoleColor.Red);
-							PrettyPrint.Log("Discord", $"   Update permissions then restart using {DiscordPlugin.Config.CommandPrefix}restart.", ConsoleColor.Red);
-							botUpdateTimer.Stop();
-						}
-						else
-						{
-							botUpdateTimer.Stop();
-                            PrettyPrint.Log("Discord", "Unable to set channel description.");
-                        }
-					}
-				}
-				await Task.Delay(50);
-			}
-		}
-
-		private Task ConnectionSuccessful()
-		{
-			PrettyPrint.Log("Discord", "Connection Established!");
-
-			if (DiscordPlugin.Config.ShowPoweredByMessageOnStartup && !Reconnect)
-			{
-				messageQueue.QueueMessage(Channel_IDs,
-					$"**This bot is powered by TerrariaChatRelay**\nUse **{DiscordPlugin.Config.CommandPrefix}help** for more commands!");
-			}
-
-			errorCounter = 0;
-			fatalErrorCounter = 0;
-			retryConnection = false;
-			Socket.Connected -= ConnectionSuccessful;
-			return Task.CompletedTask;
 		}
 
 		/// <summary>
@@ -230,22 +236,10 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 
 			// Detach events
 			if (Socket != null)
-            {
-                var SocketToDestroy = Socket;
-                SocketToDestroy.MessageReceived -= ClientMessageReceived;
-                Task.Run(async () => {
-					try
-					{
-						await SocketToDestroy.StopAsync();
-						await SocketToDestroy.LogoutAsync();
-						await SocketToDestroy.DisposeAsync();
-					}
-					catch (Exception ex)
-					{
-						PrettyPrint.Log("Discord", ex.Message);
-						Console.WriteLine(ex.StackTrace);
-					}
-				});
+			{
+				var SocketToDestroy = Socket;
+				SocketToDestroy.MessageReceived -= ClientMessageReceived;
+				SocketToDestroy.Dispose();
 			}
 
 			Socket = null;
@@ -316,7 +310,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 							}
 						}
 
-						Core.RaiseClientMessageReceived(this, user, Name, DiscordConfig.TerrariaInGameDiscordPrefix, msgout, DiscordPlugin.Config.CommandPrefix, msg.Channel.Id.ToString());
+						Core.RaiseClientMessageReceived(this, user, Name, DiscordPlugin.Config.TerrariaInGameDiscordPrefix, msgout, DiscordPlugin.Config.CommandPrefix, msg.Channel.Id.ToString());
 
 						msgout = $"<{msg.Author.Username}> {msgout}";
 
@@ -346,73 +340,6 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			return Task.CompletedTask;
 		}
 
-		/// <summary>
-		/// Sets a timer to retry after a specified time in the configuration.
-		/// </summary>
-		private Task ScheduleRetry(Exception e)
-		{
-			if (retryConnection == true)
-				return Task.CompletedTask;
-			if (Socket.LoginState == LoginState.LoggingOut)
-				return Task.CompletedTask;
-
-			retryConnection = true;
-			PrettyPrint.Log("Discord", $"Error: {e.Message}", ConsoleColor.Red);
-			PrettyPrint.Log("Discord", $"Attempting to reconnect in {DiscordPlugin.Config.SecondsToWaitBeforeRetryingAgain} seconds...", ConsoleColor.Yellow);
-			var retryTimer = new Timer(DiscordPlugin.Config.SecondsToWaitBeforeRetryingAgain * 1000);
-			retryTimer.Elapsed += (senderr, ee) =>
-			{
-				RetryAfterConnectionError();
-				retryTimer.Stop();
-				retryTimer.Dispose();
-			};
-			retryTimer.Start();
-
-			return Task.CompletedTask;
-		}
-
-		/// <summary>
-		/// Checks the state of the socket. If it is in an error state, 
-		/// it will dispose of the Discord ChatClient and reinitialize a new one from scratch.
-		/// </summary>
-		private void RetryAfterConnectionError()
-		{
-			if (DiscordPlugin.Config.NumberOfTimesToRetryConnectionAfterError < 0
-				&& fatalErrorCounter == 0)
-			{
-				PrettyPrint.Log("Discord", $"Connection retry count set to infinite...", ConsoleColor.Yellow);
-			}
-
-			fatalErrorCounter++;
-
-			try
-			{
-				if (Socket.ConnectionState == ConnectionState.Connected)
-					return;
-			}
-			catch
-			{
-				PrettyPrint.Log("Discord", "Socket Error: Fatal exception", ConsoleColor.Red);
-			}
-
-			Disconnect();
-
-			if (fatalErrorCounter >= DiscordPlugin.Config.NumberOfTimesToRetryConnectionAfterError
-				&& DiscordPlugin.Config.NumberOfTimesToRetryConnectionAfterError > 0)
-			{
-				PrettyPrint.Log("Discord", $"Unable to establish a connection after {DiscordPlugin.Config.NumberOfTimesToRetryConnectionAfterError} attempts.", ConsoleColor.Red);
-				PrettyPrint.Log("Discord", "Please use the reload command to re-establish connection.", ConsoleColor.Red);
-				return;
-			}
-
-			PrettyPrint.Log($"#{fatalErrorCounter} - Restarting client...", ConsoleColor.Yellow);
-			var restartClient = new DiscordChatClient(parent, Endpoint);
-			restartClient.Reconnect = true;
-			restartClient.ConnectAsync();
-			parent.Add(restartClient);
-			Dispose();
-		}
-
 		public override void GameMessageReceivedHandler(object sender, TerrariaChatEventArgs msg)
 		{
 			if (errorCounter > 2)
@@ -431,25 +358,25 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 				string bossName = "";
 
 				if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has joined."))
-					outMsg = DiscordConfig.PlayerLoggedInFormat;
+					outMsg = DiscordPlugin.Config.PlayerLoggedInFormat;
 				else if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has left."))
-					outMsg = DiscordConfig.PlayerLoggedOutFormat;
+					outMsg = DiscordPlugin.Config.PlayerLoggedOutFormat;
 				else if (msg.Player.Name != "Server" && msg.Player.PlayerId != -1)
-					outMsg = DiscordConfig.PlayerChatFormat;
+					outMsg = DiscordPlugin.Config.PlayerChatFormat;
 				else if (msg.Player.Name == "Server")
 				{
 					if (msg.Player.PlayerId != -1)
-						outMsg = DiscordConfig.PlayerChatFormat;
+						outMsg = DiscordPlugin.Config.PlayerChatFormat;
 					else if (msg.Message.EndsWith(" has awoken!"))
-						outMsg = DiscordConfig.VanillaBossSpawned;
+						outMsg = DiscordPlugin.Config.VanillaBossSpawned;
 					else if (msg.Message == "The server is starting!")
-						outMsg = DiscordConfig.ServerStartingFormat;
+						outMsg = DiscordPlugin.Config.ServerStartingFormat;
 					else if (msg.Message == "The server is stopping!")
-						outMsg = DiscordConfig.ServerStoppingFormat;
+						outMsg = DiscordPlugin.Config.ServerStoppingFormat;
 					else if (msg.Message.Contains("A new version of TCR is available!"))
 						outMsg = ":desktop:  **%message%**";
 					else
-						outMsg = DiscordConfig.WorldEventFormat;
+						outMsg = DiscordPlugin.Config.WorldEventFormat;
 				}
 				else
 					outMsg = "%message%";

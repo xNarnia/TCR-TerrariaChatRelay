@@ -36,9 +36,9 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public string HelpGameStatus3 { get; set; } = "%maxplayers% = Maximum number of players allowed, based on serverconfig.txt or command prompt entry";
 		[JsonProperty(Order = 138)]
 		public string BotGameStatus { get; set; } = "with %playercount%/%maxplayers% players!";
-        [JsonProperty(Order = 139)]
-        public string BotChannelDescription { get; set; } = "%worldname% - **Players Online:** %playercount% / %maxplayers%";
-        [JsonProperty(Order = 140)]
+		[JsonProperty(Order = 139)]
+		public string BotChannelDescription { get; set; } = "%worldname% - **Players Online:** %playercount% / %maxplayers%";
+		[JsonProperty(Order = 140)]
 		public string RetryHelp { get; set; } = "Set NumberOfTimesToRetryConnectionAfterError to -1 to retry infinitely";
 		[JsonProperty(Order = 150)]
 		public int NumberOfTimesToRetryConnectionAfterError { get; set; } = 5;
@@ -58,22 +58,24 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public string HelpFormat6 { get; set; } = "%groupprefix% = Group prefix";
 		[JsonProperty(Order = 230)]
 		public string HelpFormat7 { get; set; } = "%groupsuffix% = Group suffix";
+		[JsonProperty(Order = 233)]
+		public bool EmbedPlayerMessages = false;
 		[JsonProperty(Order = 235)]
-		public static string TerrariaInGameDiscordPrefix = "[c/7489d8:Discord] - ";
+		public string TerrariaInGameDiscordPrefix = "[c/7489d8:Discord] - ";
 		[JsonProperty(Order = 240)]
-		public static string PlayerChatFormat = "> **%playername%:** %message%";
+		public string PlayerChatFormat = "> **%playername%:** %message%";
 		[JsonProperty(Order = 250)]
-		public static string PlayerLoggedInFormat = ":small_blue_diamond: **%playername%** joined the server.";
+		public string PlayerLoggedInFormat = ":small_blue_diamond: **%playername%** joined the server.";
 		[JsonProperty(Order = 260)]
-		public static string PlayerLoggedOutFormat = ":small_orange_diamond: **%playername%** left the server.";
+		public string PlayerLoggedOutFormat = ":small_orange_diamond: **%playername%** left the server.";
 		[JsonProperty(Order = 270)]
-		public static string WorldEventFormat = "**%message%**";
+		public string WorldEventFormat = "**%message%**";
 		[JsonProperty(Order = 280)]
-		public static string ServerStartingFormat = ":small_blue_diamond: **%message%**";
+		public string ServerStartingFormat = ":small_blue_diamond: **%message%**";
 		[JsonProperty(Order = 290)]
-		public static string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
+		public string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
 		[JsonProperty(Order = 305)]
-		public static string VanillaBossSpawned = ":anger: **%bossname% has awoken!**";
+		public string VanillaBossSpawned = ":anger: **%bossname% has awoken!**";
 		[JsonProperty(Order = 315)]
 		public string HelpRegex1 { get; set; } = "For more advanced users, you can use RegexMessageReplace to modify/filter the final message being sent.";
 		[JsonProperty(Order = 322)]
@@ -86,8 +88,6 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public string HelpHideMessageWithString { get; set; } = "If the raw message has any of the strings in this list, it will not relay the message.";
 		[JsonProperty(Order = 360)]
 		public List<string> HideMessagesWithString { get; set; } = new List<string>();
-
-
 
 		public DiscordConfig()
 		{
@@ -110,7 +110,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 	public class Endpoint
 	{
 		public string BotToken { get; set; } = "BOT_TOKEN";
-		public ulong[] Channel_IDs { get; set; } = { 0 };
+		public List<ulong> Channel_IDs { get; set; } = new List<ulong>();
 		public List<ulong> DenySendingMessagesToGame { get; set; } = new List<ulong>();
 		public List<ulong> DenyReceivingMessagesFromGame { get; set; } = new List<ulong>();
 	}

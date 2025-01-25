@@ -8,6 +8,7 @@ namespace TerrariaChatRelay.Models
 {
 	public interface ITCRAdapter
 	{
+		Version Version { get; set;  }
 		void BroadcastChatMessage(string msg, int excludedPlayerId);
 		string ParseSnippets(string msg);
 	}

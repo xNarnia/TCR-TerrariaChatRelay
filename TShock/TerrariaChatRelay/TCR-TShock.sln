@@ -1,0 +1,19 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerrariaChatRelay", "TerrariaChatRelay.csproj", "{DDA0D880-3C7B-408A-95E2-B898429D2BD7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		TShock|Any CPU = TShock|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDA0D880-3C7B-408A-95E2-B898429D2BD7}.TShock|Any CPU.ActiveCfg = TShock|Any CPU
+		{DDA0D880-3C7B-408A-95E2-B898429D2BD7}.TShock|Any CPU.Build.0 = TShock|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

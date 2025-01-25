@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TerrariaChatRelay.Clients;
-using TerrariaChatRelay.Command;
+using TerrariaChatRelay.TCRCommand;
 using TerrariaChatRelay.Helpers;
 using TerrariaChatRelay.Models;
 using TerrariaChatRelay.Clients.DiscordClient;
@@ -16,7 +16,7 @@ namespace TerrariaChatRelay
 		public static List<IChatClient> Subscribers { get; set; }
 		public static ICommandService CommandServ { get; set; }
 
-		public static Version TCRVersion { get; set; } = new Version(2, 3, 0, 4);
+		public static Version TCRVersion { get; set; }
 
         public static event EventHandler<TerrariaChatEventArgs> OnGameMessageReceived;
 		public static event EventHandler<ClientChatEventArgs> OnClientMessageReceived;
@@ -36,6 +36,7 @@ namespace TerrariaChatRelay
 			Subscribers = new List<IChatClient>();
 			CommandServ = new CommandService();
 			_adapter = adapter;
+			TCRVersion = _adapter.Version;
 		}
 
 		/// <summary>
