@@ -21,3 +21,12 @@ These resources are aimed to help you design your own chat relay mod using TCR a
 ### Download
 * [TModLoader - Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2669581349)
 * [TShock - Releases](https://github.com/xNarnia/TCR-TerrariaChatRelay/releases)
+
+# Contributors 
+Thank you to our TerrariaChatRelay contributors who help make a difference in making this plugin what it is today!
+
+<a href="https://github.com/xNarnia/TCR-TerrariaChatRelay/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=xNarnia/TCR-TerrariaChatRelay" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
