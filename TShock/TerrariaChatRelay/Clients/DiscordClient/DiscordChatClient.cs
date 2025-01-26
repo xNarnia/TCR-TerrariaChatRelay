@@ -143,7 +143,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		/// </summary>
 		public override async void ConnectAsync()
 		{
-			if ((BOT_TOKEN == "BOT_TOKEN" || BOT_TOKEN == null || Channel_IDs.Contains(0)) && Reconnect == false)
+			if ((BOT_TOKEN == "BOT_TOKEN" || BOT_TOKEN == null) && Reconnect == false)
 			{
 				PrettyPrint.Log("Discord", "Please update your Mod Config. Mod reload required.");
 
@@ -187,7 +187,17 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			Services.Add(new ChannelDescriptionService(Socket, Channel_IDs, serviceTimer, chatParser));
 			Services.Add(new GameStatusService(Socket, serviceTimer, chatParser));
 			Services.Add(new SlashCommandService(Socket));
-			Services.ForEach(x => x.Start());
+			Services.Add(new NoChannelGreetingService(Socket, Channel_IDs));
+			Services.ForEach(x => {
+				try
+				{
+					x.Start();
+				}
+				catch (Exception e)
+				{
+					PrettyPrint.Log("Discord", $"Error starting {x}. Reason: " + e.Message);
+				}
+			});
 			return Task.CompletedTask;
 		}
 

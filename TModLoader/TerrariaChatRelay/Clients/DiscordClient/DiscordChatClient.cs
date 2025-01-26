@@ -187,7 +187,18 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			Services.Add(new ChannelDescriptionService(Socket, Channel_IDs, serviceTimer, chatParser));
 			Services.Add(new GameStatusService(Socket, serviceTimer, chatParser));
 			Services.Add(new SlashCommandService(Socket));
-			Services.ForEach(x => x.Start());
+			Services.Add(new NoChannelGreetingService(Socket, Channel_IDs));
+			Services.ForEach(x => {
+				try
+				{
+					x.Start();
+				}
+				catch (Exception e)
+				{
+					PrettyPrint.Log("Discord", $"Error starting {x}. Reason: " + e.Message);
+					Task.FromException(e);
+				}
+			});
 			return Task.CompletedTask;
 		}
 
