@@ -46,8 +46,18 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public DiscordChatClient(List<IChatClient> _parent, Endpoint _endpoint)
 			: base(_parent)
 		{
+			try
+			{
+				TokenUtils.ValidateToken(TokenType.Bot, _endpoint.BotToken);
+				BOT_TOKEN = _endpoint.BotToken;
+			}
+			catch (Exception e)
+			{
+				PrettyPrint.Log("Discord", e.Message, ConsoleColor.Red);
+				BOT_TOKEN = null;
+			}
+
 			parent = _parent;
-			BOT_TOKEN = _endpoint.BotToken;
 			chatParser = new ChatParser();
 			Channel_IDs = _endpoint.Channel_IDs.ToList();
 			Endpoint = _endpoint;
@@ -137,11 +147,11 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		/// </summary>
 		public override async void ConnectAsync()
 		{
-			if ((BOT_TOKEN == "BOT_TOKEN" || Channel_IDs.Contains(0)) && Reconnect == false)
+			if ((BOT_TOKEN == "BOT_TOKEN" || BOT_TOKEN == null || Channel_IDs.Contains(0)) && Reconnect == false)
 			{
 				PrettyPrint.Log("Discord", "Please update your Mod Config. Mod reload required.");
 
-				if (BOT_TOKEN == "BOT_TOKEN")
+				if (BOT_TOKEN == "BOT_TOKEN" || BOT_TOKEN == null)
 					PrettyPrint.Log("Discord", " Invalid Token: BOT_TOKEN", ConsoleColor.Yellow);
 				if (Channel_IDs.Contains(0))
 					PrettyPrint.Log("Discord", " Invalid Channel Id: 0", ConsoleColor.Yellow);

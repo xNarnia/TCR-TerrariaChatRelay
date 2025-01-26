@@ -27,6 +27,8 @@ namespace TerrariaChatRelay.TMLCommand
 	//	public override string Command
 	//		=> "tcrToken";
 
+	//	public override bool IsCaseSensitive => true;
+
 	//	// A short usage explanation for this command
 	//	public override string Usage
 	//		=> "tcrtoken TOKENHERE - Sets the bot token" +
@@ -58,7 +60,7 @@ namespace TerrariaChatRelay.TMLCommand
 	//		if (args.Length > 0)
 	//		{
 	//			string BotToken;
-	//			if(args.Length == 2)
+	//			if (args.Length == 2)
 	//			{
 	//				// The user supplies the index starting from 1 instead of 0
 	//				int endpointIndexStartingFromOne;
@@ -82,7 +84,7 @@ namespace TerrariaChatRelay.TMLCommand
 	//				Console.WriteLine($"Endpoint {endpointIndexStartingFromOne}: {successMessage}");
 	//				return;
 	//			}
-	//			if (args.Length == 1 && DiscordPlugin.Config.EndPoints.Count >= 2) 
+	//			if (args.Length == 1 && DiscordPlugin.Config.EndPoints.Count >= 2)
 	//			{
 	//				Console.WriteLine($"{DiscordPlugin.Config.EndPoints.Count} endpoints found!");
 	//				Console.WriteLine();
@@ -91,7 +93,7 @@ namespace TerrariaChatRelay.TMLCommand
 	//				foreach (var Endpoint in DiscordPlugin.Config.EndPoints)
 	//				{
 	//					Console.WriteLine($"[Endpoint {i}]");
-	//					if(Endpoint.Channel_IDs?.Count > 0)
+	//					if (Endpoint.Channel_IDs?.Count > 0)
 	//					{
 	//						foreach (var channelIdListing in Endpoint.Channel_IDs)
 	//						{
