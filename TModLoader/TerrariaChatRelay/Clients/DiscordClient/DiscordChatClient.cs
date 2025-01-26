@@ -14,7 +14,7 @@ using System.Timers;
 using Discord.Net;
 using Terraria;
 using TerrariaChatRelay.Clients.DiscordClient.Helpers;
-using TerrariaChatRelay.Clients.DiscordClient.Messaging;
+using TerrariaChatRelay.Clients.DiscordClient.Services;
 
 namespace TerrariaChatRelay.Clients.DiscordClient
 {
@@ -31,8 +31,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public bool Reconnect { get; set; } = false;
 		private string BOT_TOKEN;
 		private ChatParser chatParser { get; set; }
-		private DiscordMessageQueue messageQueue { get; set; }
-		public Timer botUpdateTimer { get; set; }
+		public DiscordMessageQueue MessageQueue { get; set; }
+		public List<IDiscordService> Services { get; set; }
 
 		// TCR Variables
 		private List<IChatClient> parent { get; set; }
@@ -51,10 +51,10 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			chatParser = new ChatParser();
 			Channel_IDs = _endpoint.Channel_IDs.ToList();
 			Endpoint = _endpoint;
-			botUpdateTimer = new Timer(60000);
+			Services = new List<IDiscordService>();
 
-			messageQueue = new DiscordMessageQueue(500);
-			messageQueue.OnReadyToSend += OnMessageReadyToSend;
+			MessageQueue = new DiscordMessageQueue(500);
+			MessageQueue.OnReadyToSend += OnMessageReadyToSend;
 		}
 
 		/// <summary>
@@ -62,96 +62,53 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		/// Queues messages to stack messages closely sent to each other.
 		/// This will allow TCR to combine messages and reduce messages sent to Discord.
 		/// </summary>
-		public void OnMessageReadyToSend(Dictionary<ulong, Queue<string>> messages)
+		public void OnMessageReadyToSend(Dictionary<ulong, Queue<DiscordMessage>> messages)
 		{
 			foreach (var queue in messages)
 			{
+				var isEmbed = false;
+
 				string output = "";
 
 				foreach (var msg in queue.Value)
 				{
-					output += msg + '\n';
+					output += msg.Message + '\n';
+					isEmbed = isEmbed || msg.Embed;
 				}
 
 				if (output.Length > 2000)
 					output = output.Substring(0, 2000);
 
-				var embed =
-					new EmbedBuilder()
+				if (isEmbed)
+				{
+					var embed = new EmbedBuilder()
 						.WithDescription(output)
 						.Build();
-				SendMessageToClient("", embed, queue.Key.ToString());
-			}
-		}
-
-		/// <summary>
-		/// Continuously updates the Game Status of the bot.
-		/// </summary>
-		private async void GameStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
-		{
-			var status = DiscordPlugin.Config.BotGameStatus;
-			status = chatParser.ReplaceCustomStringVariables(status);
-
-			try
-			{
-				// Don't send an update if the status hasn't changed
-				if (Socket.CurrentUser.Activities?.FirstOrDefault()?.Name != status)
-					await Socket.SetGameAsync(status);
-			}
-			catch (Exception ex)
-			{
-				PrettyPrint.Log("Discord", "Unable to set game status.");
-			}
-		}
-
-		/// <summary>
-		/// Continuously updates the Channel Descriptions the bot is relaying in.
-		/// </summary>
-		private async void ChannelTitleTimer_Elapsed(object sender, ElapsedEventArgs e)
-		{
-			foreach (var channelId in Channel_IDs)
-			{
-				var channel = await Socket.GetChannelAsync(channelId);
-				if (channel is SocketTextChannel)
-				{
-					var textChannel = (SocketTextChannel)channel;
-					var topic = DiscordPlugin.Config.BotChannelDescription;
-					topic = chatParser.ReplaceCustomStringVariables(topic);
-
-					if (topic == textChannel.Topic)
-						return;
-
-					try
-					{
-						await textChannel.ModifyAsync(x => x.Topic = topic);
-					}
-					catch (Exception ex)
-					{
-						if (ex.Message.ToLower().Contains("missing permission"))
-						{
-							PrettyPrint.Log("Discord", "Missing Permission - Manage Channels: Could not update channel description.", ConsoleColor.Red);
-							PrettyPrint.Log("Discord", $"   Update permissions then restart using {DiscordPlugin.Config.CommandPrefix}restart.", ConsoleColor.Red);
-							botUpdateTimer.Stop();
-						}
-						else
-						{
-							botUpdateTimer.Stop();
-							PrettyPrint.Log("Discord", "Unable to set channel description.");
-						}
-					}
+					SendMessageToClient("", embed, queue.Key.ToString());
 				}
-				await Task.Delay(50);
+				else
+				{
+					SendMessageToClient(output, null, queue.Key.ToString());
+				}
 			}
 		}
 
+		/// <summary>
+		/// Event called when the Discord socket client connects.
+		/// </summary>
+		/// <returns></returns>
 		private Task ConnectedEvent()
 		{
 			PrettyPrint.Log("Discord", "Connection Established!");
 
 			if (DiscordPlugin.Config.ShowPoweredByMessageOnStartup && !Reconnect)
 			{
-				messageQueue.QueueMessage(Channel_IDs,
-					$"**This bot is powered by TerrariaChatRelay**\nUse **{DiscordPlugin.Config.CommandPrefix}help** for more commands!");
+				MessageQueue.QueueMessage(Channel_IDs,
+					new DiscordMessage ()
+					{
+						Message = $"**This bot is powered by TerrariaChatRelay**\nUse **{DiscordPlugin.Config.CommandPrefix}help** for more commands!",
+						Embed = true
+					});
 			}
 
 			errorCounter = 0;
@@ -211,14 +168,21 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			Socket.MessageReceived += ClientMessageReceived;
 			Socket.Connected += ConnectedEvent;
 			Socket.Disconnected += DisconnectedEvent;
+			Socket.Ready += Socket_Ready;
+		}
 
-			if (DiscordPlugin.Config.BotGameStatus != null && DiscordPlugin.Config.BotGameStatus != "")
-				botUpdateTimer.Elapsed += GameStatusTimer_Elapsed;
-
-			if (DiscordPlugin.Config.BotChannelDescription != null && DiscordPlugin.Config.BotChannelDescription != "")
-				botUpdateTimer.Elapsed += ChannelTitleTimer_Elapsed;
-
-			botUpdateTimer.Start();
+		/// <summary>
+		/// Event called when the Discord client has finished intialization and connected to all appropriate endpoints.
+		/// </summary>
+		/// <returns></returns>
+		private Task Socket_Ready()
+		{
+			var serviceTimer = new Timer(60000);
+			Services.Add(new ChannelDescriptionService(Socket, Channel_IDs, serviceTimer, chatParser));
+			Services.Add(new GameStatusService(Socket, serviceTimer, chatParser));
+			Services.Add(new SlashCommandService(Socket));
+			Services.ForEach(x => x.Start());
+			return Task.CompletedTask;
 		}
 
 		/// <summary>
@@ -227,29 +191,29 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public override void Disconnect()
 		{
 			// Detach queue from event and dispose
-			if (messageQueue != null)
+			if (MessageQueue != null)
 			{
-				messageQueue.OnReadyToSend -= OnMessageReadyToSend;
-				messageQueue.Clear();
+				MessageQueue.OnReadyToSend -= OnMessageReadyToSend;
+				MessageQueue.Clear();
 			}
-			messageQueue = null;
+			MessageQueue = null;
+
+			// Dispose services
+			Services.ForEach(x => x.Dispose());
 
 			// Detach events
 			if (Socket != null)
-			{
-				var SocketToDestroy = Socket;
-				SocketToDestroy.MessageReceived -= ClientMessageReceived;
-				SocketToDestroy.Dispose();
+            {
+                var SocketToDestroy = Socket;
+                SocketToDestroy.MessageReceived -= ClientMessageReceived;
+				Task.Run(async () => await SocketToDestroy.DisposeAsync());
 			}
 
 			Socket = null;
-
-			botUpdateTimer.Stop();
-			botUpdateTimer.Dispose();
 		}
 
 		/// <summary>
-		/// Parses data when Discord sends a message.
+		/// Parses data when Discord receives a Client message, such as from another Discord.
 		/// </summary>
 		private Task ClientMessageReceived(SocketMessage msg)
 		{
@@ -316,9 +280,11 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 
 						if (Channel_IDs.Count > 1)
 						{
-							messageQueue.QueueMessage(
+							MessageQueue.QueueMessage(
 								Channel_IDs.Where(x => x != msg.Channel.Id && !Endpoint.DenyReceivingMessagesFromGame.Contains(x)),
-								$"**[Discord]** <{msg.Author.Username}> {msg.Content}");
+								new DiscordMessage() {
+									Message = $"**[Discord]** <{msg.Author.Username}> {msg.Content}"
+								});
 						}
 
 						Console.ForegroundColor = ConsoleColor.Blue;
@@ -356,17 +322,23 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 
 				string outMsg = "";
 				string bossName = "";
+				bool isPlayerChat = false;
 
 				if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has joined."))
 					outMsg = DiscordPlugin.Config.PlayerLoggedInFormat;
 				else if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has left."))
 					outMsg = DiscordPlugin.Config.PlayerLoggedOutFormat;
 				else if (msg.Player.Name != "Server" && msg.Player.PlayerId != -1)
+				{
 					outMsg = DiscordPlugin.Config.PlayerChatFormat;
+					isPlayerChat = true;
+				}
 				else if (msg.Player.Name == "Server")
 				{
-					if (msg.Player.PlayerId != -1)
+					if (msg.Player.PlayerId != -1) { 
 						outMsg = DiscordPlugin.Config.PlayerChatFormat;
+						isPlayerChat = true;
+					}
 					else if (msg.Message.EndsWith(" has awoken!"))
 						outMsg = DiscordPlugin.Config.VanillaBossSpawned;
 					else if (msg.Message == "The server is starting!")
@@ -415,7 +387,11 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 				if (outMsg == "" || outMsg == null)
 					return;
 
-				messageQueue.QueueMessage(ChannelsToSendTo, outMsg);
+				MessageQueue.QueueMessage(ChannelsToSendTo, new DiscordMessage()
+				{
+					Message = outMsg,
+					Embed = !DiscordPlugin.Config.EmbedPlayerMessages ? !isPlayerChat : true
+				});
 			}
 			catch (Exception e)
 			{
@@ -442,7 +418,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			if (result == "" || result == null)
 				return;
 
-			if (messageQueue == null)
+			if (MessageQueue == null)
 			{
 				Console.WriteLine("Error: Message queue is not available.");
 				return;
@@ -455,7 +431,11 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			result = result.Replace("</box>", "```");
 			result = result.Replace("</quote>", "> ");
 
-			messageQueue.QueueMessage(ulong.Parse(sourceChannelId), result);
+			MessageQueue.QueueMessage(ulong.Parse(sourceChannelId), new DiscordMessage()
+			{
+				Message = result,
+				Embed = true
+			});
 		}
 
 		public override void SendMessageToClient(string msg, string sourceChannelId)

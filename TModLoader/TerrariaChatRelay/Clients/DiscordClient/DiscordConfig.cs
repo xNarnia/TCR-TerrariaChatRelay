@@ -58,6 +58,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public string HelpFormat6 { get; set; } = "%groupprefix% = Group prefix";
 		[JsonProperty(Order = 230)]
 		public string HelpFormat7 { get; set; } = "%groupsuffix% = Group suffix";
+		[JsonProperty(Order = 233)]
+		public bool EmbedPlayerMessages = false;
 		[JsonProperty(Order = 235)]
 		public string TerrariaInGameDiscordPrefix = "[c/7489d8:Discord] - ";
 		[JsonProperty(Order = 240)]

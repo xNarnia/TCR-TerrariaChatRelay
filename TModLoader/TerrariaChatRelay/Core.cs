@@ -18,7 +18,7 @@ namespace TerrariaChatRelay
 
 		public static Version TCRVersion { get; set; }
 
-		public static event EventHandler<TerrariaChatEventArgs> OnGameMessageReceived;
+        public static event EventHandler<TerrariaChatEventArgs> OnGameMessageReceived;
 		public static event EventHandler<ClientChatEventArgs> OnClientMessageReceived;
 
 		private static ITCRAdapter _adapter;
