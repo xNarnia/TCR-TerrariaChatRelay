@@ -38,7 +38,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services
 						Task.Run(async () =>
 						{
 							var embed = new EmbedBuilder()
-								.WithTitle("This bot is powered by TerrariaChatRelay! 🌲")
+								.WithTitle("🌲 This bot is powered by TerrariaChatRelay! 🌲")
 								.WithDescription(
 									@"To get started, begin by adding a channel using the `/addchannel` command!
 
@@ -46,7 +46,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services
 								.Build();
 							try
 							{
-								await writableChannel.SendMessageAsync(null, false, embed);
+								await writableChannel.SendMessageAsync($"<@{writableChannel.Guild.OwnerId}>", false, embed);
 							}
 							catch (Exception e)
 							{

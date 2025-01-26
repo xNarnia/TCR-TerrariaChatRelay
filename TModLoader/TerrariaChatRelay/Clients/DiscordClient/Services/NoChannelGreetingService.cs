@@ -56,7 +56,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services
 								.Build();
 							try
 							{
-								await writableChannel.SendMessageAsync(null, false, embed);
+								await writableChannel.SendMessageAsync($"<@{writableChannel.Guild.OwnerId}>", false, embed);
 							}
 							catch (Exception e)
 							{
