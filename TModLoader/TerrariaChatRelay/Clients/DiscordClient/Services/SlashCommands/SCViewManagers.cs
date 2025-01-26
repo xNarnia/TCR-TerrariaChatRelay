@@ -20,10 +20,10 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 
 		public override async Task Run(SocketSlashCommand command)
 		{
-			var managerIds = DiscordPlugin.Config.ManagerUserIds;
+			var managerIds = DiscordPlugin.Config.ManagerUserIds.Where(x => x != 0);
 			string managerString = "";
 
-			if (managerIds.Count > 0)
+			if (managerIds.Count() > 0)
 				managerString = string.Join("\n", managerIds.Select(x => $"<@{x}>"));
 			else
 				managerString = "No users found.";
