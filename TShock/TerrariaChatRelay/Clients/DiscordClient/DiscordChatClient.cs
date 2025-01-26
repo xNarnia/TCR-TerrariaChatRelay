@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Net;
-using System.Text.RegularExpressions;
 using Discord.WebSocket;
 using Discord;
-using TerrariaChatRelay.Clients;
 using TerrariaChatRelay.TCRCommand;
 using TerrariaChatRelay.Helpers;
 using Game = TerrariaChatRelay.Helpers.Game;
 using System.Timers;
-using Discord.Net;
 using Terraria;
 using TerrariaChatRelay.Clients.DiscordClient.Helpers;
 using TerrariaChatRelay.Clients.DiscordClient.Services;
@@ -396,6 +392,11 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 
 				if (outMsg == "" || outMsg == null)
 					return;
+
+				if (!DiscordPlugin.Config.EmbedPlayerMessages && isPlayerChat)
+				{
+					outMsg = chatParser.RemoveUserMentions(outMsg);
+				}
 
 				MessageQueue.QueueMessage(ChannelsToSendTo, new DiscordMessage()
 				{
