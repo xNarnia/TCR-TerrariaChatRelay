@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 {
-	public class SCAddChannel : BaseSlashCommand
+	public class SCAddConsoleChannel : BaseSlashCommand
 	{
-		public override string Name => "addchannel";
+		public override string Name => "addconsolechannel";
 		public override SlashCommandScope Scope => SlashCommandScope.Guild;
-		public override string Description => "Adds a relay channel to TerrariaChatRelay.";
+		public override string Description => "Adds a console output relay channel to TerrariaChatRelay.";
 		public override bool Ephemeral => false;
 		public override GuildPermission DefaultPermission => GuildPermission.Administrator;
 
@@ -38,8 +38,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 		{
 			SocketGuildChannel channel = command.Data.Options.FirstOrDefault(o => o.Name == "channel")?.Value as SocketGuildChannel;
 
-            // The user supplies the index starting from 1 instead of 0
-            int endpointIndexStartingFromOne = 0;
+			// The user supplies the index starting from 1 instead of 0
+			int endpointIndexStartingFromOne = 0;
 			var optionalParam = command.Data.Options.FirstOrDefault(o => o.Name == "endpoint");
 
 			if (optionalParam != null)
@@ -60,14 +60,14 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 
 				var endpoint = DiscordPlugin.Config.EndPoints[endpointIndexStartingFromOne - 1];
 
-				if (endpoint.Channel_IDs.Contains(channel.Id))
-				{
-                    await command.RespondAsync(null, [GetEmbed($"<#{channel.Id}> is already relaying chat!", Color.Red)]);
-					return;
+                if (endpoint.Console_Channel_IDs.Contains(channel.Id))
+                {
+                    await command.RespondAsync(null, [GetEmbed($"<#{channel.Id}> is already relaying console output!", Color.Red)]);
+                    return;
                 }
 
-                endpoint.Channel_IDs.RemoveAll(x => x == 0);
-				endpoint.Channel_IDs.Add(channel.Id);
+                endpoint.Console_Channel_IDs.RemoveAll(x => x == 0);
+				endpoint.Console_Channel_IDs.Add(channel.Id);
 				DiscordPlugin.Config.SaveJson();
 
 				await command.RespondAsync(null, [GetEmbed($"Endpoint {endpointIndexStartingFromOne}: {successMessage}", Color.Green)]);
@@ -84,9 +84,9 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 				foreach (var Endpoint in DiscordPlugin.Config.EndPoints)
 				{
 					output += $"\n[Endpoint {i}]";
-					if (Endpoint.Channel_IDs?.Count > 0)
+					if (Endpoint.Console_Channel_IDs?.Count > 0)
 					{
-						foreach (var channelIdListing in Endpoint.Channel_IDs)
+						foreach (var channelIdListing in Endpoint.Console_Channel_IDs)
 						{
 							output += $"\n- Channel: <#{channelIdListing}>";
 						}
@@ -101,7 +101,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 
 				await command.RespondAsync(null, [GetEmbed(
 					$"\n\nTo update the channel ids, add the number of the endpoint you wish to update." +
-					$"\n- Example: /addchannel channel:#my-channel endpoint:1 ")]);
+					$"\n- Example: /addconsolechannel channel:#my-channel endpoint:1 ")]);
 				return;
 			}
 
@@ -110,7 +110,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 			{
 				DiscordPlugin.Config.EndPoints.Add(new Endpoint()
 				{
-					Channel_IDs = { channel.Id }
+					Console_Channel_IDs = { channel.Id }
 				});
 				DiscordPlugin.Config.SaveJson();
 				await command.RespondAsync(null, [GetEmbed(successMessage, Color.Green)]);
@@ -120,20 +120,20 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 			{
 				var endpoint = DiscordPlugin.Config.EndPoints.First();
 
-                if (endpoint.Channel_IDs.Contains(channel.Id))
+                if (endpoint.Console_Channel_IDs.Contains(channel.Id))
                 {
-                    await command.RespondAsync(null, [GetEmbed($"<#{channel.Id}> is already relaying chat!", Color.Red)]);
+                    await command.RespondAsync(null, [GetEmbed($"<#{channel.Id}> is already relaying console output!", Color.Red)]);
                     return;
                 }
 
-                endpoint.Channel_IDs.RemoveAll(x => x == 0);
-				endpoint.Channel_IDs.Add(channel.Id);
+                endpoint.Console_Channel_IDs.RemoveAll(x => x == 0);
+				endpoint.Console_Channel_IDs.Add(channel.Id);
 				DiscordPlugin.Config.SaveJson();
 				await command.RespondAsync(null, [GetEmbed(successMessage, Color.Green)]);
 				return;
 			}
 
-			await command.RespondAsync(null, [GetEmbed("An unexpected error occurred using /addchannel.", Color.Red)]);
+			await command.RespondAsync(null, [GetEmbed("An unexpected error occurred using /addconsolechannel.", Color.Red)]);
 		}
 	}
 }

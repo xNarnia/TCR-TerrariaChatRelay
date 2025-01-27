@@ -11,10 +11,11 @@ using System.Timers;
 using Terraria;
 using TerrariaChatRelay.Clients.DiscordClient.Helpers;
 using TerrariaChatRelay.Clients.DiscordClient.Services;
+using TerrariaChatRelay.Clients.DiscordClient.Messaging;
 
 namespace TerrariaChatRelay.Clients.DiscordClient
 {
-	public class DiscordChatClient : BaseClient
+    public class DiscordChatClient : BaseClient
 	{
 		public const string API_URL = "https://discordapp.com/api/v6";
 
@@ -188,7 +189,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			Services.Add(new GameStatusService(Socket, serviceTimer, chatParser));
 			Services.Add(new SlashCommandService(Socket));
 			Services.Add(new NoChannelGreetingService(Socket, Channel_IDs));
-			Services.ForEach(x => {
+            Services.Add(new ConsoleMirrorService(this, Endpoint.Console_Channel_IDs));
+            Services.ForEach(x => {
 				try
 				{
 					x.Start();
@@ -465,7 +467,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 
 		public async void SendMessageToClient(string msg, Embed embed, string sourceChannelId)
 		{
-			var channel = Socket.GetChannel(ulong.Parse(sourceChannelId));
+			var channel = Socket?.GetChannel(ulong.Parse(sourceChannelId));
 			if (channel is SocketTextChannel)
 			{
 				try

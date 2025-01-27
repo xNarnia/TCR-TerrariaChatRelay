@@ -34,20 +34,28 @@ namespace TerrariaChatRelay
 		[ReloadRequired]
 		public int SecondsToWaitBeforeRetryingAgain { get; set; }
 
-		[Header("UserManagement")]
+		[DefaultValue(false)]
+        [ReloadRequired]
+        public bool EmbedPlayerMessages = false;
+
+        [DefaultValue(true)]
+        [ReloadRequired]
+        public bool EnableSlashCommands = true;
+
+        [Header("UserManagement")]
 		[DefaultValue("0")]
 		[ReloadRequired]
 		public string OwnerUserId { get; set; }
 
-		[ReloadRequired]
-		[DefaultListValue("0")]
-		public List<string> ManagerUserIds { get; set; } = new List<string>();
+        [ReloadRequired]
+        [DefaultListValue("0")]
+        public List<string> ManagerUserIds { get; set; } = new List<string>();
 
-		[ReloadRequired]
-		[DefaultListValue("0")]
-		public List<string> AdminUserIds { get; set; } = new List<string>();
+        [ReloadRequired]
+        [DefaultListValue("0")]
+        public List<string> AdminUserIds { get; set; } = new List<string>();
 
-		[JsonIgnore]
+        [JsonIgnore]
 		[ShowDespiteJsonIgnore]
 		public bool OpenDiscordTokenGuide
 		{
@@ -68,9 +76,9 @@ namespace TerrariaChatRelay
 			}
 		}
 
-		public List<Endpoint> Endpoints { get; set; } = new List<Endpoint>();
+		public List<EndpointModConfig> Endpoints { get; set; } = new List<EndpointModConfig>();
 
-		[Header("Formatting")]
+        [Header("Formatting")]
 		[JsonIgnore]
 		[ShowDespiteJsonIgnore]
 		public bool HoverHereForFormatHelp { get { return false; } set { } }
@@ -137,13 +145,22 @@ namespace TerrariaChatRelay
 
 		public Config()
 		{
-			Endpoints.Add(new Endpoint
-			{
+			Endpoints.Add(new EndpointModConfig
+            {
 				BotToken = "BOT_TOKEN",
-				Channel_IDs = [ 0 ],
-				DenyReceivingMessagesFromGame = new List<ulong> { 0 },
-				DenySendingMessagesToGame = new List<ulong> { 0 }
+				Channel_IDs = new List<string>(),
+				DenyReceivingMessagesFromGame = new List<string>(),
+				DenySendingMessagesToGame = new List<string>()
 			});
 		}
 	}
+
+    public class EndpointModConfig
+    {
+        public string BotToken { get; set; } = "BOT_TOKEN";
+        public List<string> Channel_IDs { get; set; } = new List<string>();
+        public List<string> Console_Channel_IDs { get; set; } = new List<string>();
+        public List<string> DenySendingMessagesToGame { get; set; } = new List<string>();
+        public List<string> DenyReceivingMessagesFromGame { get; set; } = new List<string>();
+    }
 }

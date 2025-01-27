@@ -60,7 +60,9 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public string HelpFormat7 { get; set; } = "%groupsuffix% = Group suffix";
 		[JsonProperty(Order = 233)]
 		public bool EmbedPlayerMessages = false;
-		[JsonProperty(Order = 235)]
+        [JsonProperty(Order = 234)]
+        public bool EnableSlashCommands = true;
+        [JsonProperty(Order = 235)]
 		public string TerrariaInGameDiscordPrefix = "[c/7489d8:Discord] - ";
 		[JsonProperty(Order = 240)]
 		public string PlayerChatFormat = "> **%playername%:** %message%";
@@ -111,6 +113,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 	{
 		public string BotToken { get; set; } = "BOT_TOKEN";
 		public List<ulong> Channel_IDs { get; set; } = new List<ulong>();
+		public List<ulong> Console_Channel_IDs { get; set; } = new List<ulong>();
 		public List<ulong> DenySendingMessagesToGame { get; set; } = new List<ulong>();
 		public List<ulong> DenyReceivingMessagesFromGame { get; set; } = new List<ulong>();
 	}

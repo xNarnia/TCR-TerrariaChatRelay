@@ -53,6 +53,13 @@ namespace TerrariaChatRelay
 				File.WriteAllText(discordConfigPath, JsonConvert.SerializeObject(config));
 				new DiscordConfig().GetOrCreateConfiguration().SaveJson(); // Used to propogate comments through file
 			}
+			else
+			{
+                FileInfo file = new FileInfo(discordConfigPath);
+                file.Directory.Create();
+                File.WriteAllText(modConfigFilePath, new DiscordConfig().GetOrCreateConfiguration().ToJson());
+                new DiscordConfig().GetOrCreateConfiguration().SaveJson(); // Used to propogate comments through file
+            }
 
 			Global.Config = new TCRConfig().GetOrCreateConfiguration();
 

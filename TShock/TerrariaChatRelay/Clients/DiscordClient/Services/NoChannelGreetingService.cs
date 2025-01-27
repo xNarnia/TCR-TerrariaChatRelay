@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using MySqlX.XDevAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,20 +28,30 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services
 				{
 					// Find the first text channel where the bot has send message permissions.
 					var writableChannel = guild.TextChannels
-						.Where(channel => channel.GetPermissionOverwrite(guild.CurrentUser)?.SendMessages != PermValue.Deny)
-						.Where(channel => channel.GetPermissionOverwrite(guild.CurrentUser)?.SendMessages != PermValue.Inherit ||
-										  guild.EveryoneRole.Permissions.SendMessages)
+						.Where(channel =>
+						{
+							var permissions = channel.GetPermissionOverwrite(guild.CurrentUser);
+							if (permissions.HasValue)
+							{
+								// Explicit deny
+								if (permissions.Value.SendMessages == PermValue.Deny) return false;
+								// Explicit allow
+								if (permissions.Value.SendMessages == PermValue.Allow) return true;
+							}
+							// Check default permissions for the bot.
+							return channel.Guild.CurrentUser.GetPermissions(channel).SendMessages;
+						})
 						.FirstOrDefault();
+
 					if (writableChannel != null)
 					{
 						Task.Run(async () =>
 						{
 							var embed = new EmbedBuilder()
-								.WithTitle("🌲 This bot is powered by TerrariaChatRelay! 🌲")
+								.WithTitle("🌲 TerrariaChatRelay 🌲")
 								.WithDescription(
-									@"To get started, begin by adding a channel using the `/addchannel` command!
-
-									  If you don't see the `/addchannel` command, make sure your bot has the `Use Application Commands` permission.")
+									$"To get started, begin by adding a channel using the `/addchannel` command!" +
+									  "\n\nIf you don't see the `/addchannel` command, make sure your bot has the `Use Application Commands` permission.")
 								.Build();
 							try
 							{

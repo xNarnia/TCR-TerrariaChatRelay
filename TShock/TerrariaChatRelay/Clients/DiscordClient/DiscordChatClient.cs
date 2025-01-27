@@ -11,10 +11,11 @@ using System.Timers;
 using Terraria;
 using TerrariaChatRelay.Clients.DiscordClient.Helpers;
 using TerrariaChatRelay.Clients.DiscordClient.Services;
+using TerrariaChatRelay.Clients.DiscordClient.Messaging;
 
 namespace TerrariaChatRelay.Clients.DiscordClient
 {
-	public class DiscordChatClient : BaseClient
+    public class DiscordChatClient : BaseClient
 	{
 		public const string API_URL = "https://discordapp.com/api/v6";
 
@@ -143,7 +144,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		/// </summary>
 		public override async void ConnectAsync()
 		{
-			if ((BOT_TOKEN == "BOT_TOKEN" || BOT_TOKEN == null) && Reconnect == false)
+			if ((BOT_TOKEN == "BOT_TOKEN" || BOT_TOKEN == null || Channel_IDs.Contains(0)) && Reconnect == false)
 			{
 				PrettyPrint.Log("Discord", "Please update your Mod Config. Mod reload required.");
 
@@ -188,7 +189,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			Services.Add(new GameStatusService(Socket, serviceTimer, chatParser));
 			Services.Add(new SlashCommandService(Socket));
 			Services.Add(new NoChannelGreetingService(Socket, Channel_IDs));
-			Services.ForEach(x => {
+            Services.Add(new ConsoleMirrorService(this, Endpoint.Console_Channel_IDs));
+            Services.ForEach(x => {
 				try
 				{
 					x.Start();
@@ -196,6 +198,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 				catch (Exception e)
 				{
 					PrettyPrint.Log("Discord", $"Error starting {x}. Reason: " + e.Message);
+					Task.FromException(e);
 				}
 			});
 			return Task.CompletedTask;
@@ -464,7 +467,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 
 		public async void SendMessageToClient(string msg, Embed embed, string sourceChannelId)
 		{
-			var channel = Socket.GetChannel(ulong.Parse(sourceChannelId));
+			var channel = Socket?.GetChannel(ulong.Parse(sourceChannelId));
 			if (channel is SocketTextChannel)
 			{
 				try

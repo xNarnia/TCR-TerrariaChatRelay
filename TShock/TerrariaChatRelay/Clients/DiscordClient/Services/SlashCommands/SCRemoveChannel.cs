@@ -34,7 +34,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 
 		public override async Task Run(SocketSlashCommand command)
 		{
-			SocketChannel channel = command.Data.Options.FirstOrDefault(o => o.Name == "channel")?.Value as SocketChannel;
+			SocketGuildChannel channel = command.Data.Options.FirstOrDefault(o => o.Name == "channel")?.Value as SocketGuildChannel;
 
 			// The user supplies the index starting from 1 instead of 0
 			int endpointIndexStartingFromOne = 0;
@@ -43,7 +43,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 			if (optionalParam != null)
 				endpointIndexStartingFromOne = (int)(long)optionalParam.Value;
 
-			var successMessage = "Channel successfully removed! Use /reload to load new changes.";
+			var successMessage = $"<#{channel.Id}> successfully removed! Use /reload to load new changes.";
 			var failMessage = "Channel not found.";
 
 			var embedBuilder = new EmbedBuilder();
@@ -105,7 +105,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 				}
 
 				output += "\nTo update the channel ids, add the number of the endpoint you wish to update.";
-				output += "- Example: /tcrremovechannel 1 CHANNELIDHERE";
+				output += "- Example: /removechannel 1 CHANNELIDHERE";
 				await command.RespondAsync(null, [GetEmbed(output)]);
 				return;
 			}

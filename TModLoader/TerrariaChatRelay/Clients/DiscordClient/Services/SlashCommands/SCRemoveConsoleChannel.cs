@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 {
-	public class SCRemoveChannel : BaseSlashCommand
+	public class SCRemoveConsoleChannel : BaseSlashCommand
 	{
-		public override string Name => "RemoveChannel";
+		public override string Name => "RemoveConsoleChannel";
 		public override SlashCommandScope Scope => SlashCommandScope.Guild;
-		public override string Description => "Removes a relay channel from TerrariaChatRelay.";
+		public override string Description => "Removes a console output relay channel from TerrariaChatRelay.";
 		public override bool Ephemeral => false;
 		public override GuildPermission DefaultPermission => GuildPermission.Administrator;
 
@@ -34,7 +34,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 
 		public override async Task Run(SocketSlashCommand command)
 		{
-			SocketGuildChannel channel = command.Data.Options.FirstOrDefault(o => o.Name == "channel")?.Value as SocketGuildChannel;
+			SocketChannel channel = command.Data.Options.FirstOrDefault(o => o.Name == "channel")?.Value as SocketChannel;
 
 			// The user supplies the index starting from 1 instead of 0
 			int endpointIndexStartingFromOne = 0;
@@ -44,7 +44,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 				endpointIndexStartingFromOne = (int)(long)optionalParam.Value;
 
 			var successMessage = $"<#{channel.Id}> successfully removed! Use /reload to load new changes.";
-			var failMessage = "Channel not found.";
+			var failMessage = "Console channel not found.";
 
 			var embedBuilder = new EmbedBuilder();
 
@@ -66,9 +66,9 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 				}
 
 				var endpoint = DiscordPlugin.Config.EndPoints[endpointIndexStartingFromOne - 1];
-				if (endpoint.Channel_IDs?.Contains(channel.Id) == true)
+				if (endpoint.Console_Channel_IDs?.Contains(channel.Id) == true)
 				{
-					endpoint.Channel_IDs.RemoveAll(x => x == channel.Id);
+					endpoint.Console_Channel_IDs.RemoveAll(x => x == channel.Id);
 					DiscordPlugin.Config.SaveJson();
 					await command.RespondAsync(null, [GetEmbed($"Endpoint {endpointIndexStartingFromOne}: {successMessage}", Color.Green)]);
 				}
@@ -90,9 +90,9 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 				foreach (var Endpoint in DiscordPlugin.Config.EndPoints)
 				{
 					Console.WriteLine($"[Endpoint {i}]");
-					if (Endpoint.Channel_IDs?.Count > 0)
+					if (Endpoint.Console_Channel_IDs?.Count > 0)
 					{
-						foreach (var channelIdListing in Endpoint.Channel_IDs)
+						foreach (var channelIdListing in Endpoint.Console_Channel_IDs)
 						{
 							output += $"\n- Channel: {channelIdListing}";
 						}
@@ -105,7 +105,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 				}
 
 				output += "\nTo update the channel ids, add the number of the endpoint you wish to update.";
-				output += "- Example: /removechannel 1 CHANNELIDHERE";
+				output += "- Example: /removeconsolechannel 1 CHANNELIDHERE";
 				await command.RespondAsync(null, [GetEmbed(output)]);
 				return;
 			}
@@ -114,9 +114,9 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 			if (DiscordPlugin.Config.EndPoints.Count == 1)
 			{
 				var endpoint = DiscordPlugin.Config.EndPoints.First();
-				if (endpoint.Channel_IDs.Contains(channel.Id))
+				if (endpoint.Console_Channel_IDs.Contains(channel.Id))
 				{
-					endpoint.Channel_IDs.RemoveAll(x => x == channel.Id);
+					endpoint.Console_Channel_IDs.RemoveAll(x => x == channel.Id);
 					DiscordPlugin.Config.SaveJson();
 					await command.RespondAsync(null, [GetEmbed(successMessage, Color.Green)]);
 				}
@@ -127,7 +127,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 				return;
 			}
 
-			await command.RespondAsync(null, [GetEmbed("An unexpected error occurred using /removechannel.", Color.Red)]);
+			await command.RespondAsync(null, [GetEmbed("An unexpected error occurred using /removeconsolechannel.", Color.Red)]);
 			return;
 		}
 	}

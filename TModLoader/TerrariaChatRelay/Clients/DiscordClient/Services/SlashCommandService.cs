@@ -19,31 +19,35 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services
 	public class SlashCommandService : IDiscordService
 	{
 		public Dictionary<string, ISlashCommand> Commands { get; set; }
-		private DiscordSocketClient socket { get; set; }
+		private DiscordSocketClient parentSocket { get; set; }
 		private Regex regex { get; set; }
 
 		public SlashCommandService(DiscordSocketClient parentSocket)
 		{
-			socket = parentSocket;
-			socket.SlashCommandExecuted += SlashCommandExecuted;
+            this.parentSocket = parentSocket;
+
+            if (DiscordPlugin.Config.EnableSlashCommands)
+                this.parentSocket.SlashCommandExecuted += SlashCommandExecuted;
+
 			regex = new Regex(@"^[\w-]{3,32}$");
 			LoadCommands();
 		}
 
 		public void Start()
 		{
-			Task.Run(async () => RegisterGuildCommandsAsync(socket));
+			if (DiscordPlugin.Config.EnableSlashCommands)
+				Task.Run(async () => await RegisterGuildCommandsAsync(parentSocket));
 		}
 
 		public void Stop()
 		{
-			socket.SlashCommandExecuted -= SlashCommandExecuted;
+			parentSocket.SlashCommandExecuted -= SlashCommandExecuted;
 		}
 
 		public void Dispose()
 		{
 			Commands = null;
-			socket = null;
+			parentSocket = null;
 		}
 
 		/// <summary>
@@ -55,6 +59,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services
 			var tcrCommand = Commands[command.CommandName];
 			var errorMessage = "";
 
+			PrettyPrint.Log("Discord", $"{command.User} executed SlashCommand [{command.CommandName}].");
 			try
 			{
 				await tcrCommand.Run(command);
@@ -130,6 +135,10 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services
 			{
 				foreach (var commandEntry in Commands)
 				{
+					// The parent could be gone during registration!
+					if (parentSocket == null || parentSocket?.ConnectionState == ConnectionState.Disconnected)
+						return;
+
 					var key = commandEntry.Key;
 					var command = commandEntry.Value;
 

@@ -36,16 +36,16 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 
 		public override async Task Run(SocketSlashCommand command)
 		{
-			SocketChannel channel = command.Data.Options.FirstOrDefault(o => o.Name == "channel")?.Value as SocketChannel;
+			SocketGuildChannel channel = command.Data.Options.FirstOrDefault(o => o.Name == "channel")?.Value as SocketGuildChannel;
 
-			// The user supplies the index starting from 1 instead of 0
-			int endpointIndexStartingFromOne = 0;
+            // The user supplies the index starting from 1 instead of 0
+            int endpointIndexStartingFromOne = 0;
 			var optionalParam = command.Data.Options.FirstOrDefault(o => o.Name == "endpoint");
 
 			if (optionalParam != null)
 				endpointIndexStartingFromOne = (int)(long)optionalParam.Value;
 
-			var successMessage = "Channel successfully added! Use /reload to load new changes.";
+			var successMessage = $"<#{channel.Id}> successfully added! Use /reload to load new changes.";
 
 			var embedBuilder = new EmbedBuilder();
 
@@ -59,7 +59,14 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 				}
 
 				var endpoint = DiscordPlugin.Config.EndPoints[endpointIndexStartingFromOne - 1];
-				endpoint.Channel_IDs.RemoveAll(x => x == 0);
+
+				if (endpoint.Channel_IDs.Contains(channel.Id))
+				{
+                    await command.RespondAsync(null, [GetEmbed($"<#{channel.Id}> is already relaying chat!", Color.Red)]);
+					return;
+                }
+
+                endpoint.Channel_IDs.RemoveAll(x => x == 0);
 				endpoint.Channel_IDs.Add(channel.Id);
 				DiscordPlugin.Config.SaveJson();
 
@@ -81,7 +88,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 					{
 						foreach (var channelIdListing in Endpoint.Channel_IDs)
 						{
-							output += $"\n- Channel: {channelIdListing}";
+							output += $"\n- Channel: <#{channelIdListing}>";
 						}
 					}
 					else
@@ -112,7 +119,14 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.SlashCommands
 			if (DiscordPlugin.Config.EndPoints.Count == 1)
 			{
 				var endpoint = DiscordPlugin.Config.EndPoints.First();
-				endpoint.Channel_IDs.RemoveAll(x => x == 0);
+
+                if (endpoint.Channel_IDs.Contains(channel.Id))
+                {
+                    await command.RespondAsync(null, [GetEmbed($"<#{channel.Id}> is already relaying chat!", Color.Red)]);
+                    return;
+                }
+
+                endpoint.Channel_IDs.RemoveAll(x => x == 0);
 				endpoint.Channel_IDs.Add(channel.Id);
 				DiscordPlugin.Config.SaveJson();
 				await command.RespondAsync(null, [GetEmbed(successMessage, Color.Green)]);
