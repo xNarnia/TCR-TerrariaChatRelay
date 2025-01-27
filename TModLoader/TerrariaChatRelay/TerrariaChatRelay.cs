@@ -15,18 +15,22 @@ using Terraria.GameContent.NetModules;
 using Newtonsoft.Json;
 using TerrariaChatRelay.Helpers;
 using TerrariaChatRelay.Clients.DiscordClient;
+using System.Reflection;
+using TerrariaChatRelay.TMLHooks;
+using System.Collections.Generic;
 
 namespace TerrariaChatRelay
 {
 	public class TerrariaChatRelay : Mod
 	{
 		public Version LatestVersion = new Version("0.0.0.0");
-		public string PlayerJoinEndingString;
-		public string PlayerLeaveEndingString;
-		private Mod SubworldLib;
+		public Mod SubworldLib;
+		public static Mod TCRMod;
+		public List<BaseHook> Hooks;
 
 		public TerrariaChatRelay()
 		{
+			Hooks = new List<BaseHook>();
 		}
 
 		public override void Load()
@@ -63,20 +67,19 @@ namespace TerrariaChatRelay
 
 			Global.Config = new TCRConfig().GetOrCreateConfiguration();
 
-			// Hooks
-			On_ChatCommandProcessor.ProcessIncomingMessage += On_ChatCommandProcessor_ProcessIncomingMessage;
-			On_ChatHelper.BroadcastChatMessage += BroadcastChatMessage;
-			On_WorldFile.LoadWorld_Version2 += OnWorldLoadStart;
-			On_Netplay.StopListening += OnServerStop;
-			On_NetMessage.SyncConnectedPlayer += OnPlayerJoin_NetMessage_SyncConnectedPlayer;
-			On_RemoteClient.Reset += RemoteClient_Reset;
-			On_NetMessage.greetPlayer += NetMessage_greetPlayer;
+            // Hooks - Located in ./TMLHooks/
+            var hookTypes = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(t => t.GetCustomAttributes(typeof(TCRHook), false).Any());
+            
+			foreach (var hookType in hookTypes)
+			{
+				var hook = Activator.CreateInstance(hookType, this) as BaseHook;
+				hook.Attach();
+                Hooks.Add(hook);
+            }
 
-			PlayerJoinEndingString = Language.GetText("LegacyMultiplayer.19").Value.Split(new string[] { "{0}" }, StringSplitOptions.None).Last();
-			PlayerLeaveEndingString = Language.GetText("LegacyMultiplayer.20").Value.Split(new string[] { "{0}" }, StringSplitOptions.None).Last();
-
-			// Add subscribers to list
-			var adapter = new Adapter();
+            // Add subscribers to list
+            var adapter = new Adapter();
 			adapter.Version = Version;
 			Core.Initialize(adapter);
 			Core.ConnectClients();
@@ -85,78 +88,12 @@ namespace TerrariaChatRelay
 				Task.Run(GetLatestVersionNumber);
 		}
 
-		public override void PostSetupContent()
+        public override void PostSetupContent()
 		{
 			base.PostSetupContent();
 
 			// Mod References
 			ModLoader.TryGetMod("SubworldLibrary", out SubworldLib);
-		}
-
-		/// <summary>
-		/// Event for catching in-game player chat messages.
-		/// </summary>
-		private void On_ChatCommandProcessor_ProcessIncomingMessage(On_ChatCommandProcessor.orig_ProcessIncomingMessage orig, ChatCommandProcessor self, ChatMessage message, int clientId)
-		{
-			// If SubworldLib is present, remove the hook from Subworlds
-			// This prevents double posting, allowing the main server to relay for both worlds
-			if (SubworldLib != null)
-			{
-				object current = SubworldLib.Call("Current");
-				if (current?.ToString().ToLower() != "false")
-				{
-					On_ChatCommandProcessor.ProcessIncomingMessage -= On_ChatCommandProcessor_ProcessIncomingMessage;
-					orig(self, message, clientId);
-					return;
-				}
-			}
-
-			// Not relaying commands with / as those are typically for commands with sensitive information
-			if (Global.Config.ShowChatMessages && !message.Text.StartsWith("/"))
-			{
-				Core.RaiseTerrariaMessageReceived(this, new TCRPlayer()
-				{
-					PlayerId = clientId,
-					Name = Main.player[clientId].name
-				}, message.Text);
-			}
-			orig(self, message, clientId);
-		}
-
-		/// <summary>
-		/// Event for catching players entering before they are loaded in.
-		/// </summary>
-		private void NetMessage_greetPlayer(On_NetMessage.orig_greetPlayer orig, int plr)
-		{
-			NetPacket packet = NetTextModule.SerializeServerMessage(NetworkText.FromLiteral("This chat is powered by TerrariaChatRelay"), Color.LawnGreen, byte.MaxValue);
-			NetManager.Instance.SendToClient(packet, plr);
-			orig(plr);
-		}
-
-		/// <summary>
-		/// Event for catching players leaving.
-		/// </summary>
-		private void RemoteClient_Reset(On_RemoteClient.orig_Reset orig, RemoteClient self)
-		{
-			if (self.Id >= 0)
-			{
-				if (Main.player[self.Id].name != "")
-				{
-					var tcrPlayer = Main.player[self.Id].ToTCRPlayer(-1);
-					Core.RaiseTerrariaMessageReceived(this, tcrPlayer, $"{tcrPlayer.Name} has left.");
-				}
-			}
-			orig(self);
-		}
-
-		/// <summary>
-		/// Event for catching players entering after they have loaded in.
-		/// </summary>
-		private void OnPlayerJoin_NetMessage_SyncConnectedPlayer(On_NetMessage.orig_SyncConnectedPlayer orig, int plr)
-		{
-			orig(plr);
-			var tcrPlayer = Main.player[plr].ToTCRPlayer(-1);
-			Core.RaiseTerrariaMessageReceived(this, tcrPlayer, $"{tcrPlayer.Name} has joined.");
 		}
 
 		/// <summary>
@@ -212,79 +149,8 @@ namespace TerrariaChatRelay
 		public override void Unload()
 		{
 			Core.DisconnectClients();
-			On_ChatCommandProcessor.ProcessIncomingMessage -= On_ChatCommandProcessor_ProcessIncomingMessage;
-			On_ChatHelper.BroadcastChatMessage -= BroadcastChatMessage;
-			On_WorldFile.LoadWorld_Version2 -= OnWorldLoadStart;
-			On_Netplay.StopListening -= OnServerStop;
-			On_NetMessage.SyncConnectedPlayer -= OnPlayerJoin_NetMessage_SyncConnectedPlayer;
-			On_RemoteClient.Reset -= RemoteClient_Reset;
-			On_NetMessage.greetPlayer -= NetMessage_greetPlayer;
+			Hooks.ForEach(x => x.Detach());
 			Global.Config = null;
-		}
-
-		/// <summary>
-		/// Event to send a message when the server is loading.
-		/// </summary>
-		private int OnWorldLoadStart(On_WorldFile.orig_LoadWorld_Version2 orig, BinaryReader reader)
-		{
-			try
-			{
-				if (!Netplay.Disconnect)
-				{
-					if (Global.Config.ShowServerStartMessage)
-						Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, "The server is starting!");
-
-					if (LatestVersion > Version)
-						Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, $"A new version of TCR is available: V.{LatestVersion.ToString()}");
-				}
-			}
-			catch (Exception e)
-			{
-				PrettyPrint.Log("Adapter", "Error checking for version update: " + e.Message, ConsoleColor.Red);
-			}
-
-			return orig(reader);
-		}
-
-		/// <summary>
-		/// Event for detecting server stopping.
-		/// </summary>
-		private void OnServerStop(On_Netplay.orig_StopListening orig)
-		{
-			if (Global.Config.ShowServerStopMessage)
-				Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, "The server is stopping!");
-
-			orig();
-		}
-
-		/// <summary>
-		/// Event to intercept all other messages from Terraria. E.g. blood moon, death notifications, and player join/leaves.
-		/// </summary>
-		private void BroadcastChatMessage(On_ChatHelper.orig_BroadcastChatMessage orig, NetworkText text, Color color, int excludedPlayer)
-		{
-			if (Global.Config.ShowGameEvents && !text.ToString().EndsWith(PlayerJoinEndingString) && !text.ToString().EndsWith(PlayerLeaveEndingString))
-				Core.RaiseTerrariaMessageReceived(this, (excludedPlayer > 0 ? Main.player[excludedPlayer].ToTCRPlayer(excludedPlayer) : TCRPlayer.Server), text.ToString());
-
-			orig(text, color, excludedPlayer);
-		}
-
-		/// <summary>
-		/// Event to intercept chat messages sent from players.
-		/// </summary>
-		private bool NetTextModule_DeserializeAsServer(On_NetTextModule.orig_DeserializeAsServer orig, Terraria.GameContent.NetModules.NetTextModule self, BinaryReader reader, int senderPlayerId)
-		{
-			long savedPosition = reader.BaseStream.Position;
-			ChatMessage message = ChatMessage.Deserialize(reader);
-
-			if (Global.Config.ShowChatMessages)
-				Core.RaiseTerrariaMessageReceived(this, new TCRPlayer()
-				{
-					PlayerId = senderPlayerId,
-					Name = Main.player[senderPlayerId].name
-				}, message.Text);
-
-			reader.BaseStream.Position = savedPosition;
-			return orig(self, reader, senderPlayerId);
 		}
 	}
 	public static class Extensions

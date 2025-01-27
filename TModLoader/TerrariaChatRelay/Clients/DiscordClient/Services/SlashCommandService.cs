@@ -20,7 +20,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services
 	{
 		public Dictionary<string, ISlashCommand> Commands { get; set; }
 		private DiscordSocketClient parentSocket { get; set; }
-		private Regex regex { get; set; }
+		private static Regex regex { get; set; }
 
 		public SlashCommandService(DiscordSocketClient parentSocket)
 		{
@@ -30,7 +30,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services
                 this.parentSocket.SlashCommandExecuted += SlashCommandExecuted;
 
 			regex = new Regex(@"^[\w-]{3,32}$");
-			LoadCommands();
+            Commands = new Dictionary<string, ISlashCommand>();
+            LoadCommands();
 		}
 
 		public void Start()
@@ -89,12 +90,15 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services
 		/// <summary>
 		/// Load TCR SlashCommands from assembly.
 		/// </summary>
-		public void LoadCommands()
+		public void LoadCommands(object caller = null)
 		{
-			Commands = new Dictionary<string, ISlashCommand>();
-			var assembly = Assembly.GetExecutingAssembly();
+			Assembly assembly;
+			if (caller == null)
+				assembly = Assembly.GetExecutingAssembly();
+			else
+				assembly = Assembly.GetAssembly(caller.GetType());
 
-			foreach (var type in assembly.GetTypes())
+            foreach (var type in assembly.GetTypes())
 			{
 				if (typeof(ISlashCommand).IsAssignableFrom(type) && !type.IsAbstract && type.IsClass)
 				{
