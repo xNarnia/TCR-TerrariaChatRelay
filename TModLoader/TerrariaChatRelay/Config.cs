@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Net;
 using Terraria.ModLoader.Config;
-using TerrariaChatRelay.Clients.DiscordClient;
 
 namespace TerrariaChatRelay
 {

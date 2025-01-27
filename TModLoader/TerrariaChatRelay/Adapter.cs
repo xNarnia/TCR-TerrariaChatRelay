@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Reflection;
 using Terraria.Localization;
 using Terraria.Net;
 using Terraria.UI.Chat;

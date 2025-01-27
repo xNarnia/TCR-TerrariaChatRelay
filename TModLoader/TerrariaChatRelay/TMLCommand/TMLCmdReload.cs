@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria;
-using TerrariaChatRelay.Clients.DiscordClient;
-using System.Threading.Channels;
+﻿using Terraria.ModLoader;
 
 namespace TerrariaChatRelay.TMLCommand
 {
