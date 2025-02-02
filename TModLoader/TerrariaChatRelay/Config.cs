@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using Terraria.ModLoader.Config;
+using TerrariaChatRelay.Clients.DiscordClient;
 
 namespace TerrariaChatRelay
 {
@@ -112,6 +113,9 @@ namespace TerrariaChatRelay
 		[DefaultValue(":anger: **%bossname% has awoken!**")]
 		[ReloadRequired]
 		public string VanillaBossSpawned { get; set; }
+
+		[ReloadRequired]
+		public EmbedSettings EmbedSettings { get; set; }
 
 		public List<string> HideMessagesWithString { get; set; } = new List<string>();
 

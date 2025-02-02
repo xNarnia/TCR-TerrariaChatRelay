@@ -58,8 +58,6 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public string HelpFormat6 { get; set; } = "%groupprefix% = Group prefix";
 		[JsonProperty(Order = 230)]
 		public string HelpFormat7 { get; set; } = "%groupsuffix% = Group suffix";
-		[JsonProperty(Order = 233)]
-		public bool EmbedPlayerMessages = false;
         [JsonProperty(Order = 234)]
         public bool EnableSlashCommands = true;
         [JsonProperty(Order = 235)]
@@ -78,6 +76,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
 		[JsonProperty(Order = 305)]
 		public string VanillaBossSpawned = ":anger: **%bossname% has awoken!**";
+		[JsonProperty(Order = 310)]
+		public EmbedSettings EmbedSettings = new EmbedSettings();
 		[JsonProperty(Order = 315)]
 		public string HelpRegex1 { get; set; } = "For more advanced users, you can use RegexMessageReplace to modify/filter the final message being sent.";
 		[JsonProperty(Order = 322)]
@@ -107,6 +107,16 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 				};
 			}
 		}
+	}
+
+	public class EmbedSettings
+	{
+		public bool EmbedPlayerChat { get; set; } = false;
+		public bool EmbedPlayerEnterLeave { get; set; } = true;
+		public bool EmbedWorldEvents { get; set; } = false;
+		public bool EmbedServerStartStop { get; set; } = true;
+		public bool EmbedBossSpawn { get; set; } = false;
+		public bool EmbedOther { get; set; } = true;
 	}
 
 	public class Endpoint

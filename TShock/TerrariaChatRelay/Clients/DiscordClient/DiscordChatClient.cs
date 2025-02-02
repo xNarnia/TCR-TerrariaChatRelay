@@ -302,7 +302,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 							MessageQueue.QueueMessage(
 								Channel_IDs.Where(x => x != msg.Channel.Id && !Endpoint.DenyReceivingMessagesFromGame.Contains(x)),
 								new DiscordMessage() {
-									Message = $"**[Discord]** <{msg.Author.Username}> {msg.Content}"
+									Message = $"**[Discord]** <{msg.Author.Username}> {msg.Content}",
+									Embed = DiscordPlugin.Config.EmbedSettings.EmbedOther
 								});
 						}
 
@@ -341,33 +342,55 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 
 				string outMsg = "";
 				string bossName = "";
-				bool isPlayerChat = false;
+				bool isEmbed = false;
 
 				if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has joined."))
+				{
 					outMsg = DiscordPlugin.Config.PlayerLoggedInFormat;
+					isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedPlayerEnterLeave;
+				}
 				else if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has left."))
+				{
 					outMsg = DiscordPlugin.Config.PlayerLoggedOutFormat;
+					isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedPlayerEnterLeave;
+				}
 				else if (msg.Player.Name != "Server" && msg.Player.PlayerId != -1)
 				{
 					outMsg = DiscordPlugin.Config.PlayerChatFormat;
-					isPlayerChat = true;
+					isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedPlayerChat;
 				}
 				else if (msg.Player.Name == "Server")
 				{
 					if (msg.Player.PlayerId != -1) { 
 						outMsg = DiscordPlugin.Config.PlayerChatFormat;
-						isPlayerChat = true;
+						isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedPlayerChat;
 					}
 					else if (msg.Message.EndsWith(" has awoken!"))
+					{
 						outMsg = DiscordPlugin.Config.VanillaBossSpawned;
+						isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedBossSpawn;
+
+					}
 					else if (msg.Message == "The server is starting!")
+					{
 						outMsg = DiscordPlugin.Config.ServerStartingFormat;
+						isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedServerStartStop;
+					}
 					else if (msg.Message == "The server is stopping!")
+					{
 						outMsg = DiscordPlugin.Config.ServerStoppingFormat;
+						isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedServerStartStop;
+					}
 					else if (msg.Message.Contains("A new version of TCR is available!"))
+					{
 						outMsg = ":desktop:  **%message%**";
+						isEmbed = true;
+					}
 					else
+					{
 						outMsg = DiscordPlugin.Config.WorldEventFormat;
+						isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedWorldEvents;
+					}
 				}
 				else
 					outMsg = "%message%";
@@ -406,15 +429,12 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 				if (outMsg == "" || outMsg == null)
 					return;
 
-				if (!DiscordPlugin.Config.EmbedPlayerMessages && isPlayerChat)
-				{
-					outMsg = chatParser.RemoveUserMentions(outMsg);
-				}
+				outMsg = chatParser.RemoveUserMentions(outMsg);
 
 				MessageQueue.QueueMessage(ChannelsToSendTo, new DiscordMessage()
 				{
 					Message = outMsg,
-					Embed = !DiscordPlugin.Config.EmbedPlayerMessages ? !isPlayerChat : true
+					Embed = isEmbed
 				});
 			}
 			catch (Exception e)
