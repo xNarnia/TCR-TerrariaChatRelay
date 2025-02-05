@@ -133,13 +133,45 @@ Configs: {
 				   grandoth, StellarPurr, Soof4
 
 				Translators:
-				   -
+				   Spanish - CDT Maggot
+				   Portugese - 
+				   Chinese - 
 				''' */
 			// Label: Special Thanks to our Contributors
 		}
+
+		EmbedPlayerMessages: {
+			// Label: Embed Player Messages
+			// Tooltip: ""
+		}
+
+		EnableSlashCommands: {
+			// Label: Enable Slash Commands
+			// Tooltip: ""
+		}
+
+		BotStatus: {
+			// Label: Bot Status
+			// Tooltip: ""
+		}
+
+		BotChannelDescription: {
+			// Label: Bot Channel Description
+			// Tooltip: ""
+		}
+
+		EmbedSettings: {
+			// Label: Embed Settings
+			// Tooltip: ""
+		}
+
+		HideMessagesWithString: {
+			// Label: Hide Messages With String
+			// Tooltip: ""
+		}
 	}
 
-	Endpoint: {
+	EndpointModConfig: {
 		// Tooltip: ""
 
 		BotToken: {
@@ -152,6 +184,11 @@ Configs: {
 			// Tooltip: Discord Channel ID of the channel you want to send/receive messages
 		}
 
+		Console_Channel_IDs: {
+			// Label: Console_ Channel_ I Ds
+			// Tooltip: Discord Channel ID of the channel you want to send/receive console logs and console messages
+		}
+
 		DenySendingMessagesToGame: {
 			// Label: Channel ID - No Send
 			// Tooltip: Discord Channel ID of the channels you want to prevent Discord to Terraria chat
@@ -160,6 +197,49 @@ Configs: {
 		DenyReceivingMessagesFromGame: {
 			// Label: Channel ID - No Receive
 			// Tooltip: Discord Channel ID of the channels you want to prevent Terraria to Discord chat
+		}
+
+		HideMessagesWithString: {
+			// Label: Hide Message If Found
+			/* Tooltip:
+				'''
+				If any of these strings are present in the message,
+				TerrariaChatRelay will not relay the message
+				''' */
+		}
+	}
+
+	EmbedSettings: {
+		// Tooltip: ""
+
+		EmbedPlayerChat: {
+			// Label: Embed Player Chat
+			// Tooltip: ""
+		}
+
+		EmbedPlayerEnterLeave: {
+			// Label: Embed Player Enter Leave
+			// Tooltip: ""
+		}
+
+		EmbedWorldEvents: {
+			// Label: Embed World Events
+			// Tooltip: ""
+		}
+
+		EmbedServerStartStop: {
+			// Label: Embed Server Start Stop
+			// Tooltip: ""
+		}
+
+		EmbedBossSpawn: {
+			// Label: Embed Boss Spawn
+			// Tooltip: ""
+		}
+
+		EmbedOther: {
+			// Label: Embed Other
+			// Tooltip: ""
 		}
 	}
 }

@@ -33,10 +33,6 @@ namespace TerrariaChatRelay
 		[ReloadRequired]
 		public int SecondsToWaitBeforeRetryingAgain { get; set; }
 
-		[DefaultValue(false)]
-        [ReloadRequired]
-        public bool EmbedPlayerMessages = false;
-
         [DefaultValue(true)]
         [ReloadRequired]
         public bool EnableSlashCommands = true;
@@ -151,6 +147,7 @@ namespace TerrariaChatRelay
             {
 				BotToken = "BOT_TOKEN",
 				Channel_IDs = new List<string>(),
+				Console_Channel_IDs = new List<string>(),
 				DenyReceivingMessagesFromGame = new List<string>(),
 				DenySendingMessagesToGame = new List<string>()
 			});
