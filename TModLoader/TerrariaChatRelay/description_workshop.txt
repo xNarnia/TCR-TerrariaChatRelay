@@ -32,6 +32,7 @@ It will allow you to send chat from Terraria to multiple Chat Services (such as 
 Supported Chat Services: Discord, Slack
 
 Changelog
+- [2.6.1.2] - Spanish (ES) ModConfig Localization!
 - [2.6] - Slash commands, console commands, player embed options, console to channel, fixed ModConfig, and much more!
 - [2.3.0.4] - Config regen, new features, stability improvements and more!
 - [2.3.0.2] - Gentle Bugfixes, Code Cleanup, Quality of Life
