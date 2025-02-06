@@ -4,9 +4,9 @@ Configs: {
 
 		Headers: {
 			General: General
-			UserManagement: Administración de Usuario
-			Formatting: Formateo
-			StillNeedHelp: ¿Sigué necesitando ayuda?
+			UserManagement: Administración de usuario
+			Formatting: Formato
+			StillNeedHelp: ¿Sigues necesitando ayuda?
 		}
 
 		CommandPrefix: {
@@ -20,98 +20,98 @@ Configs: {
 
 		ShowPoweredByMessageOnStartup: {
 			Label: Mostrar "Powered by" al iniciar
-			Tooltip: Desactiva el mensaje  (Powered by TerrariaChatRelay) al iniciar en Discord cuando el BOT se conecta en linea
+			Tooltip: Desactiva el mensaje (Powered by TerrariaChatRelay) de inicio en Discord cuando el BOT se conecta en linea
 		}
 
 		OwnerUserId: {
-			Label: Identificación del Usuario Propietario
-			Tooltip: Identificación del Usuario master de Discord que permite total acceso a los comandos del bot.
+			Label: Identificación del usuario propietario
+			Tooltip: Identificación de Discord del usuario master para permitir el acceso total a los comandos del bot
 		}
 
 		ManagerUserIds: {
-			Label: Administra las identificiaciones de los usuarios
-			Tooltip: Muestra las Identificaciones de los usuarios de discord para permitirles el acceso a los comandos de moderación
+			Label: Identificaciones de los usuarios gestores
+			Tooltip: Identificaciones de Discord de los usuarios gerentes para permitir el acceso a los comandos de moderación
 		}
 
 		AdminUserIds: {
-			Label: Identificación de el Administrador
-			Tooltip: Muestra las Identificaciones de los usuarios de discord para permitir acceso a los comandos de moderación y la consola del servidor
+			Label: Identificaciones de los usuarios administradores
+			Tooltip: Identificaciones de Discord de los usuarios administradores para permitir el uso de comandos de moderación y el acceso directo a la consola del servidor
 		}
 
 		Endpoints: {
-			Label: Configuración de el Bot de Discord - [c/FF1919:Manual Reload Required]
-			Tooltip: Para aprender como obtener el token de tu bot, leé la Guía del Token de Discord que se encuentra arriba
+			Label: Configuración del bot de Discord - [c/FF1919:Se requiere volver a cargar]
+			Tooltip: Para aprender como obtener el token de tu bot, lee la Guía del Token de Discord que se encuentra arriba
 		}
 
 		NumberOfTimesToRetryConnectionAfterError: {
-			Label: Número De Veces Que Se Reintentara Conectar Luego De El Error
-			Tooltip: Coloca en -1 para infinitos reintentos
+			Label: Número de veces que se reintentara conectar tras un error
+			Tooltip: Coloca -1 para reintentos infinitos
 		}
 
 		SecondsToWaitBeforeRetryingAgain: {
-			Label: Again Segundos A Esperar Antes De Reintentar Otra Vez
-			Tooltip: Espera X Segundos antes de reintentar cuando hay un error de conexión
+			Label: Segundos a esperar antes de reintentar otra vez
+			Tooltip: Espera X segundos antes de reintentar cuando hay un error de conexión
 		}
 
 		TerrariaInGameDiscordPrefix: {
-			Label: Prefijo De Discord Dentro De Terraria
-			Tooltip: Prefijo que se adjuntara al chat enviado desde Discord hacía Terraria
+			Label: Prefijo de Discord dentro de Terraria
+			Tooltip: Prefijo que se adjuntara al chat enviado desde Discord hacia Terraria
 		}
 
 		PlayerChatFormat: {
-			Label: Formato deel Chat del Jugador
-			Tooltip: Formato para Chat del Jugador enviado desde Terraria hasta Discord
+			Label: Formato del chat de jugador
+			Tooltip: Formato para el chat de jugador enviado desde Terraria hacia Discord
 		}
 
 		PlayerLoggedInFormat: {
-			Label: Formato de el Inicio de Sesión del Jugador
-			Tooltip: Formato para los Inicio de Sesión de los Jugadores enviados desde Terraria hacía Discord
+			Label: Formato del inicio de sesión de jugador
+			Tooltip: Formato para los inicios de sesión de los jugadores enviados desde Terraria hacia Discord
 		}
 
 		PlayerLoggedOutFormat: {
-			Label: Formato del Cierre de Sesión del Jugador
-			Tooltip: Formato para los Cierres de Sesión de los Jugadores enviados desde Terraria hacía Discord
+			Label: Formato del cierre de sesión de jugador
+			Tooltip: Formato para los cierres de sesión de los jugadores enviados desde Terraria hacia Discord
 		}
 
 		WorldEventFormat: {
-			Label: Formato de el Evento Mundial
-			Tooltip: Formato para los Eventos Mundiales enviados desde Terraria hacía Discord
+			Label: Formato de los eventos
+			Tooltip: Formato para los eventos enviados desde Terraria hacia Discord
 		}
 
 		ServerStartingFormat: {
-			Label: Formato de Inicialización de el Servidor
-			Tooltip: Formato para el mensaje de inicialización del servidor enviado desde Terraria hacia Discord
+			Label: Formato de encendido del servidor
+			Tooltip: Formato para el mensaje de encendido del servidor enviado desde Terraria hacia Discord
 		}
 
 		ServerStoppingFormat: {
-			Label: Server Stopping Format Formato de Deteniendo el Servidor
-			Tooltip: Formato para el mensaje de apagado del servidor enviado desde Terraria hacía Discord
+			Label: Formato de apagado del servidor
+			Tooltip: Formato para el mensaje de apagado del servidor enviado desde Terraria hacia Discord
 		}
 
 		VanillaBossSpawned: {
-			Label: Jefe Vanilla Invocado
-			Tooltip: Formato para cuando los jefes vanilla son invocados, enviado desde Terraria hacía Discord
+			Label: Jefe vanilla invocado
+			Tooltip: Formato para cuando los jefes vanilla son invocados, enviado desde Terraria hacia Discord
 		}
 
 		HoverHereForFormatHelp: {
-			Label: Pasa el Cursor por aquí para Ayuda con el Formato
+			Label: Pasa el cursor por aquí para ayuda con el formato
 			Tooltip:
 				'''
-				                            ¡Puedes insertar cualquiera de estos formateadores para cambiar como se verá tu mensaje!(SIN MAYUSCULAS)
-				   %playername% = Nombre del Jugador
-				   %worldname% = Nombre del Mundo
+				¡Puedes insertar cualquiera de estos formateadores para cambiar como se verá tu mensaje! (CON DISTINCIÓN DE MAYÚSCULAS)
+				   %playername% = Nombre del jugador
+				   %worldname% = Nombre del mundo
 				   %message% = Contenido del mensaje inicial
-				   %bossname% = Nombre del jefe siendo invocado (solo para Jefes Vanilla)
+				   %bossname% = Nombre del jefe siendo invocado (solo para Jefes vanilla)
 				   %groupprefix% = Prefijo del grupo
 				   %groupsuffix% = Sufijo del Grupo
 				'''
 		}
 
 		OpenDiscordTokenGuide: {
-			Label: Abre Discord Token Guide
+			Label: Abre la Guía del Token de Discord
 			Tooltip:
 				'''
-				Esto abrira el siguiente link en tu buscador:
+				Esto abrirá el siguiente link en tu buscador:
 				   [c/57b3ff:https://github.com/xNarnia/TCR-TerrariaChatRelay/wiki/Discord-Relay-Setup]
 				'''
 		}
@@ -119,8 +119,7 @@ Configs: {
 		OpenDiscordSupportServer: {
 			Tooltip:
 				'''
-				 Esto abrira el siguiente link en tu buscador:
-
+				Esto abrira el siguiente link en tu buscador:
 				   [c/57b3ff:https://discord.gg/xAQGT4VetN]
 				'''
 			Label: Unete al Discord para mayor soporte
@@ -138,36 +137,71 @@ Configs: {
 				   Portugués - 
 				   Chino - 
 				'''
-			Label: Especiales Gracias a nuestros contribudores
+			Label: Gracias especiales a nuestros contribuidores
 		}
 
 		EmbedPlayerMessages: {
-			// Label: Embed Player Messages
+			Label: Incrustar mensajes de jugador
 			// Tooltip: ""
 		}
 
 		EnableSlashCommands: {
-			Label: Encender los comandos de barra inclinada
+			Label: Encender los comandos de slash
 			// Tooltip: ""
 		}
 
 		BotStatus: {
-			// Label: Bot Status
+			Label: Estado del bot
 			// Tooltip: ""
 		}
 
 		BotChannelDescription: {
-			Label: Descripción del Canal de Bot
+			Label: Descripción del canal del bot
 			// Tooltip: ""
 		}
 
 		EmbedSettings: {
-			Label: Configuración de Embed
+			Label: Configuración de incrustación
 			// Tooltip: ""
 		}
 
 		HideMessagesWithString: {
-			Label: Si Encontrado, Esconder El Mensaje
+			// i'm assuming this was moved to endpointmodconfig? if so, this should be deleted from this category
+			Label: Hide Messages With String
+			Tooltip: ""
+		}
+	}
+
+	EndpointModConfig: {
+		Tooltip: ""
+
+		BotToken: {
+			Label: Token del bot
+			Tooltip: Para aprender como obtener el token de tu bot, lee la Guía del Token de Discord que se encuentra arriba
+		}
+
+		Channel_IDs: {
+			Label: Identificación del canal
+			Tooltip: Identificación del canal de Discord al que quieres enviar o recibir mensajes
+		}
+
+		Console_Channel_IDs: {
+			Label: Identificación del canal para consola
+			Tooltip: Identificación del canal de Discord al que quieres enviar or recibir los registros y mensajes de la consola
+		}
+
+		DenySendingMessagesToGame: {
+			Label: Identificación del canal - No enviar
+			Tooltip: Identificación del canal de Discord desde el que no quieras enviar mensajes a Terraria
+		}
+
+		DenyReceivingMessagesFromGame: {
+			Label: Identificación del canal - No recibir
+			Tooltip: Identificación del canal de Discord desde el que no quieras recibir mensajes de Terraria
+		}
+
+		HideMessagesWithString: {
+			Label: Si se encuentra, esconder el mensaje
 			Tooltip:
 				'''
 				Si cualquiera de estos hilos estan presentes en el mensaje,
@@ -176,74 +210,36 @@ Configs: {
 		}
 	}
 
-	EndpointModConfig: {
-		Tooltip: ""
-
-		BotToken: {
-			Label: Bot Token
-			Tooltip: Para aprender como obtener el token de tu bot, leé la Guía del Token de Discord que se encuentra arriba
-		}
-
-		Channel_IDs: {
-			Label: Identificación del Canal
-			Tooltip: Identificación del Canal de Discord al que quieres enviar o recibir mensajes
-		}
-
-		Console_Channel_IDs: {
-			Label: Identificación del Canal para Console
-			// Tooltip: Discord Channel ID of the channel you want to send/receive console logs and console messages
-		}
-
-		DenySendingMessagesToGame: {
-			Label: Identificación del Canal - No Enviar
-			Tooltip: Identificación del Canal de Discord al que no le quieras permitir chatear con Terraria
-		}
-
-		DenyReceivingMessagesFromGame: {
-			Label: Identificación del Canal - No Recibir
-			Tooltip: Identificación del Canal de Discord al que no le quieras permitir chatear con Terraria
-		}
-
-		HideMessagesWithString: {
-			// Label: Hide Message If Found
-			/* Tooltip:
-				'''
-				If any of these strings are present in the message,
-				TerrariaChatRelay will not relay the message
-				''' */
-		}
-	}
-
 	EmbedSettings: {
-		Tooltip: Configuración de Embed
+		Tooltip: Configuración de incrustación
 
 		EmbedPlayerChat: {
-			Label: Embed Chat del Jugador
+			Label: Incrustar el chat del jugador
 			// Tooltip: ""
 		}
 
 		EmbedPlayerEnterLeave: {
-			Label: Embed Inicio de Sesi n del Jugador
+			Label: Incrustar inicio y cierre de sesión del jugador
 			// Tooltip: ""
 		}
 
 		EmbedWorldEvents: {
-			Label: Embed de el Evento Mundial
+			Label: Incrustar eventos
 			// Tooltip: ""
 		}
 
 		EmbedServerStartStop: {
-			Label: Embed de Inicializaci n y Deteniendo de el Servidor
+			Label: Incrustar encendido y apagado del servidor
 			// Tooltip: ""
 		}
 
 		EmbedBossSpawn: {
-			Label: Embed Jefe Vanilla Invocado
+			Label: Incrustar invocación de jefes vanilla
 			// Tooltip: ""
 		}
 
 		EmbedOther: {
-			Label: Embed Otras
+			Label: Incrustar otros
 			// Tooltip: ""
 		}
 	}
