@@ -133,7 +133,7 @@ Configs: {
 				   grandoth, StellarPurr, Soof4
 
 				Traductores:
-				   Español - CDT Maggot
+				   Español - qAngel, CDT_Maggot
 				   Portugués - 
 				   Chino - 
 				'''
@@ -166,9 +166,12 @@ Configs: {
 		}
 
 		HideMessagesWithString: {
-			// i'm assuming this was moved to endpointmodconfig? if so, this should be deleted from this category
-			Label: Hide Messages With String
-			Tooltip: ""
+			Label: Si se encuentra, esconder el mensaje
+			Tooltip:
+				'''
+				Si cualquiera de estos hilos estan presentes en el mensaje,
+				TerrariaChatRelay no  transmitirá el mensaje,
+				'''
 		}
 	}
 
@@ -198,15 +201,6 @@ Configs: {
 		DenyReceivingMessagesFromGame: {
 			Label: Identificación del canal - No recibir
 			Tooltip: Identificación del canal de Discord desde el que no quieras recibir mensajes de Terraria
-		}
-
-		HideMessagesWithString: {
-			Label: Si se encuentra, esconder el mensaje
-			Tooltip:
-				'''
-				Si cualquiera de estos hilos estan presentes en el mensaje,
-				TerrariaChatRelay no  transmitirá el mensaje,
-				'''
 		}
 	}
 

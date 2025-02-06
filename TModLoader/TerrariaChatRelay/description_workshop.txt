@@ -9,9 +9,6 @@ Send messages from Terraria to your favorite Chat Services!
 [img]https://raw.githubusercontent.com/xNarnia/Gif-Repo/refs/heads/main/TerrariaChatRelay/TCR-features.jpg[/img]
 Available for tModLoader and TShock.
 
-Currently supports:
-Discord, Slack
-
 It will allow you to send chat from Terraria to multiple Chat Services (such as Discord) and vice versa.
 
 [list]
@@ -29,10 +26,14 @@ It will allow you to send chat from Terraria to multiple Chat Services (such as 
 [*] Handles emojis so they show their name (If you have Emojis downloaded)
 [/list]
 
-Supported Chat Services: Discord, Slack
+Supported Chat Services: Discord
+
+Credits
+- qAngel: Spanish (ES) ModConfig Localization
+- CDT_Maggot: Spanish (ES) ModConfig Localization
 
 Changelog
-- [2.6.1.2] - Spanish (ES) ModConfig Localization!
+- [2.6.1.5] - Spanish (ES) ModConfig Localization!
 - [2.6] - Slash commands, console commands, player embed options, console to channel, fixed ModConfig, and much more!
 - [2.3.0.4] - Config regen, new features, stability improvements and more!
 - [2.3.0.2] - Gentle Bugfixes, Code Cleanup, Quality of Life

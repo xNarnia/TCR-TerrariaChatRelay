@@ -16,3 +16,7 @@ Discord <-> Terraria Features:
 - Allow relaying to Discord channels from one Discord bot
 - Handles emojis so they show their name
 - Emphasizes pings on Discord in-game as blue
+
+Credits
+- qAngel: Spanish (ES) ModConfig Localization
+- CDT_Maggot: Spanish (ES) ModConfig Localization
