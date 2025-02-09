@@ -2,6 +2,7 @@
 using Terraria;
 using System.IO;
 using Terraria.GameContent.NetModules;
+using Terraria.Chat.Commands;
 
 namespace TerrariaChatRelay.TMLHooks
 {
@@ -12,10 +13,15 @@ namespace TerrariaChatRelay.TMLHooks
     public class HookPlayerChat : BaseHook
     {
         public HookPlayerChat(TerrariaChatRelay tcrMod) : base(tcrMod) { }
-        public override void Attach() => On_ChatCommandProcessor.ProcessIncomingMessage += On_ChatCommandProcessor_ProcessIncomingMessage;
-        public override void Detach() => On_ChatCommandProcessor.ProcessIncomingMessage -= On_ChatCommandProcessor_ProcessIncomingMessage;
+		public override void Attach() => On_SayChatCommand.ProcessIncomingMessage += On_SayChatCommand_ProcessIncomingMessage;
+		public override void Detach() => On_SayChatCommand.ProcessIncomingMessage -= On_SayChatCommand_ProcessIncomingMessage;
+		
+        // No longer used
+        //public override void Attach() => On_ChatCommandProcessor.ProcessIncomingMessage += On_ChatCommandProcessor_ProcessIncomingMessage;
+		//public override void Detach() => On_ChatCommandProcessor.ProcessIncomingMessage -= On_ChatCommandProcessor_ProcessIncomingMessage;
 
-        private void On_ChatCommandProcessor_ProcessIncomingMessage(On_ChatCommandProcessor.orig_ProcessIncomingMessage orig, ChatCommandProcessor self, ChatMessage message, int clientId)
+		private void On_SayChatCommand_ProcessIncomingMessage(On_SayChatCommand.orig_ProcessIncomingMessage orig, SayChatCommand self, string text, byte clientId)
+		//private void On_ChatCommandProcessor_ProcessIncomingMessage(On_ChatCommandProcessor.orig_ProcessIncomingMessage orig, ChatCommandProcessor self, ChatMessage message, int clientId)
         {
             // If SubworldLib is present, remove the hook from Subworlds
             // This prevents double posting, allowing the main server to relay for both worlds
@@ -24,22 +30,23 @@ namespace TerrariaChatRelay.TMLHooks
                 object current = TCRMod.SubworldLib.Call("Current");
                 if (current?.ToString().ToLower() != "false")
                 {
-                    On_ChatCommandProcessor.ProcessIncomingMessage -= On_ChatCommandProcessor_ProcessIncomingMessage;
-                    orig(self, message, clientId);
+					On_SayChatCommand.ProcessIncomingMessage -= On_SayChatCommand_ProcessIncomingMessage;
+                    orig(self, text, clientId);
                     return;
                 }
             }
 
             // Not relaying commands with / as those are typically for commands with sensitive information
-            if (Global.Config.ShowChatMessages && !message.Text.StartsWith("/"))
+            if (Global.Config.ShowChatMessages)
             {
                 Core.RaiseTerrariaMessageReceived(this, new TCRPlayer()
                 {
                     PlayerId = clientId,
                     Name = Main.player[clientId].name
-                }, message.Text);
+                }, text);
             }
-            orig(self, message, clientId);
+
+            orig(self, text, clientId);
         }
 
         /// <summary>
