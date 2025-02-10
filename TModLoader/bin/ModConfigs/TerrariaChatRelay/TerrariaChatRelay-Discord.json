@@ -1,6 +1,7 @@
 {
     "CommentGuide": "Setup Guide: https://tinyurl.com/TCR-Setup",
     "EnableDiscord": true,
+    "EnableUserAndEveryonePings": false,
     "CommandPrefix": "t!",
     "BotStatus": "TerrariaChatRelay",
     "BotChannelDescription": "%worldname% - **Players Online:** %playercount% / %maxplayers%",
