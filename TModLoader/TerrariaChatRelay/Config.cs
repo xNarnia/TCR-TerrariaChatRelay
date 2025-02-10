@@ -110,6 +110,10 @@ namespace TerrariaChatRelay
 		[ReloadRequired]
 		public string VanillaBossSpawned { get; set; }
 
+		[DefaultValue(false)]
+		[ReloadRequired]
+		public bool EnableUserAndEveryonePings;
+
 		[ReloadRequired]
 		public EmbedSettings EmbedSettings { get; set; }
 

@@ -429,7 +429,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 				if (outMsg == "" || outMsg == null)
 					return;
 
-				outMsg = chatParser.RemoveUserMentions(outMsg);
+				if (!DiscordPlugin.Config.EnableUserAndEveryonePings)
+					outMsg = chatParser.RemoveUserMentions(outMsg);
 
 				MessageQueue.QueueMessage(ChannelsToSendTo, new DiscordMessage()
 				{

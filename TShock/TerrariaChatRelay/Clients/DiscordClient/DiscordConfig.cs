@@ -76,6 +76,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
 		[JsonProperty(Order = 305)]
 		public string VanillaBossSpawned = ":anger: **%bossname% has awoken!**";
+		[JsonProperty(Order = 308)]
+		public bool EnableUserAndEveryonePings = false;
 		[JsonProperty(Order = 310)]
 		public EmbedSettings EmbedSettings = new EmbedSettings();
 		[JsonProperty(Order = 315)]
