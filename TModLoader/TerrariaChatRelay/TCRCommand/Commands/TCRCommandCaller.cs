@@ -16,7 +16,7 @@ namespace TerrariaChatRelay.TCRCommand.Commands
 			foreach (string value in array)
 			{
 				if (value.Length > 0)
-					Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, value);
+					Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, value, TerrariaChatSource.Command);
 			}
 		}
 	}

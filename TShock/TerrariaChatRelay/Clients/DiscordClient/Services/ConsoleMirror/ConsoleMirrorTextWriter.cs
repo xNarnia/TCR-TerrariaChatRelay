@@ -29,12 +29,6 @@ namespace TerrariaChatRelay.Clients.DiscordClient.Services.ConsoleMirror
 
         public override void Write(char value)
         {
-            if(writeCatch.Length > 200)
-            {
-                ConsoleMessageReceived?.Invoke(writeCatch);
-                writeCatch = "";
-            }
-
             writeCatch += value;
             previousWriter?.Write(value);
         }

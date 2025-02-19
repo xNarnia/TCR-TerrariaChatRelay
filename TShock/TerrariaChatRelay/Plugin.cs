@@ -36,6 +36,7 @@ namespace TerrariaChatRelay
 
 		// Really weird way to fix the double broadcasting issue. TShock's code simply will not allow any other way.
 		public List<Chatter> ChatHolder = new List<Chatter>();
+		public static List<string> SpawnedBosses = new List<string>();
 
 		public class Chatter
 		{
@@ -47,28 +48,6 @@ namespace TerrariaChatRelay
 			}
 		}
 
-		public List<int> BossIDs = new List<int>()
-		{
-			50, // King Slime
-			4, // Eye of Cthulu			
-			222, // Queen Bee
-			13, // Eater of Worlds	
-			266, // Brain of Cthulu
-			35, // Skeletron
-			668, // Deerclops
-			113, // Wall of Flesh
-			657, // Queen Slime
-			125, // Retinazer
-			127, // Skeletron Prime	
-			134, // The Destroyer
-			262, // Plantera
-			245, // Golem
-			636, // Empress Of Light
-			370, // Duke Fishron
-			439, // Lunatic Cultist
-			396 // Moon Lord
-		};
-
 		public Plugin(Main game) : base(game)
 		{
 
@@ -79,6 +58,9 @@ namespace TerrariaChatRelay
 			Global.SavePath = Path.Combine(Directory.GetCurrentDirectory(), TShock.SavePath);
 			Global.ModConfigPath = Path.Combine(Directory.GetCurrentDirectory(), TShock.SavePath, "TerrariaChatRelay");
 			Global.Config = new TCRConfig().GetOrCreateConfiguration();
+
+			if(Global.Config.LangOnlyForTShock != null)
+				LanguageManager.Instance.SetLanguage(Global.Config.LangOnlyForTShock);
 
 			CommandPrefix = TShock.Config.Settings.CommandSpecifier;
 			SilentCommandPrefix = TShock.Config.Settings.CommandSilentSpecifier;
@@ -106,6 +88,7 @@ namespace TerrariaChatRelay
 			ServerApi.Hooks.NetGreetPlayer.Register(this, OnPlayerGreet);
 			ServerApi.Hooks.ServerLeave.Register(this, OnServerLeave);
 			ServerApi.Hooks.NpcSpawn.Register(this, OnNPCSpawn);
+			ServerApi.Hooks.NpcKilled.Register(this, NPC_Killed);
 
 			//This hook is a part of TShock and not a part of TS-API. There is a strict distinction between those two assemblies.
 			//This event is provided through the C# ``event`` keyword.
@@ -173,7 +156,7 @@ namespace TerrariaChatRelay
                 Text = $"{outmsg}"
             });
 
-            Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(args.Who), text);
+            Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(args.Who), text, TerrariaChatSource.PlayerChat);
         }
 
         private void OnPlayerGreet(GreetPlayerEventArgs args)
@@ -185,10 +168,10 @@ namespace TerrariaChatRelay
 
 				NetPacket packet =
 					Terraria.GameContent.NetModules.NetTextModule.SerializeServerMessage(
-						NetworkText.FromFormattable("This chat is powered by TerrariaChatRelay."), Color.LawnGreen, byte.MaxValue);
+						NetworkText.FromFormattable("[TerrariaChatRelay]"), Color.LawnGreen, byte.MaxValue);
 				NetManager.Instance.SendToClient(packet, args.Who);
 
-				Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(-1), $"{Main.player[args.Who].name} has joined.");
+				Core.RaiseTerrariaMessageReceived(this, Main.player[args.Who].ToTCRPlayer(-1), $"{Main.player[args.Who].name} has joined.", TerrariaChatSource.PlayerEnter);
 			}
 			catch (Exception)
 			{
@@ -208,7 +191,7 @@ namespace TerrariaChatRelay
 				{
 					var player = Main.player[args.Who];
 					// -1 is hacky, but works
-					Core.RaiseTerrariaMessageReceived(this, player.ToTCRPlayer(-1), $"{player.name} has left.");
+					Core.RaiseTerrariaMessageReceived(this, player.ToTCRPlayer(-1), $"{player.name} has left.", TerrariaChatSource.PlayerLeave);
 				}
 			}
 			catch (Exception)
@@ -221,20 +204,46 @@ namespace TerrariaChatRelay
 		{
 			NPC npc = Main.npc[args.NpcId];
 
-			if (BossIDs.Contains(npc.netID))
+			try
 			{
-				Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, $"{npc.FullName} has awoken!");
+				if (!SpawnedBosses.Contains(npc.FullName))
+					SpawnedBosses.Add(npc.FullName);
 			}
+			catch (Exception e)
+			{
+				PrettyPrint.Log("TerrariaChatRelay", "Error HookBosses: " + e.Message);
+			}
+
+			if (npc.boss)
+				Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, string.Format(Language.GetTextValue("Announcement.HasAwoken"), npc.FullName), TerrariaChatSource.BossSpawned);
+		}
+
+		private void NPC_Killed(NpcKilledEventArgs args)
+		{
+			NPC npc = Main.npc[args.npc.entityId];
+
+			try
+			{
+				if (!SpawnedBosses.Contains(npc.FullName))
+					SpawnedBosses.Add(npc.FullName);
+			}
+			catch (Exception e)
+			{
+				PrettyPrint.Log("TerrariaChatRelay", "Error HookBosses: " + e.Message);
+			}
+
+			if (npc.boss)
+				Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, string.Format(Language.GetTextValue("Announcement.HasBeenDefeated_Single"), npc.FullName), TerrariaChatSource.BossKilled);
 		}
 
 		private void OnServerStart(EventArgs args)
 		{
-			Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, "The server is starting!");
+			Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, Language.GetTextValue("LegacyMenu.8"), TerrariaChatSource.ServerStart);
 		}
 
 		private void OnServerStop()
 		{
-			Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, "The server is stopping!");
+			Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, Language.GetTextValue("Net.ServerSavingOnExit"), TerrariaChatSource.ServerStop);
 		}
 
 		private void OnServerBroadcast(ServerBroadcastEventArgs args)
@@ -252,14 +261,17 @@ namespace TerrariaChatRelay
 				)
 				return;
 
-			var CheckChat = ChatHolder.Where(x => literalText.Contains(x.Player.Name) && literalText.Contains(x.Text));
+			if (SpawnedBosses.Any(literalText.Contains))
+				return;
+
+				var CheckChat = ChatHolder.Where(x => literalText.Contains(x.Player.Name) && literalText.Contains(x.Text));
 			if (CheckChat.Count() > 0)
 			{
 				ChatHolder.Remove(ChatHolder.First());
 				return;
 			}
 
-			Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, literalText);
+			Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, literalText, TerrariaChatSource.ServerBroadcast);
 		}
 
 		//private void OnBroadcastMessage(NetworkText text, ref Color color, ref int ignorePlayer)

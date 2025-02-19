@@ -80,9 +80,9 @@ namespace TerrariaChatRelay
 		/// <param name="sender">Object that is emitting this event.</param>
 		/// <param name="playerId">Id of player in respect to Main.Player[i], where i is the index of the player.</param>
 		/// <param name="msg">Text content of the message</param>
-		public static void RaiseTerrariaMessageReceived(object sender, TCRPlayer player, string msg)
+		public static void RaiseTerrariaMessageReceived(object sender, TCRPlayer player, string msg, TerrariaChatSource chatSource)
 		{
-			RaiseTerrariaMessageReceived(sender, player, new TCRColor(255, 255, 255), _adapter.ParseSnippets(msg));
+			RaiseTerrariaMessageReceived(sender, player, new TCRColor(255, 255, 255), _adapter.ParseSnippets(msg), chatSource);
 		}
 
 		/// <summary>
@@ -92,8 +92,8 @@ namespace TerrariaChatRelay
 		/// <param name="playerId">Id of player in respect to Main.Player[i], where i is the index of the player.</param>
 		/// <param name="color">Color to display the text.</param>
 		/// <param name="msg">Text content of the message</param>
-		public static void RaiseTerrariaMessageReceived(object sender, TCRPlayer player, TCRColor color, string msg)
-            => OnGameMessageReceived?.Invoke(sender, new TerrariaChatEventArgs(player, color, msg));
+		public static void RaiseTerrariaMessageReceived(object sender, TCRPlayer player, TCRColor color, string msg, TerrariaChatSource chatSource)
+            => OnGameMessageReceived?.Invoke(sender, new TerrariaChatEventArgs(player, color, msg, chatSource));
 
 		public static void ConnectClients()
         {
@@ -168,6 +168,7 @@ namespace TerrariaChatRelay
         public TCRPlayer Player { get; set; }
         public TCRColor Color { get; set; }
         public string Message { get; set; }
+		public TerrariaChatSource Source { get; set; }
 
 		/// <summary>
 		/// Message payload sent to subscribers when a game message has been received.
@@ -176,11 +177,12 @@ namespace TerrariaChatRelay
 		/// <param name="color">Color to display the text.</param>
 		/// 
 		/// <param name="msg">Text content of the message</param>
-		public TerrariaChatEventArgs(TCRPlayer player, TCRColor color, string msg)
+		public TerrariaChatEventArgs(TCRPlayer player, TCRColor color, string msg, TerrariaChatSource chatSource)
         {
 			Player = player;
 			Color = color;
             Message = msg;
+			Source = chatSource;
 		}
     }
 
@@ -189,6 +191,7 @@ namespace TerrariaChatRelay
 		public string ClientName { get; set; }
 		public TCRClientUser User { get; set; }
 		public string Message { get; set; }
+		public TerrariaChatSource Source { get; set; }
 
 		/// <summary>
 		/// Message payload sent to subscribers when a game message has been received.
@@ -202,5 +205,21 @@ namespace TerrariaChatRelay
 			User = user;
 			Message = msg;
 		}
+	}
+
+	public enum TerrariaChatSource
+	{
+		ServerStart,
+		ServerStop,
+		ServerBroadcast,
+		World,
+		BossSpawned,
+		BossKilled,
+		PlayerEnter,
+		PlayerLeave,
+		PlayerChat,
+		Command,
+		TCR,
+		Other
 	}
 }

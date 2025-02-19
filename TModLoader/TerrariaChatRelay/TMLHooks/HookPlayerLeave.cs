@@ -19,7 +19,7 @@ namespace TerrariaChatRelay.TMLHooks
                 if (Main.player[self.Id].name != "")
                 {
                     var tcrPlayer = Main.player[self.Id].ToTCRPlayer(-1);
-                    Core.RaiseTerrariaMessageReceived(this, tcrPlayer, $"{tcrPlayer.Name} has left.");
+                    Core.RaiseTerrariaMessageReceived(this, tcrPlayer, $"{tcrPlayer.Name} has left.", TerrariaChatSource.PlayerLeave);
                 }
             }
             orig(self);

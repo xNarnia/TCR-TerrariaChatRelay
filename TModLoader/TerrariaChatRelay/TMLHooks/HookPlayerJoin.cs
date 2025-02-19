@@ -16,7 +16,7 @@ namespace TerrariaChatRelay.TMLHooks
         {
             orig(plr);
             var tcrPlayer = Main.player[plr].ToTCRPlayer(-1);
-            Core.RaiseTerrariaMessageReceived(this, tcrPlayer, $"{tcrPlayer.Name} has joined.");
+            Core.RaiseTerrariaMessageReceived(this, tcrPlayer, $"{tcrPlayer.Name} has joined.", TerrariaChatSource.PlayerEnter);
         }
     }
 }

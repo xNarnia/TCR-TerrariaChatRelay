@@ -17,7 +17,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		[JsonProperty(Order = 50)]
 		public string CommandPrefix { get; set; } = "t!";
 		[JsonProperty(Order = 60)]
-		public bool ShowPoweredByMessageOnStartup { get; set; } = true;
+		public bool ShowMessageOnStartup { get; set; } = true;
 		[JsonProperty(Order = 75)]
 		public ulong OwnerUserId { get; set; } = 0;
 		[JsonProperty(Order = 110)]
@@ -52,12 +52,10 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public string HelpFormat3 { get; set; } = "%worldname% = World Name";
 		[JsonProperty(Order = 200)]
 		public string HelpFormat4 { get; set; } = "%message% = Initial message content";
-		[JsonProperty(Order = 210)]
-		public string HelpFormat5 { get; set; } = "%bossname% = Name of boss being summoned (only for VanillaBossSpawned)";
 		[JsonProperty(Order = 220)]
-		public string HelpFormat6 { get; set; } = "%groupprefix% = Group prefix";
+		public string HelpFormat5 { get; set; } = "%groupprefix% = Group prefix";
 		[JsonProperty(Order = 230)]
-		public string HelpFormat7 { get; set; } = "%groupsuffix% = Group suffix";
+		public string HelpFormat6 { get; set; } = "%groupsuffix% = Group suffix";
         [JsonProperty(Order = 234)]
         public bool EnableSlashCommands = true;
         [JsonProperty(Order = 235)]
@@ -75,7 +73,9 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		[JsonProperty(Order = 290)]
 		public string ServerStoppingFormat = ":small_orange_diamond: **%message%**";
 		[JsonProperty(Order = 305)]
-		public string VanillaBossSpawned = ":anger: **%bossname% has awoken!**";
+		public string BossSpawned = ":anger: **%message%**";
+		[JsonProperty(Order = 305)]
+		public string BossKilled = ":headstone: **%message%**";
 		[JsonProperty(Order = 308)]
 		public bool EnableUserAndEveryonePings = false;
 		[JsonProperty(Order = 310)]
@@ -117,7 +117,7 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		public bool EmbedPlayerEnterLeave { get; set; } = true;
 		public bool EmbedWorldEvents { get; set; } = false;
 		public bool EmbedServerStartStop { get; set; } = true;
-		public bool EmbedBossSpawn { get; set; } = false;
+		public bool EmbedBossSpawnAndKill { get; set; } = false;
 		public bool EmbedOther { get; set; } = true;
 	}
 

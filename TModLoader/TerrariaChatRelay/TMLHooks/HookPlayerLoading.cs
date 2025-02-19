@@ -18,7 +18,7 @@ namespace TerrariaChatRelay.TMLHooks
 
         private void NetMessage_greetPlayer(On_NetMessage.orig_greetPlayer orig, int plr)
         {
-            NetPacket packet = NetTextModule.SerializeServerMessage(NetworkText.FromLiteral("This chat is powered by TerrariaChatRelay"), Color.LawnGreen, byte.MaxValue);
+            NetPacket packet = NetTextModule.SerializeServerMessage(NetworkText.FromLiteral("[TerrariaChatRelay]"), Color.LawnGreen, byte.MaxValue);
             NetManager.Instance.SendToClient(packet, plr);
             orig(plr);
         }

@@ -32,6 +32,6 @@ namespace TerrariaChatRelay.TCRCommand.Commands
 			=> Group = new SuperAdminGroup();
 
 		public override void SendMessage(string msg, byte red, byte green, byte blue)
-			=> Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, msg);
+			=> Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, msg, TerrariaChatSource.Command);
 	}
 }

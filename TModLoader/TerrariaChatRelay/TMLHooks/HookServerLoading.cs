@@ -3,6 +3,7 @@ using System.IO;
 using Terraria.IO;
 using Terraria;
 using TerrariaChatRelay.Helpers;
+using Terraria.Localization;
 
 namespace TerrariaChatRelay.TMLHooks
 {
@@ -23,10 +24,10 @@ namespace TerrariaChatRelay.TMLHooks
                 if (!Netplay.Disconnect)
                 {
                     if (Global.Config.ShowServerStartMessage)
-                        Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, "The server is starting!");
+                        Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, Language.GetTextValue("LegacyMenu.8"), TerrariaChatSource.ServerStart);
 
                     if (TCRMod.LatestVersion > TCRMod.Version)
-                        Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, $"A new version of TCR is available: V.{TCRMod.LatestVersion.ToString()}");
+                        Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, $"A new version of TCR is available: V.{TCRMod.LatestVersion.ToString()}", TerrariaChatSource.TCR);
                 }
             }
             catch (Exception e)

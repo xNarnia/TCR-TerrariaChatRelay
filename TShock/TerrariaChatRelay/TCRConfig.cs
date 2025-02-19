@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace TerrariaChatRelay
 		public bool ShowServerStopMessage { get; set; } = true;
 		public bool ShowWorldSeed { get; set; } = false;
 		public bool CheckForLatestVersion { get; set; } = true;
+		public string LangOnlyForTShock { get; set; } = null;
 
 		public TCRConfig()
 		{

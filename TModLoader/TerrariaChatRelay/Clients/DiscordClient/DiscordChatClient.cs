@@ -12,6 +12,7 @@ using Terraria;
 using TerrariaChatRelay.Clients.DiscordClient.Helpers;
 using TerrariaChatRelay.Clients.DiscordClient.Services;
 using TerrariaChatRelay.Clients.DiscordClient.Messaging;
+using Terraria.Localization;
 
 namespace TerrariaChatRelay.Clients.DiscordClient
 {
@@ -108,12 +109,12 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 		{
 			PrettyPrint.Log("Discord", "Connection Established!");
 
-			if (DiscordPlugin.Config.ShowPoweredByMessageOnStartup && !Reconnect)
+			if (DiscordPlugin.Config.ShowMessageOnStartup && !Reconnect)
 			{
 				MessageQueue.QueueMessage(Channel_IDs,
 					new DiscordMessage ()
 					{
-						Message = $"**This bot is powered by TerrariaChatRelay**\nUse **{DiscordPlugin.Config.CommandPrefix}help** for more commands!",
+						Message = $"**TerrariaChatRelay - {Language.GetText("LegacyMenu.8")}**\n🔹 **{DiscordPlugin.Config.CommandPrefix}help** - {Language.GetTextValue("CLI.Help_Description")}",
 						Embed = true
 					});
 			}
@@ -168,7 +169,8 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 			{
 				GatewayIntents = GatewayIntents.MessageContent | GatewayIntents.AllUnprivileged,
 				MessageCacheSize = 30,
-				LogLevel = LogSeverity.Verbose
+				LogLevel = LogSeverity.Verbose,
+				UseInteractionSnowflakeDate = false
 			});
 			await Socket.LoginAsync(TokenType.Bot, BOT_TOKEN);
 			await Socket.StartAsync();
@@ -344,12 +346,12 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 				string bossName = "";
 				bool isEmbed = false;
 
-				if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has joined."))
+				if (msg.Player.PlayerId == -1 && msg.Source == TerrariaChatSource.PlayerEnter)
 				{
 					outMsg = DiscordPlugin.Config.PlayerLoggedInFormat;
 					isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedPlayerEnterLeave;
 				}
-				else if (msg.Player.PlayerId == -1 && msg.Message.EndsWith(" has left."))
+				else if (msg.Player.PlayerId == -1 && msg.Source == TerrariaChatSource.PlayerLeave)
 				{
 					outMsg = DiscordPlugin.Config.PlayerLoggedOutFormat;
 					isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedPlayerEnterLeave;
@@ -365,25 +367,29 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 						outMsg = DiscordPlugin.Config.PlayerChatFormat;
 						isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedPlayerChat;
 					}
-					else if (msg.Message.EndsWith(" has awoken!"))
+					else if (msg.Source == TerrariaChatSource.BossSpawned)
 					{
-						outMsg = DiscordPlugin.Config.VanillaBossSpawned;
-						isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedBossSpawn;
-
+						outMsg = DiscordPlugin.Config.BossSpawned;
+						isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedBossSpawnAndKill;
 					}
-					else if (msg.Message == "The server is starting!")
+					else if (msg.Source == TerrariaChatSource.BossKilled)
+					{
+						outMsg = DiscordPlugin.Config.BossKilled;
+						isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedBossSpawnAndKill;
+					}
+					else if (msg.Source == TerrariaChatSource.ServerStart)
 					{
 						outMsg = DiscordPlugin.Config.ServerStartingFormat;
 						isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedServerStartStop;
 					}
-					else if (msg.Message == "The server is stopping!")
+					else if (msg.Source == TerrariaChatSource.ServerStop)
 					{
 						outMsg = DiscordPlugin.Config.ServerStoppingFormat;
 						isEmbed = DiscordPlugin.Config.EmbedSettings.EmbedServerStartStop;
 					}
 					else if (msg.Message.Contains("A new version of TCR is available!"))
 					{
-						outMsg = ":desktop:  **%message%**";
+						outMsg = ":desktop: **%message%**";
 						isEmbed = true;
 					}
 					else
@@ -402,16 +408,11 @@ namespace TerrariaChatRelay.Clients.DiscordClient
 
 				outMsg = chatParser.RemoveTerrariaColorAndItemCodes(outMsg);
 
-				if (msg.Message.EndsWith(" has awoken!"))
-				{
-					bossName = msg.Message.Replace(" has awoken!", "");
-					outMsg = outMsg.Replace("%bossname%", bossName);
-				}
-
 				// Find the Player Name
-				if (msg.Player == null && (msg.Message.EndsWith(" has joined.") || msg.Message.EndsWith(" has left.")))
+				if (msg.Player == null && (msg.Source == TerrariaChatSource.PlayerEnter || msg.Source == TerrariaChatSource.PlayerEnter))
 				{
-					string playerName = msg.Message.Replace(" has joined.", "").Replace(" has left.", "");
+					string playerName 
+						= msg.Message.Replace(" has joined.", "").Replace(" has left.", "");
 
 					// Suppress empty player name "has left" messages caused by port sniffers
 					if (playerName == null || playerName == "")

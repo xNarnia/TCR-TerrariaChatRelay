@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.Localization;
 
 namespace TerrariaChatRelay.TMLHooks
 {
@@ -15,7 +16,7 @@ namespace TerrariaChatRelay.TMLHooks
         private void OnServerStop(On_Netplay.orig_StopListening orig)
         {
             if (Global.Config.ShowServerStopMessage)
-                Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, "The server is stopping!");
+                Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, Language.GetTextValue("Net.ServerSavingOnExit"), TerrariaChatSource.ServerStop);
 
             orig();
         }

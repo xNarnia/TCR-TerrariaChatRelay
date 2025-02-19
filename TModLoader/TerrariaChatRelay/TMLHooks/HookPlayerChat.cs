@@ -43,7 +43,7 @@ namespace TerrariaChatRelay.TMLHooks
                 {
                     PlayerId = clientId,
                     Name = Main.player[clientId].name
-                }, text);
+                }, text, TerrariaChatSource.PlayerChat);
             }
 
             orig(self, text, clientId);
@@ -63,7 +63,7 @@ namespace TerrariaChatRelay.TMLHooks
                 {
                     PlayerId = senderPlayerId,
                     Name = Main.player[senderPlayerId].name
-                }, message.Text);
+                }, message.Text, TerrariaChatSource.PlayerChat);
 
             reader.BaseStream.Position = savedPosition;
             return orig(self, reader, senderPlayerId);
