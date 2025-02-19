@@ -33,6 +33,12 @@ Credits
 - CDT_Maggot: Spanish (ES) ModConfig Localization
 
 Changelog
+[2.7]
+- Add chat source to all Terraria chat relay broadcasts
+- Adjust hooks to use new chat source
+- Added support for localization
+- Fixed an issue where slash commands wouldn't work if the computer's clock was out of sync
+
 - [2.6.1.5] - Spanish (ES) ModConfig Localization!
 - [2.6] - Slash commands, console commands, player embed options, console to channel, fixed ModConfig, and much more!
 - [2.3.0.4] - Config regen, new features, stability improvements and more!
