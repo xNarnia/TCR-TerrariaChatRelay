@@ -13,6 +13,9 @@ namespace TerrariaChatRelay.Helpers
 			public static string GetName()
 				=> Terraria.Main.worldName;
 
+			public static double GetTime()
+				=> Terraria.Main.time;
+
 			public static string GetEvilType()
 				=> Terraria.WorldGen.crimson == false ? "Corruption" : "Crimson";
 

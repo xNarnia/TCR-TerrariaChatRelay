@@ -20,6 +20,11 @@ namespace TerrariaChatRelay.TCRCommand.Commands.Discord
 
 		public string Execute(object sender, string input = null, TCRClientUser whoRanCommand = null)
 		{
+			var mentions = DiscordPlugin.Config.ManagerUserIds.Where(x => x != 0).ToList();
+			if (mentions.Count() == 0)
+			{
+				return "**No administrators found!**";
+			}
 			return "**Administrators for TerrariaChatRelay:**\n" + string.Join("\n", DiscordPlugin.Config.ManagerUserIds.Where(x => x != 0).Select(x => $"<@{x}> - ID: {x}\n"));
 		}
 	}

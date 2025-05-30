@@ -10,7 +10,7 @@ namespace TerrariaChatRelay.TCRCommand.Commands
 
 		public string CommandKey { get; } = "cmd";
 
-		public string[] Aliases { get; } = { };
+		public string[] Aliases { get; } = { "command" };
 
 		public string Description { get; } = "Run any command as if you were on the server console!";
 

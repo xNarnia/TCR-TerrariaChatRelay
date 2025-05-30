@@ -46,10 +46,10 @@
     "FormatHelp7": "%groupsuffix% = Group suffix",
     "TerrariaInGameDiscordPrefix": "[c/7489d8:Discord] - ",
     "PlayerChatFormat": "> **%playername%:** %message%",
-    "PlayerLoggedInFormat": ":small_blue_diamond: **%playername%** joined the server.",
-    "PlayerLoggedOutFormat": ":small_orange_diamond: **%playername%** left the server.",
+    "PlayerLoggedInFormat": ":arrow_right: **%playername%** joined the server.",
+    "PlayerLoggedOutFormat": ":arrow_left: **%playername%** left the server.",
     "WorldEventFormat": "**%message%**",
-    "ServerStartingFormat": ":small_blue_diamond: **%message%**",
-    "ServerStoppingFormat": ":small_orange_diamond: **%message%**",
+    "ServerStartingFormat": ":green_circle: **%message%**",
+    "ServerStoppingFormat": ":red_circle: **%message%**",
     "VanillaBossSpawned": ":anger: **%bossname% has awoken!**"
 }

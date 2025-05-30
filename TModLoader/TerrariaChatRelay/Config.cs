@@ -86,11 +86,11 @@ namespace TerrariaChatRelay
 		[ReloadRequired]
 		public string PlayerChatFormat { get; set; }
 
-		[DefaultValue(":small_blue_diamond: **%playername%** joined the server.")]
+		[DefaultValue(":arrow_right: **%playername%** joined the server.")]
 		[ReloadRequired]
 		public string PlayerLoggedInFormat { get; set; }
 
-		[DefaultValue(":small_orange_diamond: **%playername%** left the server.")]
+		[DefaultValue(":arrow_left: **%playername%** left the server.")]
 		[ReloadRequired]
 		public string PlayerLoggedOutFormat { get; set; }
 
@@ -98,11 +98,11 @@ namespace TerrariaChatRelay
 		[ReloadRequired]
 		public string WorldEventFormat { get; set; }
 
-		[DefaultValue(":small_blue_diamond: **%message%**")]
+		[DefaultValue(":green_circle: **%message%**")]
 		[ReloadRequired]
 		public string ServerStartingFormat { get; set; }
 
-		[DefaultValue(":small_orange_diamond: **%message%**")]
+		[DefaultValue(":red_circle: **%message%**")]
 		[ReloadRequired]
 		public string ServerStoppingFormat { get; set; }
 
