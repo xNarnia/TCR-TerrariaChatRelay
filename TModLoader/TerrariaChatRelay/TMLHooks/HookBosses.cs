@@ -15,6 +15,8 @@ namespace TerrariaChatRelay.TMLHooks
 	public class HookBosses : GlobalNPC
 	{
 		public static List<string> SpawnedBosses = new List<string>();
+		private static Dictionary<string, double> lastSpawnFrame = new Dictionary<string, double>();
+		private static Dictionary<string, double> lastKillFrame = new Dictionary<string, double>();
 
 		public override void OnSpawn(NPC npc, IEntitySource source)
 		{
@@ -31,7 +33,14 @@ namespace TerrariaChatRelay.TMLHooks
 				{
 					PrettyPrint.Log("TerrariaChatRelay", "Error HookBosses: " + e.Message);
 				}
+
+				double currentFrame = Main.GameUpdateCount;
+				if (lastSpawnFrame.TryGetValue(npc.FullName, out double lastFrame) && (lastFrame == currentFrame || lastFrame + 1 == currentFrame))
+            	{
+            	    return;
+            	}
 				
+				lastSpawnFrame[npc.FullName] = currentFrame;
 				Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, string.Format(Language.GetTextValue("Announcement.HasAwoken"), npc.FullName), TerrariaChatSource.BossSpawned);
 			}
 		}
@@ -52,6 +61,13 @@ namespace TerrariaChatRelay.TMLHooks
 					PrettyPrint.Log("TerrariaChatRelay", "Error HookBosses: " + e.Message);
 				}
 
+				double currentFrame = Main.GameUpdateCount;
+				if (lastKillFrame.TryGetValue(npc.FullName, out double lastFrame) && (lastFrame == currentFrame || lastFrame + 1 == currentFrame))
+            	{
+            	    return;
+            	}
+
+				lastKillFrame[npc.FullName] = currentFrame;
 				Core.RaiseTerrariaMessageReceived(this, TCRPlayer.Server, string.Format(Language.GetTextValue("Announcement.HasBeenDefeated_Single"), npc.FullName), TerrariaChatSource.BossKilled);
 			}
 		}
